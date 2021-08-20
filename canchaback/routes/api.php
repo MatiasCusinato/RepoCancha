@@ -3,6 +3,10 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
+use App\Http\Controllers\API\ClienteController;
+use App\Http\Controllers\API\CanchaController;
+use App\Http\Controllers\API\TurnoController;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -17,3 +21,8 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+//APIS
+Route::apiResource('clientes', ClienteController::class);
+Route::apiResource('canchas', CanchaController::class);
+Route::apiResource('turnos', TurnoController::class);
