@@ -13,10 +13,12 @@ class Turno extends Model
     protected $fillable = [
         'cliente_id',
         'cancha_id',
+        'club_configuracion_id',
         'tipo_turno',
         'fecha_Desde',
         'fecha_Hasta',
-        'precio'
+        'grupo',
+        'precio',
     ];
 
     protected $hidden = [
@@ -34,5 +36,11 @@ class Turno extends Model
     public function cancha() 
     {
         return $this->belongsTo('App\Models\Cancha');
+    }
+
+    //Relacion 1 a M INVERSA
+    public function club_configuracion() 
+    {
+        return $this->belongsTo('App\Models\clubConfiguracion');
     }
 }
