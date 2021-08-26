@@ -6,6 +6,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\ClienteController;
 use App\Http\Controllers\API\CanchaController;
 use App\Http\Controllers\API\TurnoController;
+use App\Http\Controllers\API\clubConfiguracionController;
+use App\Http\Controllers\API\UsuarioController;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,6 +25,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 //APIS
+Route::apiResource('club_configuracions', clubConfiguracionController::class);
 Route::apiResource('clientes', ClienteController::class);
 Route::apiResource('canchas', CanchaController::class);
 Route::apiResource('turnos', TurnoController::class);
+Route::apiResource('usuarios', UsuarioController::class);
