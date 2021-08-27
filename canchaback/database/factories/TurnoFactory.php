@@ -25,7 +25,7 @@ class TurnoFactory extends Factory
             'cliente_id' => $this->faker->numberBetween($min = 1, $max = 10),
             'cancha_id'  => $this->faker->numberBetween($min = 1, $max = 5),
             'club_configuracion_id' => $this->faker->numberBetween($min = 1, $max = 3),
-            'tipo_turno' => $this->faker->numberBetween($min = 1, $max = 4),
+            'tipo_turno' => $this->faker->word,
             'fecha_Desde' => $this->faker->date($format = 'Y-m-d', $max = 'now'),
             'fecha_Hasta' => $this->faker->date($format = 'Y-m-d', $max = 'now'),
             'grupo' => $this->faker->numberBetween($min = 1, $max = 50),

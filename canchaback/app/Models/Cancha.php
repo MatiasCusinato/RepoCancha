@@ -10,6 +10,7 @@ class Cancha extends Model
     use HasFactory;
 
     protected $fillable = [
+        'club_configuracion_id',
         'deporte',
     ];
 
@@ -18,8 +19,15 @@ class Cancha extends Model
         'updated_at'
     ];
 
+    //Relacion 1 a M
     public function turnos() 
     {
         return $this->hasMany('App\Models\Turno');
+    }
+
+    //Relacion 1 a M INVERSA
+    public function club() 
+    {
+        return $this->belongsTo('App\Models\clubConfiguracion');
     }
 }

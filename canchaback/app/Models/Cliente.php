@@ -27,4 +27,10 @@ class Cliente extends Model
     {
         return $this->hasMany('App\Models\Turno');
     }
+
+    //Relacion M A M 
+    public function clubes()
+    {
+        return $this->belongsToMany('App\Models\clubConfiguracion');
+    }
 }

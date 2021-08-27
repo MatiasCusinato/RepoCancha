@@ -18,9 +18,12 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name',
+        //'name',
         'email',
+        'telefono',
         'password',
+        'club_configuracion_id',
+        'rememberToken',
     ];
 
     /**
@@ -41,4 +44,10 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    //Relacion 1 a 1 INVERSA
+    public function club() 
+    {
+        return $this->belongsTo('App\Models\clubConfiguracion');
+    }
 }
