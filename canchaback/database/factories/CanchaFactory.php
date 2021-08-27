@@ -22,6 +22,7 @@ class CanchaFactory extends Factory
     public function definition()
     {
         return [
+            'club_configuracion_id' => $this->faker->numberBetween($min = 1, $max = 3),
             'deporte'=> $this->faker->word,
         ];
     }

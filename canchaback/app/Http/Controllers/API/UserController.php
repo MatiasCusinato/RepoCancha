@@ -4,9 +4,9 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Usuario;
+use App\Models\User;
 
-class UsuarioController extends Controller
+class UserController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,8 +15,8 @@ class UsuarioController extends Controller
      */
     public function index()
     {
-        $usuario = Usuario::all();
-        return $usuario->toJson(JSON_PRETTY_PRINT);
+        $user = User::all();
+        return $user->toJson(JSON_PRETTY_PRINT);
     }
 
     /**
@@ -27,8 +27,8 @@ class UsuarioController extends Controller
      */
     public function store(Request $request)
     {
-        $usuario = Usuario::create($request->all());
-        return response()->json($usuario, 201);
+        $user = User::create($request->all());
+        return response()->json($user, 201);
     }
 
     /**
@@ -39,8 +39,8 @@ class UsuarioController extends Controller
      */
     public function show($id)
     {
-        $usuario = Usuario::find($id);
-        return $usuario->toJson(JSON_PRETTY_PRINT);
+        $user = User::find($id);
+        return $user->toJson(JSON_PRETTY_PRINT);
     }
 
     /**
@@ -50,9 +50,9 @@ class UsuarioController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Usuario $usuario)
+    public function update(Request $request, User $user)
     {
-        $usuario->update($request->all());
+        $user->update($request->all());
         return response()->json(['Petición' => 'Exitosa', 'Mensaje' => 'Usuario modificado']);
     }
 
@@ -62,9 +62,9 @@ class UsuarioController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Usuario $usuario)
+    public function destroy(User $user)
     {
-        Usuario::destroy($usuario->id);
+        User::destroy($user->id);
         return response()->json(['Petición' => 'Exitosa', 'Mensaje' => 'Usuario eliminado']);
     }
 }

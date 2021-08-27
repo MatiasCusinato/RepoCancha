@@ -31,11 +31,11 @@ class CreateTurnosTable extends Migration
                     ->references('id')->on('club_configuracions')
                     ->onDelete('set null');
                     
-            $table->enum('tipo_turno', ['Escuelaf5','Entrenamiento','Futbol5','Cumpleaños']);
+            $table->string('tipo_turno');
             $table->dateTime("fecha_Desde");
             $table->dateTime("fecha_Hasta");
             $table->integer("grupo");
-            $table->enum('precio', ['0', '500', '1000' ]);   
+            $table->enum('precio', ['0', '500', '1000']);   
 
             $table->timestamps();
         });

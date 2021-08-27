@@ -27,9 +27,21 @@ class clubConfiguracion extends Model
         return $this->hasMany('App\Models\Turno');
     }
 
-    //Relacion 1 a 1 INVERSA
-    public function usuario() 
+    //Relacion 1 A M 
+    public function canchas()
     {
-        return $this->hasOne('App\Models\Usuario');
+        return $this->hasMany('App\Models\Cancha');
+    }
+
+    //Relacion 1 a 1 INVERSA
+    public function users() 
+    {
+        return $this->belongsToMany('App\Models\User');
+    }
+
+    //Relacion M A M 
+    public function clientes()
+    {
+        return $this->belongsToMany('App\Models\User');
     }
 }
