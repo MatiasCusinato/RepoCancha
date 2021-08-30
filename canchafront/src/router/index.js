@@ -1,6 +1,9 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
+import INFOclientes from '@/components/INFOclientes.vue'
+import INFOturnos from '@/components/INFOturnos.vue'
+import INFOcanchas from '@/components/INFOcanchas.vue'
 
 Vue.use(VueRouter)
 
@@ -8,7 +11,22 @@ const routes = [
   {
     path: '/',
     name: 'Home',
-    component: Home
+    component: Home,
+  },
+  {
+    path: '/INFOclientes',
+    name: 'INFOclientes',
+    component: INFOclientes,
+  },
+  {
+    path: '/INFOturnos',
+    name: 'INFOturnos',
+    component: INFOturnos,
+  },
+  {
+    path: '/INFOcanchas',
+    name: 'INFOcanchas',
+    component: INFOcanchas,
   },
   {
     path: '/about',
