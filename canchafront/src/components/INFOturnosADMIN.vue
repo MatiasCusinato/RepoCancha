@@ -4,7 +4,7 @@
         <br>
         <div>
             <h4>FILTROS</h4>
-            <input type="text" v-model="busqueda" placeholder="Buscar clientes">
+            <input type="text" placeholder="Buscar clientes">
         </div>
 
         <br>
