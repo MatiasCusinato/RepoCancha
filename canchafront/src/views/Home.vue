@@ -1,6 +1,8 @@
 <template>
   <div class="home">
     <div>
+
+
       <ul class="list-group">
         <!-- <li class="list-group-item">
           <router-link to="/INFOturnos" class="nav-link">Turnos ADMIN</router-link>
@@ -26,26 +28,10 @@
 // @ is an alias to /src
 
 export default {
-  components: {
-  },
-  data() {
-    return {
-      verINFOclientes: false,
-      verINFOturnos: false,
-      verINFOcanchas: false,
-    }
-  },
-  methods: {
-    funcMostrarClientes() {
-      this.verINFOclientes = !this.verINFOclientes
-    },
-    funcMostrarTurnos() {
-      this.verINFOturnos = !this.verINFOturnos
-    },
-    funcMostrarCanchas() {
-      this.verINFOcanchas = !this.verINFOcanchas
-    },
-  }
+
+
+  
+  
 }
 </script>
 

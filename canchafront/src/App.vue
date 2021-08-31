@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+    <NavigationBar/>
 
     <main class="form-signin">
       <router-view/>
@@ -9,8 +10,11 @@
 </template>
 
 <script>
+import NavigationBar from "../src/components/NavigationBar.vue";
+
 export default{
   components:{
+    NavigationBar,
   }
 }
 </script>
