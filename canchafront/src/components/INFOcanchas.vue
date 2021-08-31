@@ -1,7 +1,7 @@
 <template>
     <div>
         <h2> Canchas </h2>
-        <button> Ingresar una nueva Cancha </button>
+        <button> Agregar nueva Cancha </button>
 
         <br>
 
@@ -13,6 +13,7 @@
                     <th scope="col">#</th>
                     <th scope="col">Club</th>
                     <th scope="col">Deporte</th>
+                    <th scope="col">Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -20,16 +21,14 @@
                     <th scope="row">1</th>
                     <td>Mark</td>
                     <td>Otto</td>
-                    </tr>
-                    <tr>
-                    <th scope="row">2</th>
-                    <td>Jacob</td>
-                    <td>Thornton</td>
-                    </tr>
-                    <tr>
-                    <th scope="row">3</th>
-                    <td>Larry</td>
-                    <td>the Bird</td>
+                    <td>
+                    <button class="btn btn-warning">
+                        Modificar
+                    </button> 
+                    <button class="btn btn-danger">
+                        Eliminar
+                    </button> 
+                    </td>
                     </tr>
                 </tbody>
             </table>
