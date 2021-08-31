@@ -54,18 +54,3 @@ export default {
     }
 }
 </script>
-
-<style scoped>
-.botonesABM {
-    height: 30px;
-    width: 60px;
-}
-
-.tdAcciones {
-    min-width: 300px;
-}
-
-.button {
-    margin: 0px 10px 0px 0px;
-}
-</style>

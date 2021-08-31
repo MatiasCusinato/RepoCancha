@@ -87,7 +87,6 @@ export default {
     width: 80px;
     padding: 15px 32px;
 }
-
 .btnCancha button {
     display: inline-block;
     margin: 0 10px;
