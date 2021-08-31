@@ -1,29 +1,32 @@
 <template>
   <div class="home">
-    <div class="BtnInfos">
-      <button @click="funcMostrarClientes()">Clientes</button>
-      <button @click="funcMostrarTurnos()">Turnos</button>
-      <button @click="funcMostrarCanchas()">Canchas</button>
-    </div>
-    <div class="info">
-      <INFOclientes v-if="verINFOclientes"/>
-      <INFOturnos v-if="verINFOturnos"/>
-      <INFOcanchas v-if="verINFOcanchas"/>
+    <div>
+      <ul class="list-group">
+        <li class="list-group-item">
+          <router-link to="/INFOturnos" class="nav-link">Turnos ADMIN</router-link>
+        </li>
+        <li class="list-group-item">
+          <router-link to="/INFOclientes" class="nav-link">Clientes</router-link>
+        </li>
+        <li class="list-group-item">
+          <router-link to="/INFOcanchas" class="nav-link">Canchas</router-link>
+        </li>
+      </ul>
+
+      <!-- <ul class="navbar-nav me-auto mb-2 mb-md-0">
+          <li class="nav-item">
+              <a href="#" class="nav-link">Logout</a>
+          </li>
+      </ul> -->
     </div>
   </div>  
 </template>
 
 <script>
 // @ is an alias to /src
-import INFOclientes from '@/components/INFOclientes.vue'
-import INFOturnos from '@/components/INFOturnos.vue'
-import INFOcanchas from '@/components/INFOcanchas.vue'
 
 export default {
   components: {
-    INFOclientes,
-    INFOturnos,
-    INFOcanchas,
   },
   data() {
     return {
