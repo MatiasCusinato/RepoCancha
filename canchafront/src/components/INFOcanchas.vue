@@ -1,7 +1,7 @@
 <template>
     <div>
         <h2> Canchas </h2>
-        <button> Ingresar una nueva Cancha </button>
+        <button> Agregar nueva Cancha </button>
 
         <br>
 
@@ -18,18 +18,17 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <th scope="row">1</th>
-                        <td>Mark</td>
-                        <td>Otto</td>
-                        <td>
-                            <button class="btn btn-warning btn-sm">
-                                Modificar
-                            </button>
-
-                            <button class="btn btn-danger btn-sm">
-                                Borrar
-                            </button>
-                        </td>
+                    <th scope="row">1</th>
+                    <td>Mark</td>
+                    <td>Otto</td>
+                    <td>
+                    <button class="btn btn-warning">
+                        Modificar
+                    </button> 
+                    <button class="btn btn-danger">
+                        Eliminar
+                    </button> 
+                    </td>
                     </tr>
                 </tbody>
             </table>

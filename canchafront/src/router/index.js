@@ -2,7 +2,8 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 import INFOclientes from '@/components/INFOclientes.vue'
-import INFOturnos from '@/components/INFOturnos.vue'
+import INFOturnosADMIN from '@/components/INFOturnosADMIN.vue'
+import INFOturnosDISPONIBLES from '@/components/INFOturnosDISPONIBLES.vue'
 import INFOcanchas from '@/components/INFOcanchas.vue'
 import Login from '@/views/Login.vue'
 import Registro from '@/views/Registro.vue'
@@ -25,9 +26,15 @@ const routes = [
   },
 
   {
-    path: '/INFOturnos',
-    name: 'INFOturnos',
-    component: INFOturnos,
+    path: '/INFOturnosADMIN',
+    name: 'INFOturnosADMIN',
+    component: INFOturnosADMIN,
+  },
+
+  {
+    path: '/INFOturnosDISPONIBLES',
+    name: 'INFOturnosDISPONIBLES',
+    component: INFOturnosDISPONIBLES,
   },
 
   {

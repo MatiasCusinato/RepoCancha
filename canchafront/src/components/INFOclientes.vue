@@ -1,7 +1,7 @@
 <template>
     <div>
         <h1> Clientes </h1>
-        <button> Ingresar un nuevo Cliente </button>
+        <button> Agregar un nuevo Cliente </button>
 
         <br>
 
@@ -14,8 +14,9 @@
                     <th scope="col">Nombre</th>
                     <th scope="col">Apellido</th>
                     <th scope="col">Telefono</th>
-                    <th scope="col">Edad</th>
-                    <th scope="col">Email</th>
+                    <!-- <th scope="col">Edad</th>
+                    <th scope="col">Email</th> -->
+                    <th scope="col">Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -24,18 +25,17 @@
                     <td>Mark</td>
                     <td>Otto</td>
                     <td>@mdo</td>
-                    </tr>
-                    <tr>
-                    <th scope="row">2</th>
-                    <td>Jacob</td>
-                    <td>Thornton</td>
-                    <td>@fat</td>
-                    </tr>
-                    <tr>
-                    <th scope="row">3</th>
-                    <td>Larry</td>
-                    <td>the Bird</td>
-                    <td>@twitter</td>
+                    <td class="tdAcciones">
+                    <button class="button btn btn-warning btn-sm">
+                        Modificar
+                    </button> 
+                    <button class="button btn btn-danger btn-sm">
+                        Eliminar
+                    </button> 
+                    <button class="button btn btn-primary btn-sm">
+                        Consultar
+                    </button>
+                    </td>
                     </tr>
                 </tbody>
             </table>
