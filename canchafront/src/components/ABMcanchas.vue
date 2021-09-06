@@ -1,30 +1,18 @@
 <template>
     <div>
         <hr>
-        {{accion}} Clientes
+        {{accion}} Canchas
             <div>
                 <label>Id:</label>
-                <input type="text" v-model="datosClientes.id">
+                <input type="text" v-model="datosCancha.id">
             </div>
             <div>
-                <label> Nombre: </label>
-                <input type="text" v-model="datosClientes.nombre">
+                <label> Id Club: </label>
+                <input type="text" v-model="datosCancha.club_configuracion_id">
             </div>
             <div>
-                <label> Apellido: </label>
-                <input type="text" v-model="datosClientes.apellido">
-            </div>
-            <div>
-                <label> Telefono: </label>
-                <input type="text" v-model="datosClientes.telefono">
-            </div>
-            <div>
-                <label> Edad: </label>
-                <input type="text" v-model="datosClientes.edad">
-            </div>
-            <div>
-                <label> Email: </label>
-                <input type="text" v-model="datosClientes.email">
+                <label> Deporte: </label>
+                <input type="text" v-model="datosCancha.deporte">
             </div>
             <br>
             <div>
@@ -45,7 +33,7 @@ export default {
     mixins: [apiRest],
     data() {
         return {
-            datosClientes: {
+            datosCancha: {
                 nombre: '',
                 id: 0,
             }
@@ -54,9 +42,9 @@ export default {
     created() {
         console.log("evento created")
         if (this.accion != 'Crear') {
-            this.ObtenerDatosPorId('clientes', this.id)
+            this.ObtenerDatosPorId('canchas', this.id)
                 .then (res => {
-                    this.datosClientes = res
+                    this.datosCancha = res
             })
         }
     },
@@ -72,34 +60,34 @@ export default {
     methods: {
         Aceptar() {
             if (this.accion == 'Crear') {
-                this.InsertarDatos ('clientes', this.datosClientes)
+                this.InsertarDatos ('canchas', this.datosCancha)
                     .then(res => {
                         if (res.id != 0) {
                             console.log('El registro fue ingresado con exito')
                         } else {
                             console.log('Error al ingresar el registro')
                         }
-                        this.$emit('SalirDeABMclientes', true)
+                        this.$emit('SalirDeABMcanchas', true)
                     })
             }
             if (this.accion == 'Modificar') {
-                this.EditarDatos ('clientes', this.id, this.datosClientes)
+                this.EditarDatos ('canchas', this.id, this.datosCancha)
                     .then(res => {
-                        this.datosClientes = res
-                        this.$emit('SalirDeABMclientes', true)
+                        this.datosCancha = res
+                        this.$emit('SalirDeABMcanchas', true)
                     })
             }
             if (this.accion == 'Eliminar') {
-                this.EliminarDatos ('clientes', this.id)
+                this.EliminarDatos ('canchas', this.id)
                     .then(res => {
-                        this.datosClientes = res
-                        this.$emit('SalirDeABMclientes', true)
+                        this.datosCancha = res
+                        this.$emit('SalirDeABMcanchas', true)
                     })
             }
         },
         Cancelar() {
-            this.$emit("SalirDeABMclientes", false)
+            this.$emit("SalirDeABMcanchas", false)
         },
     }
-}    
+}
 </script>
