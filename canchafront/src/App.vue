@@ -11,6 +11,7 @@
 
 <script>
 import NavigationBar from "../src/components/NavigationBar.vue";
+
 export default{
   components:{
     NavigationBar,

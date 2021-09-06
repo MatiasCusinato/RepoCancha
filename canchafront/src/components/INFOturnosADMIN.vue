@@ -4,7 +4,7 @@
         <br>
         <div>
             <h4>FILTROS</h4>
-            <input type="text" v-model="busqueda" placeholder="Buscar clientes">
+            <input type="text" placeholder="Buscar clientes">
         </div>
 
         <br>
@@ -87,7 +87,6 @@ export default {
     width: 80px;
     padding: 15px 32px;
 }
-
 .btnCancha button {
     display: inline-block;
     margin: 0 10px;
