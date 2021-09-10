@@ -8,6 +8,7 @@ use App\Http\Controllers\API\CanchaController;
 use App\Http\Controllers\API\TurnoController;
 use App\Http\Controllers\API\clubConfiguracionController;
 use App\Http\Controllers\API\UserController;
+use App\Http\Controllers\API\AccesoUsuarioController;
 
 /*
 |--------------------------------------------------------------------------
@@ -30,3 +31,8 @@ Route::apiResource('clientes', ClienteController::class);
 Route::apiResource('canchas', CanchaController::class);
 Route::apiResource('turnos', TurnoController::class);
 Route::apiResource('users', UserController::class);
+
+//Registro, login y logout
+Route::post('registro',[AccesoUsuarioController::class, 'registro']);
+Route::post('login',[AccesoUsuarioController::class, 'login']);
+Route::post('logout',[AccesoUsuarioController::class, 'logout']); 

@@ -18,12 +18,14 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        //'name',
+        'nombre',
+        'apellido',
         'email',
         'telefono',
         'password',
         'club_configuracion_id',
-        'rememberToken',
+        'token_actual',
+        //'rememberToken',
     ];
 
     /**

@@ -15,7 +15,8 @@ class CreateUsersTable extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            //$table->string('name');
+            $table->string('nombre');
+            $table->string('apellido');
             //$table->timestamp('email_verified_at')->nullable();
             $table->string('email')->unique();            
             $table->integer("telefono");
@@ -26,7 +27,8 @@ class CreateUsersTable extends Migration
                     ->references('id')->on('club_configuracions')
                     ->onDelete('set null');
 
-            $table->rememberToken();
+            $table->string('token_actual')->nullable();
+            //$table->rememberToken();
             $table->timestamps();
         });
     }
