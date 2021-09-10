@@ -1,26 +1,22 @@
 <template>
     <div>
         <hr>
-        {{accion}} Canchas
-            <div>
-                <label>Id:</label>
-                <input type="text" v-model="datosCancha.id">
-            </div>
-            <div>
-                <label> Id Club: </label>
-                <input type="text" v-model="datosCancha.club_configuracion_id">
-            </div>
-            <div>
-                <label> Deporte: </label>
-                <input type="text" v-model="datosCancha.deporte">
-            </div>
-            <br>
-            <div>
-                <button @click="Aceptar()"> Aceptar </button>
-                |
-                <button @click="Cancelar()"> Cancelar </button>
-            </div>
-            <hr>
+        <p>{{accion}} Canchas</p>
+            <form class="formABM">
+                <div class="mb-3">
+                    <label for="" class="form-label"> Id Club: </label>
+                    <input type="text" class="form-control" v-model="datosCancha.club_configuracion_id">
+                </div>
+                <div class="mb-3">
+                    <label for="" class="form-label"> Deporte </label>
+                    <input type="text" class="form-control" v-model="datosCancha.deporte">
+                </div>
+                <div>
+                    <button @click="Aceptar()" class="btn btn-primary"> Aceptar </button>
+                    |
+                    <button @click="Cancelar()" class="btn btn-danger"> Cancelar </button>
+                </div>
+            </form>
     </div>
 </template>
 
@@ -70,14 +66,14 @@ export default {
                         this.$emit('SalirDeABMcanchas', true)
                     })
             }
-            if (this.accion == 'Modificar') {
+            if (this.accion == 'Editar') {
                 this.EditarDatos ('canchas', this.id, this.datosCancha)
                     .then(res => {
                         this.datosCancha = res
                         this.$emit('SalirDeABMcanchas', true)
                     })
             }
-            if (this.accion == 'Eliminar') {
+            if (this.accion == 'Borrar') {
                 this.EliminarDatos ('canchas', this.id)
                     .then(res => {
                         this.datosCancha = res
@@ -91,3 +87,15 @@ export default {
     }
 }
 </script>
+
+<style scoped>
+.formABM {
+    border: 2px solid rgb(116, 113, 113);
+    border-collapse: collapse;
+    padding: 15px 32px;
+}
+p {
+    font-size: 30px;
+    font-family: "Times New Roman", Times, serif;
+} 
+</style>

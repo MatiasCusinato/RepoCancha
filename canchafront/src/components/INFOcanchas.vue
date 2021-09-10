@@ -1,11 +1,10 @@
 <template>
     <div>
-        <h1> Canchas </h1>
+        <h1 class="bg-primary text-white text-center mb-3"> Canchas </h1>
         <br>
-        <button class="btn btn-success" @click="desplegarABMcancha('Crear')"> 
+        <button class="btn btn-success" @click="desplegarABMcancha('Crear')" style="font-size: 22px"> 
             Agregar nueva Cancha 
         </button>
-        <br>
         <br>
         <ABMcanchas
             v-if="abrirABMcancha"
@@ -13,10 +12,10 @@
             :id=id
             @SalirDeABMcanchas = MostrarABMcanchas($event)
         />
-        <br>
-            <table class="table">
-                <thead class="table-dark">
-                    <tr>
+        <br>  <!-- table table-dark table-striped mt-4 -->
+            <table class="light-blue darken-2">
+                <thead>
+                    <tr class="bg-primary text-light">
                     <th scope="col">#</th>
                     <th scope="col">Club</th>
                     <th scope="col">Deporte</th>
@@ -29,11 +28,11 @@
                     <td> {{canchas.club_configuracion_id}} </td>
                     <td> {{canchas.deporte}} </td>
                     <td>
-                    <button class="btn btn-warning" @click="desplegarABMcancha('Modificar', canchas.id)">
-                        Modificar
+                    <button class="btn btn-info" @click="desplegarABMcancha('Editar', canchas.id)">
+                        Editar
                     </button> 
-                    <button class="btn btn-danger" @click="desplegarABMcancha('Eliminar', canchas.id)">
-                        Eliminar
+                    <button class="btn btn-danger" @click="desplegarABMcancha('Borrar', canchas.id)">
+                        Borrar
                     </button> 
                     </td>
                     </tr>
@@ -98,10 +97,22 @@ export default {
 </script>
 
 <style scoped>
+h1 {
+    text-align: center;
+    border-style: solid;
+    border-width: 2px;
+    font-size: 50px;
+    font-family: -webkit-body;
+    color: blue;
+}
 table, th, td{
-        border: 2px solid rgb(116, 113, 113);
-        border-collapse: collapse;
-        margin:10px auto 10px auto;
-        background-color: rgb(222, 184, 135);
+    border: 2px solid rgb(116, 113, 113);
+    border-collapse: collapse;
+    margin:10px auto 10px auto;
+    padding: 18px 30px;
+    margin: 10px -100px;
+    text-align: center;
+    border-width: 2px;
+    font-size: 15px;
     }
 </style>
