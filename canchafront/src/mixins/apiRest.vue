@@ -37,6 +37,8 @@ export default {
             return fetch(urlDestino,
             {
                 method: 'POST',
+                mode: 'cors',
+                credentials: 'include',
                 headers: {
                     'Content-Type': 'application/json'
                 },
@@ -75,6 +77,7 @@ export default {
             })
             .catch(err => console.log('Error fetch:', err))
         },
+
     }
 }                
 </script>

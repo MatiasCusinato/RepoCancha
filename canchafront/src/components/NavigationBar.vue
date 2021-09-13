@@ -50,6 +50,7 @@ export default {
             }
             token.token_actual = token.token_actual.slice(1,-1)
             console.log("token "+ JSON.stringify(token)+ " a borrar")
+            
             this.InsertarDatos("logout", token)
                 .then(res => {
                     console.log(res)

@@ -34,13 +34,13 @@ export default {
         data(){
                 return {
                         datosRegistroUser: {
-                        nombre: "usuario",
-                        apellido: "falso",
-                        email: "usuario@gmail.com",
-                        telefono: "12313212",
-                        password: "usuario",
-                        token_actual: "null",
-                        club_configuracion_id:"2",
+                                nombre: "usuario",
+                                apellido: "falso",
+                                email: "usuario@gmail.com",
+                                telefono: "12313212",
+                                password: "usuario",
+                                token_actual: "null",
+                                club_configuracion_id:"2",
                         },
                 }
         },
@@ -49,7 +49,7 @@ export default {
                 registrarUsuario(){
                         this.InsertarDatos("registro", this.datosRegistroUser)
                                 .then(res => {
-                                console.log(res)
+                                        console.log(res)
                                 })
                         this.$router.push('/login') 
                 }, 

@@ -42,6 +42,6 @@ class clubConfiguracion extends Model
     //Relacion M A M 
     public function clientes()
     {
-        return $this->belongsToMany('App\Models\User');
+        return $this->belongsToMany('App\Models\Cliente');
     }
 }

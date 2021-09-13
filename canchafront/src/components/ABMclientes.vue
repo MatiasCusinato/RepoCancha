@@ -48,6 +48,11 @@ export default {
         return {
             datosClientes: {
                 nombre: '',
+                apellido:"",
+                edad: "",
+                telefono: "",
+                email: "",
+                club_configuracion_id:"",
                 id: 0,
             }
         }
@@ -55,7 +60,9 @@ export default {
     created() {
         console.log("evento created")
         if (this.accion != 'Crear') {
-            this.ObtenerDatosPorId('clientes', this.id)
+            let club= {club_configuracion_id : localStorage.getItem('club')}
+            this.datosClientes.club_configuracion_id= club;
+            this.InsertarDatos(`clientes/${this.id}`, club)
                 .then (res => {
                     this.datosClientes = res
             })
@@ -67,12 +74,16 @@ export default {
     beforeDestroyed() {
         console.log("evento beforeDestroyed")
     },
-    destroted() {
+    destroyed() {
         console.log("evento destroyed")
     },
     methods: {
         Aceptar() {
             if (this.accion == 'Crear') {
+                let club= {club_configuracion_id : localStorage.getItem('club')}
+                this.datosClientes.club_configuracion_id= club;
+
+                console.log(JSON.stringify(this.datosClientes))
                 this.InsertarDatos ('clientes', this.datosClientes)
                     .then(res => {
                         if (res.id != 0) {
@@ -84,18 +95,25 @@ export default {
                     })
             }
             if (this.accion == 'Editar') {
-                this.EditarDatos ('clientes', this.id, this.datosClientes)
+                console.log(JSON.stringify(this.datosClientes))
+                this.InsertarDatos(`clientes/editar/${this.id}`, this.datosClientes)
                     .then(res => {
                         this.datosClientes = res
                         this.$emit('SalirDeABMclientes', true)
                     })
             }
             if (this.accion == 'Borrar') {
-                this.EliminarDatos ('clientes', this.id)
+                /* this.EliminarDatos ('clientes', this.id)
+                    .then(res => {
+                        this.datosClientes = res
+                        this.$emit('SalirDeABMclientes', true)
+                    }) */
+                this.InsertarDatos(`clientes/eliminar/${this.id}`, this.datosClientes)
                     .then(res => {
                         this.datosClientes = res
                         this.$emit('SalirDeABMclientes', true)
                     })
+                
             }
         },
         Cancelar() {

@@ -60,9 +60,11 @@ import apiRest from "../mixins/apiRest.vue"
 import ABMclientes from "../components/ABMclientes.vue"
 export default {
     mixins: [apiRest],
+
     components: {
         ABMclientes
-        },
+    },
+
     data() {
         return {
             datos: [],
@@ -71,24 +73,31 @@ export default {
             id: 0,
         }
     },
+
     created() {
         this.traerDatos()
     },
+
     mounted() {
         console.log("evento mounted")
-        this.traerDatos()
+        //this.traerDatos()
     },
-    destroyed() {
-        console.log("evento destroyed")
-        this.traerDatos()
-    },
+
     methods: {
         traerDatos() {
             console.log("Obteniendo CLIENTES desde la API ...");
-            this.ObtenerDatos('clientes')
+            /* this.ObtenerDatos('clientes')
                 .then(res => {
                     this.datos = res
+                }) */
+
+            let club= {club_configuracion_id : localStorage.getItem('club')}
+
+            this.InsertarDatos("clientes", club)
+                .then(res => {
+                        this.datos = res
                 })
+
         },
         desplegarABMcliente(accion, id=0) {
             this.accion = accion,
