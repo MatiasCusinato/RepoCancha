@@ -46,9 +46,8 @@ export default {
                 body: JSON.stringify(datosIngresar)
             })
             .then(res => {
-                return res.json()
-                }
-            )
+                    return res.json()
+                })
             .catch(err => console.log('Error fetch:', err))
         },
         EditarDatos(ruta, id, datosIngresar) {

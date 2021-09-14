@@ -32,11 +32,13 @@ export default {
             console.log(res)
             let token = JSON.stringify(res.user.token_actual);
             let numeroClub = JSON.stringify(res.user.club_configuracion_id)
+
             this.$store.commit("guardarDatosUsuario", {
               token,
               numeroClub,
             });
-          })
+          }) 
+
         this.$router.push('/') 
       },
       /* async logearUsuario(){
