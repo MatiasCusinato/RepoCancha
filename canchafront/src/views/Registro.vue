@@ -29,7 +29,7 @@
 import apiRest from '../mixins/apiRest.vue'
 //import axios from "axios";
 export default {
-    name: 'Registro',
+name: 'Registro',
         mixins:[apiRest],
         data(){
                 return {
@@ -44,7 +44,7 @@ export default {
                         },
                 }
         },
-    
+
         methods: {  
                 registrarUsuario(){
                         this.InsertarDatos("registro", this.datosRegistroUser)

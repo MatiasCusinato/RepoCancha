@@ -68,3 +68,4 @@ class ClienteController extends Controller
         return response()->json(['Petición' => 'Exitosa', 'Mensaje' => 'Cliente eliminado']);
     }
 }
+?>

@@ -71,10 +71,15 @@ export default {
     methods: {
         traerDatos() {
             console.log("Obteniendo CANCHAS desde la API ...");
-            this.ObtenerDatos('canchas')
+            let club = localStorage.getItem('club')
+            this.ObtenerDatos(`canchas/${club}`)
+                .then (res => {
+                    this.datosCancha = res
+            })
+            /*  this.ObtenerDatos('canchas/1')
                 .then(res => {
                     this.datos = res
-                })
+                }) */
         },
         desplegarABMcancha(accion, id=0) {
             this.accion = accion,
