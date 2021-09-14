@@ -42,8 +42,8 @@ Route::post('logout',[AccesoUsuarioController::class, 'logout']);
 
 
 //Rutas Clientes
-Route::post('clientes', [ClienteController::class, 'index']);
+Route::get('clientes/{club_id}', [ClienteController::class, 'index']);
 Route::post('clientes/guardar', [ClienteController::class, 'store']);
-Route::post('clientes/{cliente_id}', [ClienteController::class, 'show']);
-Route::post('clientes/editar/{cliente_id}', [ClienteController::class, 'update']);
-Route::post('clientes/eliminar/{cliente_id}', [ClienteController::class, 'destroy']);  
+Route::get('clientes/{club_id}/{cliente_id}', [ClienteController::class, 'show']);
+Route::put('clientes/editar/{cliente_id}', [ClienteController::class, 'update']);
+Route::delete('clientes/eliminar/{cliente_id}', [ClienteController::class, 'destroy']);  

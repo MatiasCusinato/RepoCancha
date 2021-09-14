@@ -3,27 +3,56 @@
         <hr>
         <p>{{accion}} Clientes</p>
             <form class="formABM">
-                <div class="mb-3">
-                    <label for="" class="form-label"> Nombre: </label>
-                    <input type="text" class="form-control" v-model="datosClientes.nombre">
+
+                <div v-if="accion=='Borrar'">
+                    <table class="table-bordered light-blue darken-2">
+                        <thead>
+                            <tr class="bg-primary text-light">
+                                <th scope="col">ID</th>
+                                <th scope="col">Nombre</th>
+                                <th scope="col">Apellido</th>
+                                <th scope="col">Telefono</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <th scope="row">{{datosClientes.id}}</th>
+                                <td> {{datosClientes.nombre}} </td>
+                                <td> {{datosClientes.apellido}} </td>
+                                <td> {{datosClientes.telefono}} </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
-                <div class="mb-3">
-                    <label for="" class="form-label"> Apellido: </label>
-                    <input type="text" class="form-control" v-model="datosClientes.apellido">
+                
+                <div v-if="accion=='Crear' || accion=='Editar'">
+                    <div class="mb-3">
+                        <label for="" class="form-label"> Nombre: </label>
+                        <input type="text" class="form-control" v-model="datosClientes.nombre">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="" class="form-label"> Apellido: </label>
+                        <input type="text" class="form-control" v-model="datosClientes.apellido">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="" class="form-label"> Telefono: </label>
+                        <input type="text" class="form-control" v-model="datosClientes.telefono">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="" class="form-label"> Edad: </label>
+                        <input type="text" class="form-control" v-model="datosClientes.edad">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="" class="form-label"> Email:</label>
+                        <input type="text" class="form-control" v-model="datosClientes.email">
+                    </div>
                 </div>
-                <div class="mb-3">
-                    <label for="" class="form-label"> Telefono: </label>
-                    <input type="text" class="form-control" v-model="datosClientes.telefono">
-                </div>
-                <div class="mb-3">
-                    <label for="" class="form-label"> Edad: </label>
-                    <input type="text" class="form-control" v-model="datosClientes.edad">
-                </div>
-                <div class="mb-3">
-                    <label for="" class="form-label"> Email:</label>
-                    <input type="text" class="form-control" v-model="datosClientes.email">
-                </div>
-                <div>
+
+                <div class="divBotones">
                     <button @click="Aceptar()" class="btn btn-primary"> Aceptar </button>
                     |
                     <button @click="Cancelar()" class="btn btn-danger"> Cancelar </button>
@@ -60,12 +89,13 @@ export default {
     created() {
         console.log("evento created")
         if (this.accion != 'Crear') {
-            let club= {club_configuracion_id : localStorage.getItem('club')}
-            this.datosClientes.club_configuracion_id= club;
-            this.InsertarDatos(`clientes/${this.id}`, club)
+            let club=  localStorage.getItem('club')
+            //this.datosClientes.club_configuracion_id= club;
+
+            this.ObtenerDatos(`clientes/${club}/${this.id}`)
                 .then (res => {
                     this.datosClientes = res
-            })
+                })
         }
     },
     mounted() {
@@ -96,7 +126,7 @@ export default {
             }
             if (this.accion == 'Editar') {
                 console.log(JSON.stringify(this.datosClientes))
-                this.InsertarDatos(`clientes/editar/${this.id}`, this.datosClientes)
+                this.EditarDatos(`clientes/editar`, this.id, this.datosClientes)
                     .then(res => {
                         this.datosClientes = res
                         this.$emit('SalirDeABMclientes', true)
@@ -108,7 +138,7 @@ export default {
                         this.datosClientes = res
                         this.$emit('SalirDeABMclientes', true)
                     }) */
-                this.InsertarDatos(`clientes/eliminar/${this.id}`, this.datosClientes)
+                this.EliminarDatos(`clientes/eliminar`, this.id, this.datosClientes)
                     .then(res => {
                         this.datosClientes = res
                         this.$emit('SalirDeABMclientes', true)
@@ -129,13 +159,19 @@ export default {
     border-collapse: collapse;
     padding: 15px 32px;
 }
+
 p {
     font-size: 30px;
     font-family: "Times New Roman", Times, serif;
 } 
+
 .pBorrar{
     font: 20px;
     font-weight: bold;
     color: black;
+}
+
+.divBotones{
+    margin: 20px 10px
 }
 </style>

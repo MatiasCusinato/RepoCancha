@@ -15,15 +15,16 @@ class ClienteController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index($club_id)
     {
-        $club_id = $request->club_configuracion_id;
+        //$club_id = $request->club_configuracion_id;
 
         //$clientes: consulta sql de los clientes pertenecientes a tal club
         $clientes = DB::table('cliente_club_configuracion')
                             ->join('clientes', 'cliente_club_configuracion.cliente_id', '=', 'clientes.id')
                             ->where('cliente_club_configuracion.club_configuracion_id', '=', $club_id)
                             ->select('clientes.*')
+                            ->orderBy('id', 'asc')
                             ->get();
 
         return $clientes->toJson(JSON_PRETTY_PRINT);
@@ -91,9 +92,9 @@ class ClienteController extends Controller
      * @param  int  $cliente_id
      * @return \Illuminate\Http\Response
      */
-    public function show(Request $request, $cliente_id)
+    public function show(Request $request, $club_id, $cliente_id)
     {
-        $club_id = $request->club_configuracion_id;
+        //$club_id = $request->club_configuracion_id;
 
         $cliente = DB::table('cliente_club_configuracion')
                             ->join('clientes', 'cliente_club_configuracion.cliente_id', '=', 'clientes.id')
