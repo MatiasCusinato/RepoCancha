@@ -30,8 +30,12 @@ export default {
         this.InsertarDatos("login", this.datosLoginUser)
           .then(res => {
             console.log(res)
-            let tkn = JSON.stringify(res.user.token_actual);
-            this.$store.commit("guardarToken", tkn);
+            let token = JSON.stringify(res.user.token_actual);
+            let numeroClub = JSON.stringify(res.user.club_configuracion_id)
+            this.$store.commit("guardarDatosUsuario", {
+              token,
+              numeroClub,
+            });
           })
         this.$router.push('/') 
       },

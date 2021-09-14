@@ -32,11 +32,14 @@ export default {
             )
             .catch(err => console.log('error fetch:', err))
         },
+        
         InsertarDatos(ruta, datosIngresar) {
             let urlDestino = "http://127.0.0.1:8000/api/" + ruta 
             return fetch(urlDestino,
             {
                 method: 'POST',
+                mode: 'cors',
+                credentials: 'include',
                 headers: {
                     'Content-Type': 'application/json'
                 },
@@ -75,6 +78,7 @@ export default {
             })
             .catch(err => console.log('Error fetch:', err))
         },
+
     }
 }                
 </script>

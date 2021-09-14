@@ -18,7 +18,7 @@ class CreateClienteClubConfiguracionTable extends Migration
 
             $table->unsignedBigInteger("cliente_id")->nullable();
             $table->foreign('cliente_id')
-                    ->references('id')->on('club_configuracions')
+                    ->references('id')->on('clientes')
                     ->onDelete('set null');
 
             $table->unsignedBigInteger("club_configuracion_id")->nullable();

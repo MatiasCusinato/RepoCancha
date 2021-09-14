@@ -1,9 +1,26 @@
 <template>
     <div>
         <h2> Turnos </h2>
-        <button> Ingresar un nuevo Turno </button>
+        <br>
+        <div>
+            <h4>FILTROS</h4>
+            <input type="text" placeholder="Buscar clientes">
+        </div>
 
         <br>
+        <br>
+        <div class="btn-group" role="group" aria-label="Basic example">
+            <button class="btn btn-info" style="margin: 10px">CANCHA 1</button>
+            <button class="btn btn-info" style="margin: 10px">CANCHA 2</button>
+            <button class="btn btn-info" style="margin: 10px">CANCHA 3</button>
+        </div>
+        <br>
+        <div class="btnTurno">
+            <button class="btn btn-info"> Agregar nuevo Turno </button>
+            <br>
+            <br>
+            <button class="btn btn-info"> Agregar nuevo Turno Fijo </button>
+        </div>
 
         <br>
         <div>
@@ -57,3 +74,21 @@ export default {
     }
 }
 </script>
+
+<style scoped>
+.btnTurno {
+    position: fixed;
+    float: left;
+    bottom: 200px;
+    left: 100px;
+    font-size: 16px;
+    min-width: 150px;
+    height: 40px;
+    width: 80px;
+    padding: 15px 32px;
+}
+.btnCancha button {
+    display: inline-block;
+    margin: 0 10px;
+}
+</style>
