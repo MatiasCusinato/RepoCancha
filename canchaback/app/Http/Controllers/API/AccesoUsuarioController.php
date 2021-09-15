@@ -51,13 +51,8 @@ class AccesoUsuarioController extends Controller
     public function login(Request $request){
 
         $validacionLogin = Validator::make($request->all(), [
-            //'nombre' => 'required',
-            //'apellido' => 'required',
             'email' => ['required', 'exists:users'],
-            //'telefono' => 'required',
             'password' => ['required', 'string'],
-            //'token_actual' => ['required', 'string'],
-            //'club_configuracion_id' => 'required'
         ]);
 
         if($validacionLogin->fails()){
@@ -67,15 +62,16 @@ class AccesoUsuarioController extends Controller
             ], 422);
         }else { 
             $user = User::where('email', $request->email)->first();
-
-            if(!Hash::check($request->password, $user->password)){
-                return response()->json([
-                    'msj' => 'Error',
-                    'Razon' => 'Password incorrecta'
-                ], 401);
-            }
-
+            
             if($user->token_actual == 'null'){
+
+                if(!Hash::check($request->password, $user->password)){
+                    return response()->json([
+                        'msj' => 'Error',
+                        'Razon' => 'Password incorrecta'
+                    ], 401);
+                }
+
                 $user->token_actual = $user->createToken('laravelToken')->plainTextToken;
                 $user->save();
     

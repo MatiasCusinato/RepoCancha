@@ -4,22 +4,22 @@
                         <h1 class="h3 mb-3 fw-normal">Por favor, registrese</h1>
 
                         <input v-model="datosRegistroUser.nombre" class="form-control"
-                                placeholder="Nombre" required />
+                                placeholder="Nombre" />
 
                         <input v-model="datosRegistroUser.apellido" class="form-control"
-                                placeholder="Apellido" required />
+                                placeholder="Apellido" />
 
                         <input v-model="datosRegistroUser.email" type="email" 
-                                class="form-control" placeholder="Email" required />
+                                class="form-control" placeholder="Email" />
 
                         <input v-model="datosRegistroUser.telefono" type="telefono" 
-                                class="form-control" placeholder="Telefono" required />
+                                class="form-control" placeholder="Telefono" />
 
                         <input v-model="datosRegistroUser.password" type="password" minlength="6"
-                                class="form-control"  placeholder="Password" required />
+                                class="form-control"  placeholder="Password" />
 
                         <input v-model="datosRegistroUser.club_configuracion_id"
-                                class="form-control" placeholder="ID club" required />
+                                class="form-control" placeholder="ID club" />
                         
                         <br> 
 
@@ -32,7 +32,7 @@
 
                 <div class="alert alert-danger" role="alert"
                         v-if="this.alertaRegistrado == true">
-                        ¡El usuario ya se encuentra logueado!
+                        ¡Ese usuario ya se encuentra registrado!
                 </div>
         </div>
 </template>
@@ -40,6 +40,7 @@
 <script>
 import apiRest from "../mixins/apiRest.vue";
 //import axios from "axios";
+
 export default {
     name: "Registro",
 
@@ -62,15 +63,32 @@ export default {
 
     methods: {
         registrarUsuario() {
-            this.InsertarDatos("registro", this.datosRegistroUser)
+                for (let key in this.datosRegistroUser) {
+                        if(this.datosRegistroUser[key] == ""){
+                                console.log("Uno de los campos estan vacios")
+                        }
+                        /* console.log("Key: " + key);
+                        console.log("Value: " + this.datosRegistroUser[key]); */
+                }
+
+            /* this.InsertarDatos("registro", this.datosRegistroUser)
                 .then((res) => {
-                    if (res.msj == "Error") {
-                        this.alertaRegistrado = true
-                    } else {
-                        this.$router.push("/login");
-                    }
+                        console.log(res)
+
+                        if (res.msj == "Error") {
+                                this.alertaRegistrado = true
+                        } else {
+                                this.$router.push("/login");
+                        }
                 })
-                .catch((err) => console.log("Error fetch:", err));
+                .catch((err) => console.log("Error fetch:", err)); */
+        },
+
+        validarCampos(){
+                for (var key in this.datosRegistroUser) {
+                        console.log("Key: " + key);
+                        console.log("Value: " + this.datosRegistroUser[key]);
+                }
         },
 
         /* async registrarUsuario(){

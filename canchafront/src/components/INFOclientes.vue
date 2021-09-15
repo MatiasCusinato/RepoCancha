@@ -1,23 +1,27 @@
 <template>
     <div>
         <h1 class="bg-primary text-white text-center mb-3"> Clientes </h1>
+
         <br>
+
         <div class="divFiltros">
             <h4>Filtros:</h4>
             <input type="text" placeholder="Filtro por nombre">
         </div>
+
         <br>
+
         <div class="btncli">
             <button class="btn btn-primary" @click="desplegarABMcliente('Crear')" style="font-size: 22px"> 
                 Agregar un nuevo Cliente 
             </button>
         </div>
+
         <br>
         <br>
-        <ABMclientes
-            v-if="abrirABMcliente"
-            :accion=accion
-            :id=id
+
+        <ABMclientes v-if="abrirABMcliente"
+            :accion=accion :id=id
             @SalirDeABMclientes = MostrarABMclientes($event)
         />
         <br>
@@ -60,7 +64,9 @@
 <script>
 import apiRest from "../mixins/apiRest.vue"
 import ABMclientes from "../components/ABMclientes.vue"
+
 export default {
+    
     mixins: [apiRest],
 
     components: {
@@ -80,11 +86,6 @@ export default {
         this.traerDatos()
     },
 
-    mounted() {
-        console.log("evento mounted")
-        //this.traerDatos()
-    },
-
     methods: {
         traerDatos() {
             console.log("Obteniendo CLIENTES desde la API ...");
@@ -100,8 +101,8 @@ export default {
                 .then(res => {
                         this.datos = res
                 }) */
-
         },
+
         desplegarABMcliente(accion, id=0) {
             this.accion = accion,
             this.id = id,
@@ -111,7 +112,7 @@ export default {
         MostrarABMclientes(ver) {
             this.abrirABMcliente = false
             if (ver == true) {
-            this.traerDatos();
+                this.traerDatos();
             }
         }
     }

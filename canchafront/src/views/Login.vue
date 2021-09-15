@@ -3,21 +3,11 @@
         <form @submit.prevent="logearUsuario">
             <h1 class="h3 mb-3 fw-normal">Por favor, ingrese</h1>
 
-            <input
-                v-model="datosLoginUser.email"
-                type="email"
-                class="form-control"
-                placeholder="Email"
-                required
-            />
+            <input v-model="datosLoginUser.email" type="email"
+                class="form-control" placeholder="Email" required />
 
-            <input
-                v-model="datosLoginUser.password"
-                type="password"
-                class="form-control"
-                placeholder="Password"
-                required
-            />
+            <input v-model="datosLoginUser.password" type="password"
+                class="form-control" placeholder="Password" required />
 
             <button class="w-100 btn btn-lg btn-primary" type="logearUsuario">
                 Iniciar sesión
@@ -28,7 +18,7 @@
         
         <div class="alert alert-danger" role="alert"
               v-if="this.alertaLogueado==true">
-          ¡El usuario ya se encuentra logueado!
+            ¡El usuario ya se encuentra logueado!
         </div>
     </div>
 </template>
@@ -36,6 +26,7 @@
 <script>
 import apiRest from "../mixins/apiRest.vue";
 //import axios from "axios";
+
 export default {
     name: "Login",
 
@@ -55,10 +46,11 @@ export default {
     methods: {
         logearUsuario() {
             this.InsertarDatos("login", this.datosLoginUser).then((res) => {
+                console.log(res)
+
                 if (res.msj == "Error") {
                     this.alertaLogueado = true;
                 } else {
-                    console.log(res);
                     let token = JSON.stringify(res.user.token_actual);
                     let numeroClub = JSON.stringify(
                         res.user.club_configuracion_id
@@ -73,6 +65,7 @@ export default {
                 }
             });
         },
+
         /* async logearUsuario(){
 				const url = 'http://localhost:8000/api/login';
 				axios.post(url, this.datosLoginUser, {
