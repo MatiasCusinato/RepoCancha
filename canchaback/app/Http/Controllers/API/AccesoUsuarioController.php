@@ -34,7 +34,7 @@ class AccesoUsuarioController extends Controller
                 'email' => $request->email,
                 'telefono' => $request->telefono,
                 'password' => $request->password,
-                'token_actual' => $request->token_actual,
+                'token_actual' => "null",
                 'club_configuracion_id' => $request->club_configuracion_id,
             ]);
     
@@ -63,7 +63,8 @@ class AccesoUsuarioController extends Controller
         if($validacionLogin->fails()){
             return response()->json([
                 'msj' => 'Error', 
-                'Mensaje' => 'Ese email no esta registrado'], 422);
+                'Mensaje' => 'Ese email no esta registrado'
+            ], 422);
         }else { 
             $user = User::where('email', $request->email)->first();
 
@@ -74,13 +75,20 @@ class AccesoUsuarioController extends Controller
                 ], 401);
             }
 
-            $user->token_actual = $user->createToken('laravelToken')->plainTextToken;
-            $user->save();
-
-            return response()->json([
-                'msj' => 'Login exitoso',
-                'user' => $user
-            ], 200); 
+            if($user->token_actual == 'null'){
+                $user->token_actual = $user->createToken('laravelToken')->plainTextToken;
+                $user->save();
+    
+                return response()->json([
+                    'msj' => 'Login exitoso',
+                    'user' => $user
+                ], 200);
+            } else {
+                return response()->json([
+                    'msj' => 'Error',
+                    'Razon' => 'Este usuario ya se encuentra logueado'
+                ], 401);
+            } 
         }
 
         /* if($user->token_actual == 'null'){
@@ -96,7 +104,6 @@ class AccesoUsuarioController extends Controller
                 'msj' => 'Error, este usuario ya se encuentra logueado'
             ], 401);
         } */
-        
         
     }
 
