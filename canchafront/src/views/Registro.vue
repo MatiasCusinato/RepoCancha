@@ -31,8 +31,13 @@
                 <br>
 
                 <div class="alert alert-danger" role="alert"
-                        v-if="this.alertaRegistrado == true">
-                        ¡Ese usuario ya se encuentra registrado!
+                        v-if="this.alertaRegistrado.length > 0" >
+
+                        <h5>Complete los siguientes campos, por favor</h5>
+                        <ul v-for="(campo, id) in alertaRegistrado" 
+                                :key="id">
+                                <li>{{campo}}</li>
+                        </ul>
                 </div>
         </div>
 </template>
@@ -57,37 +62,40 @@ export default {
                         club_configuracion_id: "2",
                 },
                 
-                alertaRegistrado: false,
+                alertaRegistrado: [],
         };
     },
 
     methods: {
         registrarUsuario() {
-                for (let key in this.datosRegistroUser) {
-                        if(this.datosRegistroUser[key] == ""){
-                                console.log("Uno de los campos estan vacios")
-                        }
-                        /* console.log("Key: " + key);
-                        console.log("Value: " + this.datosRegistroUser[key]); */
-                }
+                if(!this.validarCampos()){
+                        this.InsertarDatos("registro", this.datosRegistroUser)
+                                .then((res) => {
+                                        console.log(res)
 
-            /* this.InsertarDatos("registro", this.datosRegistroUser)
-                .then((res) => {
-                        console.log(res)
+                                        if (res.msj == "Error") {
+                                                this.alertaRegistrado = true
+                                        } else {
+                                                this.$router.push("/login");
+                                        }
+                                })
+                                .catch((err) => console.log("Error fetch:", err));
+                }    
 
-                        if (res.msj == "Error") {
-                                this.alertaRegistrado = true
-                        } else {
-                                this.$router.push("/login");
-                        }
-                })
-                .catch((err) => console.log("Error fetch:", err)); */
         },
 
         validarCampos(){
-                for (var key in this.datosRegistroUser) {
-                        console.log("Key: " + key);
-                        console.log("Value: " + this.datosRegistroUser[key]);
+                this.alertaRegistrado= [];
+                for (let key in this.datosRegistroUser) {
+                        if(this.datosRegistroUser[key] == ""){
+                                this.alertaRegistrado.push(key.charAt(0).toUpperCase()+ key.slice(1))
+                        }
+                }
+
+                if(this.alertaRegistrado.length > 0){
+                        return true
+                } else {
+                        return false
                 }
         },
 

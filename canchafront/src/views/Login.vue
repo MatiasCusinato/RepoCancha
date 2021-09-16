@@ -4,10 +4,10 @@
             <h1 class="h3 mb-3 fw-normal">Por favor, ingrese</h1>
 
             <input v-model="datosLoginUser.email" type="email"
-                class="form-control" placeholder="Email" required />
+                class="form-control" placeholder="Email" />
 
             <input v-model="datosLoginUser.password" type="password"
-                class="form-control" placeholder="Password" required />
+                class="form-control" placeholder="Password" />
 
             <button class="w-100 btn btn-lg btn-primary" type="logearUsuario">
                 Iniciar sesión
@@ -17,8 +17,13 @@
         <br>
         
         <div class="alert alert-danger" role="alert"
-              v-if="this.alertaLogueado==true">
-            ¡El usuario ya se encuentra logueado!
+                v-if="this.alertaLogueado.length > 0" >
+
+                <h5>Complete los siguientes campos, por favor</h5>
+                <ul v-for="(campo, id) in alertaLogueado" 
+                        :key="id">
+                        <li>{{campo}}</li>
+                </ul>
         </div>
     </div>
 </template>
@@ -39,31 +44,50 @@ export default {
                 password: "usuario",
             },
 
-            alertaLogueado: false,
+            alertaLogueado: [],
         };
     },
 
     methods: {
         logearUsuario() {
-            this.InsertarDatos("login", this.datosLoginUser).then((res) => {
-                console.log(res)
+            if(!this.validarCampos()){
+                this.InsertarDatos("login", this.datosLoginUser).then((res) => {
+                    console.log(res)
+    
+                    if (res.msj == "Error") {
+                        this.alertaLogueado = true;
+                    } else {
+                        let token = JSON.stringify(res.user.token_actual);
+                        let numeroClub = JSON.stringify(
+                            res.user.club_configuracion_id
+                        );
+    
+                        this.$store.commit("guardarDatosUsuario", {
+                            token,
+                            numeroClub,
+                        });
+    
+                        this.$router.push("/");
+                    }
+                });
+                
+            }
 
-                if (res.msj == "Error") {
-                    this.alertaLogueado = true;
-                } else {
-                    let token = JSON.stringify(res.user.token_actual);
-                    let numeroClub = JSON.stringify(
-                        res.user.club_configuracion_id
-                    );
+        },
 
-                    this.$store.commit("guardarDatosUsuario", {
-                        token,
-                        numeroClub,
-                    });
-
-                    this.$router.push("/");
+        validarCampos(){
+                this.alertaLogueado= [];
+                for (let key in this.datosLoginUser) {
+                        if(this.datosLoginUser[key] == ""){
+                                this.alertaLogueado.push(key.charAt(0).toUpperCase()+ key.slice(1))
+                        }
                 }
-            });
+
+                if(this.alertaLogueado.length > 0){
+                        return true
+                } else {
+                        return false
+                }
         },
 
         /* async logearUsuario(){
