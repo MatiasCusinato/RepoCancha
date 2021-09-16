@@ -74,7 +74,7 @@ export default {
                                         console.log(res)
 
                                         if (res.msj == "Error") {
-                                                this.alertaRegistrado = true
+                                                alert(res.Razon)
                                         } else {
                                                 this.$router.push("/login");
                                         }
