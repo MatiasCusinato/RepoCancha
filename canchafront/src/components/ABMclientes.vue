@@ -70,9 +70,12 @@
 
 <script>
 import apiRest from "@/mixins/apiRest.vue"
+
 export default {
     props: ['accion','id'],
+
     mixins: [apiRest],
+
     data() {
         return {
             datosClientes: {
@@ -86,6 +89,7 @@ export default {
             }
         }
     },
+
     created() {
         console.log("evento created")
         if (this.accion != 'Crear') {
@@ -98,15 +102,7 @@ export default {
                 })
         }
     },
-    mounted() {
-        console.log("evento mounted")
-    },
-    beforeDestroyed() {
-        console.log("evento beforeDestroyed")
-    },
-    destroyed() {
-        console.log("evento destroyed")
-    },
+
     methods: {
         Aceptar() {
             if (this.accion == 'Crear') {
@@ -124,6 +120,7 @@ export default {
                         this.$emit('SalirDeABMclientes', true)
                     })
             }
+
             if (this.accion == 'Editar') {
                 console.log(JSON.stringify(this.datosClientes))
                 this.EditarDatos(`clientes/editar`, this.id, this.datosClientes)
@@ -132,6 +129,7 @@ export default {
                         this.$emit('SalirDeABMclientes', true)
                     })
             }
+
             if (this.accion == 'Borrar') {
                 /* this.EliminarDatos ('clientes', this.id)
                     .then(res => {
@@ -146,6 +144,8 @@ export default {
                 
             }
         },
+
+        
         Cancelar() {
             this.$emit("SalirDeABMclientes", false)
         },
