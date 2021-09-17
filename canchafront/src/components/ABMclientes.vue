@@ -70,27 +70,40 @@
 
 <script>
 import apiRest from "@/mixins/apiRest.vue"
+
 export default {
     props: ['accion','id'],
+
     mixins: [apiRest],
+
     data() {
         return {
             datosClientes: {
+                id:0,
                 nombre: '',
                 apellido:"",
                 edad: "",
                 telefono: "",
                 email: "",
+
                 club_configuracion_id:"",
                 id: 0,
+
+                club_configuracion_id: "",
+
             }
         }
     },
+
     created() {
         console.log("evento created")
         if (this.accion != 'Crear') {
             let club=  localStorage.getItem('club')
+
             //this.datosClientes.club_configuracion_id= club;
+
+            this.datosClientes.club_configuracion_id= club;
+
 
             this.ObtenerDatos(`clientes/${club}/${this.id}`)
                 .then (res => {
@@ -98,6 +111,7 @@ export default {
                 })
         }
     },
+
     mounted() {
         console.log("evento mounted")
     },
@@ -115,16 +129,32 @@ export default {
 
                 console.log(JSON.stringify(this.datosClientes))
                 this.InsertarDatos ('clientes', this.datosClientes)
+
+
+    methods: {
+        Aceptar() {
+            if (this.accion == 'Crear') {
+                let club= localStorage.getItem('club')
+                this.datosClientes.club_configuracion_id= club;
+
+                console.log(JSON.stringify(this.datosClientes))
+                this.InsertarDatos ('clientes/guardar', this.datosClientes)
+
                     .then(res => {
-                        if (res.id != 0) {
-                            console.log('El registro fue ingresado con exito')
-                        } else {
-                            console.log('Error al ingresar el registro')
+                        console.log(res)
+                        if(res.msj == "Error"){
+                            alert(""+ res.razon)
                         }
+
                         this.$emit('SalirDeABMclientes', true)
                     })
             }
+
             if (this.accion == 'Editar') {
+
+
+                
+
                 console.log(JSON.stringify(this.datosClientes))
                 this.EditarDatos(`clientes/editar`, this.id, this.datosClientes)
                     .then(res => {
@@ -132,12 +162,16 @@ export default {
                         this.$emit('SalirDeABMclientes', true)
                     })
             }
+
             if (this.accion == 'Borrar') {
+
                 /* this.EliminarDatos ('clientes', this.id)
                     .then(res => {
                         this.datosClientes = res
                         this.$emit('SalirDeABMclientes', true)
                     }) */
+
+
                 this.EliminarDatos(`clientes/eliminar`, this.id, this.datosClientes)
                     .then(res => {
                         this.datosClientes = res
@@ -146,6 +180,8 @@ export default {
                 
             }
         },
+
+        
         Cancelar() {
             this.$emit("SalirDeABMclientes", false)
         },
