@@ -86,6 +86,12 @@ export default {
         this.traerDatos()
     },
 
+    mounted() {
+        console.log("evento mounted")
+        //this.traerDatos()
+    },
+
+
     methods: {
         traerDatos() {
             console.log("Obteniendo CLIENTES desde la API ...");
@@ -101,6 +107,9 @@ export default {
                 .then(res => {
                         this.datos = res
                 }) */
+
+
+
         },
 
         desplegarABMcliente(accion, id=0) {

@@ -10,7 +10,10 @@ use App\Http\Controllers\API\clubConfiguracionController;
 use App\Http\Controllers\API\UserController;
 use App\Http\Controllers\API\AccesoUsuarioController;
 
+
+
 use App\Models\Cliente;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -30,7 +33,11 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 //APIS
 Route::apiResource('clubes', clubConfiguracionController::class);
 //Route::apiResource('clientes', ClienteController::class);
+
+/* Route::apiResource('canchas', CanchaController::class); */
+
 Route::apiResource('canchas', CanchaController::class);
+
 Route::apiResource('turnos', TurnoController::class);
 Route::apiResource('users', UserController::class);
 
@@ -41,9 +48,20 @@ Route::post('login',[AccesoUsuarioController::class, 'login']);
 Route::post('logout',[AccesoUsuarioController::class, 'logout']); 
 
 
+//Rutas Canchas
+Route::get('canchas/{club_id}', [CanchaController::class, 'index']);
+Route::post('canchas/guardar', [CanchaController::class, 'store']);
+Route::get('canchas/{club_id}/{cancha_id}', [CanchaController::class, 'show']);
+Route::put('canchas/editar/{cancha_id}', [CanchaController::class, 'update']);
+Route::delete('canchas/eliminar/{cancha_id}', [CanchaController::class, 'destroy']); 
+
 //Rutas Clientes
 Route::get('clientes/{club_id}', [ClienteController::class, 'index']);
 Route::post('clientes/guardar', [ClienteController::class, 'store']);
 Route::get('clientes/{club_id}/{cliente_id}', [ClienteController::class, 'show']);
 Route::put('clientes/editar/{cliente_id}', [ClienteController::class, 'update']);
+
 Route::delete('clientes/eliminar/{cliente_id}', [ClienteController::class, 'destroy']);  
+
+Route::delete('clientes/eliminar/{cliente_id}', [ClienteController::class, 'destroy']);  
+

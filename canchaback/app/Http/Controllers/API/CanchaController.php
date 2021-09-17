@@ -5,6 +5,8 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Models\Cancha;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 
 class CanchaController extends Controller
 {
@@ -13,9 +15,17 @@ class CanchaController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($club_id)
     {
-        $cancha = Cancha::all();
+
+        //$cancha: consulta sql de los canchas pertenecientes a tal club
+
+        $cancha = DB::table('canchas')
+                            ->join('club_configuracions', 'canchas.club_configuracion_id', '=', 'club_configuracions.id')
+                            ->where('canchas.club_configuracion_id', '=', $club_id)
+                            ->select('canchas.*')
+                            ->get();
+
         return $cancha->toJson(JSON_PRETTY_PRINT);
     }
 
@@ -27,20 +37,54 @@ class CanchaController extends Controller
      */
     public function store(Request $request)
     {
-        $cancha = Cancha::create($request->all());
+        
+        $val = Validator::make($request->all(), [
+            'club_configuracion_id' => 'required',
+            'deporte' => 'required',
+        ]); 
+
+        if($val->fails()){
+            return response()->json([
+                    'Respuesta' => 'Error', 
+                    'Mensaje' => 'Faltan datos por ingresar']);
+        }else { 
+            try {
+                DB::beginTransaction();
+
+                $cancha = Cancha::create([
+                    "club_configuracion_id" => $request->club_configuracion_id,
+                    "deporte" => $request ->deporte,
+                ]);
+
+                DB::commit(); 
+            }
+            // Ha ocurrido un error, devolvemos la BD a su estado previo
+            catch (\Exception $e)
+            {
+                dd($e);
+                DB::rollback();
+                return response()->json(["Mensaje" => "Error!!"]);
+            }
         return response()->json($cancha, 201);
+            }
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  int  $cancha_id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($club_id , $cancha_id)
     {
-        $cancha = Cancha::find($id);
-        return $cancha->toJson(JSON_PRETTY_PRINT);
+        $cancha = DB::table('canchas')
+                            ->join('club_configuracions', 'canchas.club_configuracion_id', '=', 'club_configuracions.id')
+                            ->where('canchas.club_configuracion_id', '=', $club_id)
+                            ->where('canchas.id', '=', $cancha_id)
+                            ->select('canchas.*')
+                            ->get();
+                            
+        return response()->json($cancha[0], 200); 
     }
 
     /**
@@ -50,8 +94,9 @@ class CanchaController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Cancha $cancha)
+    public function update(Request $request, Cancha $cancha, $cancha_id)
     {
+        $cancha = Cancha::find($cancha_id);
         $cancha->update($request->all());
         return response()->json(['Petición' => 'Exitosa', 'Mensaje' => 'Cancha modificada']);
     }
@@ -62,9 +107,10 @@ class CanchaController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Cancha $cancha)
+    public function destroy(Cancha $cancha, $cancha_id)
     {
-        Cancha::destroy($cancha->id);
+        Cancha::destroy($cancha_id);
         return response()->json(['Petición' => 'Exitosa', 'Mensaje' => 'Cancha eliminada']);
     }
 }
+?>
