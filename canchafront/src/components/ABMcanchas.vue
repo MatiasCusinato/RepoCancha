@@ -3,15 +3,38 @@
         <hr>
         <p>{{accion}} Canchas</p>
             <form class="formABM">
-                <div class="mb-3">
-                    <label for="" class="form-label"> Id Club: </label>
-                    <input type="text" class="form-control" v-model="datosCancha.club_configuracion_id">
+
+                <div v-if="accion=='Borrar'">
+                    <table class="table-bordered light-blue darken-2">
+                        <thead>
+                            <tr class="bg-primary text-light">
+                                <th scope="col">ID</th>
+                                <th scope="col">Club</th>
+                                <th scope="col">Deporte</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <th scope="row"> {{datosCancha.id}} </th>
+                                <td> {{datosCancha.club_configuracion_id}} </td>
+                                <td> {{datosCancha.deporte}} </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
-                <div class="mb-3">
-                    <label for="" class="form-label"> Deporte </label>
-                    <input type="text" class="form-control" v-model="datosCancha.deporte">
+
+                <div v-if="accion=='Crear' || accion=='Editar'">
+                    <!-- <div class="mb-3">
+                        <label for="" class="form-label"> Id Club: </label>
+                        <input type="text" class="form-control" v-model="datosCancha.club_configuracion_id">
+                    </div> -->
+                    <div class="mb-3">
+                        <label for="" class="form-label"> Deporte </label>
+                        <input type="text" class="form-control" v-model="datosCancha.deporte">
+                    </div>
                 </div>
-                <div>
+
+                <div class="divBotones">
                     <button @click="Aceptar()" class="btn btn-primary"> Aceptar </button>
                     |
                     <button @click="Cancelar()" class="btn btn-danger"> Cancelar </button>
@@ -28,15 +51,16 @@ export default {
     data() {
         return {
             datosCancha: {
-                nombre: '',
                 id: 0,
+                deporte: "",
             }
         }
     },
     created() {
         console.log("evento created")
         if (this.accion != 'Crear') {
-            this.ObtenerDatosPorId('canchas', this.id)
+            let club = localStorage.getItem('club')
+            this.ObtenerDatos(`canchas/${club}/${this.id}`)
                 .then (res => {
                     this.datosCancha = res
             })
@@ -54,8 +78,13 @@ export default {
     methods: {
         Aceptar() {
             if (this.accion == 'Crear') {
-                this.InsertarDatos ('canchas', this.datosCancha)
+                let club=localStorage.getItem('club')
+                this.datosCancha.club_configuracion_id= club;
+                console.log(JSON.stringify(this.datosCancha))
+
+                this.InsertarDatos ('canchas/guardar', this.datosCancha)
                     .then(res => {
+                        console.log(res)
                         if (res.id != 0) {
                             console.log('El registro fue ingresado con exito')
                         } else {
@@ -65,18 +94,25 @@ export default {
                     })
             }
             if (this.accion == 'Editar') {
-                this.EditarDatos ('canchas', this.id, this.datosCancha)
+                console.log(JSON.stringify(this.datosCancha))
+                this.EditarDatos ('canchas/editar', this.id, this.datosCancha)
                     .then(res => {
                         this.datosCancha = res
                         this.$emit('SalirDeABMcanchas', true)
                     })
             }
             if (this.accion == 'Borrar') {
-                this.EliminarDatos ('canchas', this.id)
+                /* this.EliminarDatos ('canchas', this.id)
+                    .then(res => {
+                        this.datosCancha = res
+                        this.$emit('SalirDeABMcanchas', true)
+                    }) */
+                this.EliminarDatos(`canchas/eliminar`, this.id, this.datosCancha)
                     .then(res => {
                         this.datosCancha = res
                         this.$emit('SalirDeABMcanchas', true)
                     })
+                
             }
         },
         Cancelar() {
@@ -96,4 +132,7 @@ p {
     font-size: 30px;
     font-family: "Times New Roman", Times, serif;
 } 
+.divBotones{
+    margin: 20px 10px
+}
 </style>

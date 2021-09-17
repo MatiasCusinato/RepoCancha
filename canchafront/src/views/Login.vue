@@ -49,6 +49,36 @@ export default {
     },
 
     methods: {
+
+      logearUsuario(){
+        this.InsertarDatos("login", this.datosLoginUser)
+          .then(res => {
+            console.log(res)
+            let token = JSON.stringify(res.user.token_actual);
+            let numeroClub = JSON.stringify(res.user.club_configuracion_id)
+            this.$store.commit("guardarDatosUsuario", {
+              token,
+              numeroClub,
+            });
+          })
+        this.$router.push('/') 
+      },
+      /* async logearUsuario(){
+        const url = 'http://localhost:8000/api/login';
+        axios.post(url, this.datosLoginUser, {
+          withCredentials: true,
+          headers: {
+                  Accept: 'application/json',
+                  'Content-Type': 'application/json',
+          },
+        }).then(res =>{
+          console.log(res.data)
+          let tkn = JSON.stringify(res.data.user.token_actual);
+          this.$store.commit("guardarToken", tkn);
+          this.$router.push('/') 
+        });
+      }, */
+
         logearUsuario() {
             if(!this.validarCampos()){
                 this.InsertarDatos("login", this.datosLoginUser).then((res) => {
@@ -105,6 +135,7 @@ export default {
 					this.$router.push('/') 
 				});
 			}, */
+
     },
 };
 </script>

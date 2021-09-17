@@ -33,7 +33,6 @@ export default {
             })
             .catch(err => console.log('error fetch:', err))
         },
-
         
         InsertarDatos(ruta, datosIngresar) {
             let urlDestino = "http://127.0.0.1:8000/api/" + ruta 

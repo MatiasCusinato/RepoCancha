@@ -47,6 +47,29 @@ import apiRest from "../mixins/apiRest.vue";
 //import axios from "axios";
 
 export default {
+
+name: 'Registro',
+        mixins:[apiRest],
+        data(){
+                return {
+                        datosRegistroUser: {
+                                nombre: "usuario",
+                                apellido: "falso",
+                                email: "usuario@gmail.com",
+                                telefono: "12313212",
+                                password: "usuario",
+                                token_actual: "null",
+                                club_configuracion_id:"2",
+                        },
+                }
+        },
+
+        methods: {  
+                registrarUsuario(){
+                        this.InsertarDatos("registro", this.datosRegistroUser)
+                                .then(res => {
+                                        console.log(res)
+
     name: "Registro",
 
     mixins: [apiRest],
@@ -78,6 +101,7 @@ export default {
                                         } else {
                                                 this.$router.push("/login");
                                         }
+
                                 })
                                 .catch((err) => console.log("Error fetch:", err));
                 }    

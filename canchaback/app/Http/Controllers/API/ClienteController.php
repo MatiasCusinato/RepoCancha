@@ -38,6 +38,26 @@ class ClienteController extends Controller
      */
     public function store(Request $request)
     {
+
+
+        //Valido datos con estas reglas
+        $val = Validator::make($request->all(), [
+            'nombre' => 'required|max:20',
+            'apellido' => 'required',
+            'edad' => 'required',
+            'telefono' => 'required',
+            'email' => 'required',
+            'club_configuracion_id' => 'required',
+        ]); 
+
+        if($val->fails()){
+            return response()->json([
+                    'Respuesta' => 'Error', 
+                    'Mensaje' => 'Faltan datos por rellenar']);
+        }else { 
+            try {
+                DB::beginTransaction();
+
         //Valido que el email sea UNICO en la tabla clientes
         $val = Validator::make($request->all(), [
             'email' => 'required|unique:clientes',
@@ -88,6 +108,7 @@ class ClienteController extends Controller
             try {
                 DB::beginTransaction(); 
 
+
                 $cliente = Cliente::create([
                     "nombre" => $request->nombre,
                     "apellido" => $request->apellido,
@@ -111,10 +132,14 @@ class ClienteController extends Controller
                 return response()->json(["Mensaje" => "Error!!"]);
             }
 
+
+            return response()->json($cliente, 201);
+
             return response()->json([
                 'msj' => 'Cliente creado exitosamente',
                 'cliente' => $cliente
             ], 201);
+
         }
 
 
@@ -167,3 +192,4 @@ class ClienteController extends Controller
         return response()->json(['Petición' => 'Exitosa', 'Mensaje' => 'Cliente eliminado']); 
     }
 }
+?>
