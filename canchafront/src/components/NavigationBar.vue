@@ -13,7 +13,7 @@
                 </div>
 
                 <div>
-                    <ul class="navbar-nav me-auto mb-2 mb-md-0">
+                    <ul class="navbar-nav me-auto mb-2 mb-md-0" v-if="!this.token">
                         <li class="nav-item">
                             <router-link to="/login" class="nav-link">Login</router-link>
                         </li>
@@ -24,7 +24,7 @@
 
                     </ul>
 
-                    <ul class="navbar-nav me-auto mb-2 mb-md-0">
+                    <ul class="navbar-nav me-auto mb-2 mb-md-0" v-if="this.token">
                         <li class="nav-item">
                             <a @click="logoutUser" href="#" class="nav-link">Logout</a>
                         </li>
@@ -39,24 +39,40 @@
 <script>
 import apiRest from '../mixins/apiRest.vue'
 //import axios from 'axios'
+
 export default {
     name: "NavigationBar",
     
     mixins:[apiRest],
+
+    data(){
+        return {
+            token: localStorage.getItem('laravelToken'),
+
+        }
+    },
+
     methods:{
         logoutUser(){
             let token= {
                 token_actual: localStorage.getItem('laravelToken')
             }
-            token.token_actual = token.token_actual.slice(1,-1)
-            console.log("token "+ JSON.stringify(token)+ " a borrar")
+
+            if(token.token_actual){
+                token.token_actual = token.token_actual.slice(1,-1)
+                console.log("token "+ JSON.stringify(token)+ " a borrar")
+                
+                this.InsertarDatos("logout", token)
+                    .then(res => {
+                        console.log(res)
+                        this.$store.commit("borrarToken");
+                    })
+                //this.$router.push('/login')
+            } else {
+                alert("Ya estas deslogueado!!")
+            }
+
             
-            this.InsertarDatos("logout", token)
-                .then(res => {
-                    console.log(res)
-                    this.$store.commit("borrarToken");
-                })
-            this.$router.push('/login') 
         },
         /* async logoutUser(){
             const url = 'http://localhost:8000/api/logout';
