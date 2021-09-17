@@ -5,13 +5,12 @@
             <form class="formABM">
 
                 <div v-if="accion=='Borrar'">
-                    <table class="light-blue darken-2">
+                    <table class="table-bordered light-blue darken-2">
                         <thead>
                             <tr class="bg-primary text-light">
-                                <th scope="col">#</th>
+                                <th scope="col">ID</th>
                                 <th scope="col">Club</th>
                                 <th scope="col">Deporte</th>
-                                <th scope="col">Acciones</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -25,20 +24,20 @@
                 </div>
 
                 <div v-if="accion=='Crear' || accion=='Editar'">
-                    <div class="mb-3">
+                    <!-- <div class="mb-3">
                         <label for="" class="form-label"> Id Club: </label>
                         <input type="text" class="form-control" v-model="datosCancha.club_configuracion_id">
-                    </div>
+                    </div> -->
                     <div class="mb-3">
                         <label for="" class="form-label"> Deporte </label>
                         <input type="text" class="form-control" v-model="datosCancha.deporte">
                     </div>
+                </div>
 
-                    <div class="divBotones">
-                        <button @click="Aceptar()" class="btn btn-primary"> Aceptar </button>
-                        |
-                        <button @click="Cancelar()" class="btn btn-danger"> Cancelar </button>
-                    </div>
+                <div class="divBotones">
+                    <button @click="Aceptar()" class="btn btn-primary"> Aceptar </button>
+                    |
+                    <button @click="Cancelar()" class="btn btn-danger"> Cancelar </button>
                 </div>
             </form>
     </div>
@@ -53,7 +52,6 @@ export default {
         return {
             datosCancha: {
                 id: 0,
-                club_configuracion_id:"",
                 deporte: "",
             }
         }
@@ -80,12 +78,13 @@ export default {
     methods: {
         Aceptar() {
             if (this.accion == 'Crear') {
-                let club= {club_configuracion_id : localStorage.getItem('club')}
+                let club=localStorage.getItem('club')
                 this.datosCancha.club_configuracion_id= club;
                 console.log(JSON.stringify(this.datosCancha))
 
-                this.InsertarDatos ('canchas', this.datosCancha)
+                this.InsertarDatos ('canchas/guardar', this.datosCancha)
                     .then(res => {
+                        console.log(res)
                         if (res.id != 0) {
                             console.log('El registro fue ingresado con exito')
                         } else {
@@ -103,11 +102,17 @@ export default {
                     })
             }
             if (this.accion == 'Borrar') {
-                this.EliminarDatos ('canchas/eliminar', this.id. this.datosCancha)
+                /* this.EliminarDatos ('canchas', this.id)
+                    .then(res => {
+                        this.datosCancha = res
+                        this.$emit('SalirDeABMcanchas', true)
+                    }) */
+                this.EliminarDatos(`canchas/eliminar`, this.id, this.datosCancha)
                     .then(res => {
                         this.datosCancha = res
                         this.$emit('SalirDeABMcanchas', true)
                     })
+                
             }
         },
         Cancelar() {

@@ -16,28 +16,30 @@
             <table class="light-blue darken-2">
                 <thead>
                     <tr class="bg-primary text-light">
-                    <th scope="col">#</th>
-                    <th scope="col">Club</th>
-                    <th scope="col">Deporte</th>
-                    <th scope="col">Acciones</th>
+                        <th scope="col">ID</th>
+                        <th scope="col">Club</th>
+                        <th scope="col">Deporte</th>
+                        <th scope="col">Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr v-for="(canchas, index) in datos" :key="index">
-                    <th scope="row"> {{canchas.id}} </th>
-                    <td> {{canchas.club_configuracion_id}} </td>
-                    <td> {{canchas.deporte}} </td>
-                    <td>
-                    <button class="btn btn-info" @click="desplegarABMcancha('Editar', canchas.id)">
-                        Editar
-                    </button> 
-                    <button class="btn btn-danger" @click="desplegarABMcancha('Borrar', canchas.id)">
-                        Borrar
-                    </button> 
-                    </td>
+                        <th scope="row">{{canchas.id}}</th>
+                        <td> {{canchas.club_configuracion_id}} </td>
+                        <td> {{canchas.deporte}} </td>
+
+                        <td>
+                            <button class="btn btn-info" @click="desplegarABMcancha('Editar', canchas.id)">
+                                Editar
+                            </button>
+
+                            <button class="btn btn-danger" @click="desplegarABMcancha('Borrar', canchas.id)">
+                                Borrar
+                            </button>
+                        </td>
                     </tr>
                 </tbody>
-            </table>
+            </table>  
     </div>
 </template>
 
@@ -62,19 +64,19 @@ export default {
     },
     mounted() {
         console.log("evento mounted")
-        this.traerDatos()
+        //this.traerDatos()
     },
-    destroyed() {
+    /*  destroyed() {
         console.log("evento destroyed")
         this.traerDatos()
-    },
+    }, */
     methods: {
         traerDatos() {
             console.log("Obteniendo CANCHAS desde la API ...");
-            let club = localStorage.getItem('club')
+            let club= localStorage.getItem('club')
             this.ObtenerDatos(`canchas/${club}`)
-                .then (res => {
-                    this.datosCancha = res
+                .then(res => {
+                    this.datos = res
             })
             /*  this.ObtenerDatos('canchas/1')
                 .then(res => {
@@ -104,15 +106,31 @@ h1 {
     font-size: 50px;
     font-family: -webkit-body;
     color: blue;
+    /* position: absolute;
+    left: 140px;
+    top: 140px; */
 }
-table, th, td{
+/* .div-table{
+    display: block;
+    margin: 10px 40px;
+    align-content: center;
+    text-align: center;
+    float: left;
+}  */
+    table, th, td{
     border: 2px solid rgb(116, 113, 113);
     border-collapse: collapse;
-    margin:10px auto 10px auto;
-    padding: 18px 30px;
-    margin: 10px -100px;
+    /* margin:10px auto 10px auto; */
+    padding: 18px;
+    margin: 15px -80px; 
     text-align: center;
     border-width: 2px;
     font-size: 15px;
-    }
+}   
+.btncli {
+    position: absolute;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+}
 </style>

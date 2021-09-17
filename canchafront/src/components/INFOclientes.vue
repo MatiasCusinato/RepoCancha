@@ -24,31 +24,33 @@
             <table class="light-blue darken-2">
                 <thead>
                     <tr class="bg-primary text-light">
-                    <th scope="col">#</th>
-                    <th scope="col">Nombre</th>
-                    <th scope="col">Apellido</th>
-                    <th scope="col">Telefono</th>
-                    <th scope="col">Edad</th>
-                    <th scope="col">Email</th>
-                    <th scope="col">Acciones</th>
+                        <th scope="col">ID</th>
+                        <th scope="col">Nombre</th>
+                        <th scope="col">Apellido</th>
+                        <th scope="col">Telefono</th>
+                        <th scope="col">Edad</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr v-for="(clientes, index) in datos" :key="index">
-                    <th scope="row">{{clientes.id}}</th>
-                    <td> {{clientes.nombre}} </td>
-                    <td> {{clientes.apellido}} </td>
-                    <td> {{clientes.telefono}} </td>
-                    <td> {{clientes.edad}} </td>
-                    <td> {{clientes.email}} </td>
-                    <td>
-                    <button class="btn btn-info" @click="desplegarABMcliente('Editar', clientes.id)">
-                        Editar
-                    </button>
-                    <button class="btn btn-danger" @click="desplegarABMcliente('Borrar', clientes.id)">
-                        Borrar
-                    </button> 
-                    </td>
+                        <th scope="row">{{clientes.id}}</th>
+                        <td> {{clientes.nombre}} </td>
+                        <td> {{clientes.apellido}} </td>
+                        <td> {{clientes.telefono}} </td>
+                        <td> {{clientes.edad}} </td>
+                        <td> {{clientes.email}} </td>
+
+                        <td>
+                            <button class="btn btn-info" @click="desplegarABMcliente('Editar', clientes.id)">
+                                Editar
+                            </button>
+
+                            <button class="btn btn-danger" @click="desplegarABMcliente('Borrar', clientes.id)">
+                                Borrar
+                            </button>
+                        </td>
                     </tr>
                 </tbody>
             </table>    
@@ -60,9 +62,11 @@ import apiRest from "../mixins/apiRest.vue"
 import ABMclientes from "../components/ABMclientes.vue"
 export default {
     mixins: [apiRest],
+
     components: {
         ABMclientes
-        },
+    },
+
     data() {
         return {
             datos: [],
@@ -71,24 +75,32 @@ export default {
             id: 0,
         }
     },
+
     created() {
         this.traerDatos()
     },
+
     mounted() {
         console.log("evento mounted")
-        this.traerDatos()
+        //this.traerDatos()
     },
-    destroyed() {
-        console.log("evento destroyed")
-        this.traerDatos()
-    },
+
     methods: {
         traerDatos() {
             console.log("Obteniendo CLIENTES desde la API ...");
-            this.ObtenerDatos('clientes')
+            let club= localStorage.getItem('club')
+            this.ObtenerDatos(`clientes/${club}`)
                 .then(res => {
                     this.datos = res
-                })
+                }) 
+
+            /* let club= {club_configuracion_id : localStorage.getItem('club')}
+
+            this.InsertarDatos("clientes", club)
+                .then(res => {
+                        this.datos = res
+                }) */
+
         },
         desplegarABMcliente(accion, id=0) {
             this.accion = accion,

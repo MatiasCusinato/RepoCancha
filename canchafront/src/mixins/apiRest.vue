@@ -3,7 +3,6 @@ export default {
     methods: {
         ObtenerDatos(ruta) {
             let urlDestino = "http://127.0.0.1:8000/api/" + ruta 
-            console.log(urlDestino,'ho2156l4654116')
             return fetch(urlDestino,
             {
                 method: 'GET',
