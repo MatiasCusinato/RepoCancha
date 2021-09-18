@@ -38,37 +38,17 @@ class ClienteController extends Controller
      */
     public function store(Request $request)
     {
-
-
-        //Valido datos con estas reglas
-        $val = Validator::make($request->all(), [
-            'nombre' => 'required|max:20',
-            'apellido' => 'required',
-            'edad' => 'required',
-            'telefono' => 'required',
-            'email' => 'required',
-            'club_configuracion_id' => 'required',
-        ]); 
-
-        if($val->fails()){
-            return response()->json([
-                    'Respuesta' => 'Error', 
-                    'Mensaje' => 'Faltan datos por rellenar']);
-        }else { 
-            try {
-                DB::beginTransaction();
-
         //Valido que el email sea UNICO en la tabla clientes
         $val = Validator::make($request->all(), [
             'email' => 'required|unique:clientes',
             'club_configuracion_id' => 'required',
         ]); 
 
-        //Si el email ya existe(fallo el validador), se agrega un registro en
+        //Si el email ya existe(falló el validador), se agrega un registro en
         //la tabla "cliente_club_configuracion" (relacion M a M entre cliente y club)
         if($val->fails()){
             $cliente = Cliente::where('email', $request->email)->first();
-            
+
             $sqlValidacionClienteClub = DB::table('cliente_club_configuracion')
                                                 ->where([
                                                     ['cliente_club_configuracion.cliente_id', '=', $cliente->id],
@@ -77,12 +57,12 @@ class ClienteController extends Controller
                                                 ->select('cliente_club_configuracion.*')
                                                 ->get();
             //dd($sqlValidacionClienteClub);
-                                
+
             //dd(count($sqlValidacionClienteClub));
             //dd($cliente->id);
             //dd($request->club_configuracion_id);
 
-            
+
             //Verifico si ya esta registrado ese cliente y ese club
             if(count($sqlValidacionClienteClub) > 0){
                 return response()->json([
@@ -95,7 +75,7 @@ class ClienteController extends Controller
                     'cliente_id' => $cliente->id,
                     'club_configuracion_id' => $request->club_configuracion_id,
                 ]);
-    
+
                 return response()->json([
                     'msj' => 'Cliente ya registrado, vinculacion de club exitosa', 
                     'razon' => 'El cliente ya ha sido registrado por otra persona,
@@ -107,7 +87,6 @@ class ClienteController extends Controller
             // y tambien se inserta un registro en la tabla "cliente_club_configuracion" del cliente y su club
             try {
                 DB::beginTransaction(); 
-
 
                 $cliente = Cliente::create([
                     "nombre" => $request->nombre,
@@ -132,17 +111,11 @@ class ClienteController extends Controller
                 return response()->json(["Mensaje" => "Error!!"]);
             }
 
-
-            return response()->json($cliente, 201);
-
             return response()->json([
                 'msj' => 'Cliente creado exitosamente',
                 'cliente' => $cliente
             ], 201);
-
         }
-
-
     }
 
     /**
@@ -177,7 +150,11 @@ class ClienteController extends Controller
         //dd($cliente_id);
         $cliente = Cliente::find($cliente_id);
         $cliente->update($request->all());
-        return response()->json(['Petición' => 'Exitosa', 'Mensaje' => 'Cliente modificado']);
+
+        return response()->json([
+            'Petición' => 'Exitosa',
+            'Mensaje' => 'Cliente modificado'
+        ], 200);
     }
 
     /**
@@ -189,7 +166,11 @@ class ClienteController extends Controller
     public function destroy(Cliente $cliente, $cliente_id)
     {
         Cliente::destroy($cliente_id);
-        return response()->json(['Petición' => 'Exitosa', 'Mensaje' => 'Cliente eliminado']); 
+        
+        return response()->json([
+            'Petición' => 'Exitosa',
+             'Mensaje' => 'Cliente eliminado'
+        ], 200); 
     }
 }
 ?>

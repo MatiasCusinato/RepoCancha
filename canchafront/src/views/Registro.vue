@@ -50,7 +50,8 @@ export default {
 
 name: 'Registro',
         mixins:[apiRest],
-        data(){
+        
+        data() {
                 return {
                         datosRegistroUser: {
                                 nombre: "usuario",
@@ -58,83 +59,59 @@ name: 'Registro',
                                 email: "usuario@gmail.com",
                                 telefono: "12313212",
                                 password: "usuario",
-                                token_actual: "null",
-                                club_configuracion_id:"2",
+                                club_configuracion_id: "2",
                         },
-                }
+                        
+                        alertaRegistrado: [],
+                };
         },
 
-        methods: {  
-                registrarUsuario(){
-                        this.InsertarDatos("registro", this.datosRegistroUser)
-                                .then(res => {
-                                        console.log(res)
+        methods: {
+                registrarUsuario() {
+                        if(!this.validarCampos()){
+                                this.InsertarDatos("registro", this.datosRegistroUser)
+                                        .then((res) => {
+                                                console.log(res)
 
-    name: "Registro",
+                                                if (res.msj == "Error") {
+                                                        alert(res.Razon)
+                                                } else {
+                                                        this.$router.push("/login");
+                                                }
 
-    mixins: [apiRest],
+                                        })
+                                        .catch((err) => console.log("Error fetch:", err));
+                        }    
 
-    data() {
-        return {
-                datosRegistroUser: {
-                        nombre: "usuario",
-                        apellido: "falso",
-                        email: "usuario@gmail.com",
-                        telefono: "12313212",
-                        password: "usuario",
-                        club_configuracion_id: "2",
                 },
-                
-                alertaRegistrado: [],
-        };
-    },
 
-    methods: {
-        registrarUsuario() {
-                if(!this.validarCampos()){
-                        this.InsertarDatos("registro", this.datosRegistroUser)
-                                .then((res) => {
-                                        console.log(res)
-
-                                        if (res.msj == "Error") {
-                                                alert(res.Razon)
-                                        } else {
-                                                this.$router.push("/login");
-                                        }
-
-                                })
-                                .catch((err) => console.log("Error fetch:", err));
-                }    
-
-        },
-
-        validarCampos(){
-                this.alertaRegistrado= [];
-                for (let key in this.datosRegistroUser) {
-                        if(this.datosRegistroUser[key] == ""){
-                                this.alertaRegistrado.push(key.charAt(0).toUpperCase()+ key.slice(1))
+                validarCampos(){
+                        this.alertaRegistrado= [];
+                        for (let key in this.datosRegistroUser) {
+                                if(this.datosRegistroUser[key] == ""){
+                                        this.alertaRegistrado.push(key.charAt(0).toUpperCase()+ key.slice(1))
+                                }
                         }
-                }
 
-                if(this.alertaRegistrado.length > 0){
-                        return true
-                } else {
-                        return false
-                }
+                        if(this.alertaRegistrado.length > 0){
+                                return true
+                        } else {
+                                return false
+                        }
+                },
+
+                /* async registrarUsuario(){
+                                const url = 'http://localhost:8000/api/registro';
+                                axios.post(url, this.datosRegistroUser, {
+                                        withCredentials: true,
+                                        headers: {
+                                                Accept: 'application/json',
+                                                'Content-Type': 'application/json',
+                                        },
+                                }).then(res =>{
+                                        this.$router.push('/login')
+                                });
+                        },  */
         },
-
-        /* async registrarUsuario(){
-                        const url = 'http://localhost:8000/api/registro';
-                        axios.post(url, this.datosRegistroUser, {
-                                withCredentials: true,
-                                headers: {
-                                        Accept: 'application/json',
-                                        'Content-Type': 'application/json',
-                                },
-                        }).then(res =>{
-                                this.$router.push('/login')
-                        });
-                },  */
-    },
 };
 </script>

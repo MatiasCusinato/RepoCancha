@@ -75,7 +75,7 @@ export default {
     props: ['accion','id'],
 
     mixins: [apiRest],
-
+    
     data() {
         return {
             datosClientes: {
@@ -85,13 +85,9 @@ export default {
                 edad: "",
                 telefono: "",
                 email: "",
-
-                club_configuracion_id:"",
-                id: 0,
-
                 club_configuracion_id: "",
+            },
 
-            }
         }
     },
 
@@ -99,12 +95,7 @@ export default {
         console.log("evento created")
         if (this.accion != 'Crear') {
             let club=  localStorage.getItem('club')
-
-            //this.datosClientes.club_configuracion_id= club;
-
             this.datosClientes.club_configuracion_id= club;
-
-
             this.ObtenerDatos(`clientes/${club}/${this.id}`)
                 .then (res => {
                     this.datosClientes = res
@@ -112,49 +103,24 @@ export default {
         }
     },
 
-    mounted() {
-        console.log("evento mounted")
-    },
-    beforeDestroyed() {
-        console.log("evento beforeDestroyed")
-    },
-    destroyed() {
-        console.log("evento destroyed")
-    },
-    methods: {
-        Aceptar() {
-            if (this.accion == 'Crear') {
-                let club= {club_configuracion_id : localStorage.getItem('club')}
-                this.datosClientes.club_configuracion_id= club;
-
-                console.log(JSON.stringify(this.datosClientes))
-                this.InsertarDatos ('clientes', this.datosClientes)
-
-
     methods: {
         Aceptar() {
             if (this.accion == 'Crear') {
                 let club= localStorage.getItem('club')
                 this.datosClientes.club_configuracion_id= club;
-
                 console.log(JSON.stringify(this.datosClientes))
-                this.InsertarDatos ('clientes/guardar', this.datosClientes)
 
+                this.InsertarDatos ('clientes/guardar', this.datosClientes)
                     .then(res => {
                         console.log(res)
                         if(res.msj == "Error"){
                             alert(""+ res.razon)
                         }
-
                         this.$emit('SalirDeABMclientes', true)
                     })
             }
 
             if (this.accion == 'Editar') {
-
-
-                
-
                 console.log(JSON.stringify(this.datosClientes))
                 this.EditarDatos(`clientes/editar`, this.id, this.datosClientes)
                     .then(res => {
@@ -162,25 +128,15 @@ export default {
                         this.$emit('SalirDeABMclientes', true)
                     })
             }
-
+            
             if (this.accion == 'Borrar') {
-
-                /* this.EliminarDatos ('clientes', this.id)
-                    .then(res => {
-                        this.datosClientes = res
-                        this.$emit('SalirDeABMclientes', true)
-                    }) */
-
-
                 this.EliminarDatos(`clientes/eliminar`, this.id, this.datosClientes)
                     .then(res => {
                         this.datosClientes = res
                         this.$emit('SalirDeABMclientes', true)
                     })
-                
             }
         },
-
         
         Cancelar() {
             this.$emit("SalirDeABMclientes", false)
@@ -195,18 +151,15 @@ export default {
     border-collapse: collapse;
     padding: 15px 32px;
 }
-
 p {
     font-size: 30px;
     font-family: "Times New Roman", Times, serif;
 } 
-
 .pBorrar{
     font: 20px;
     font-weight: bold;
     color: black;
 }
-
 .divBotones{
     margin: 20px 10px
 }
