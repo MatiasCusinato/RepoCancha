@@ -46,14 +46,15 @@ class CanchaController extends Controller
         if($val->fails()){
             return response()->json([
                     'Respuesta' => 'Error', 
-                    'Mensaje' => 'Faltan datos por ingresar']);
+                    'Mensaje' => 'Faltan datos por ingresar'
+            ], 400);
         }else { 
             try {
                 DB::beginTransaction();
 
                 $cancha = Cancha::create([
                     "club_configuracion_id" => $request->club_configuracion_id,
-                    "deporte" => $request ->deporte,
+                    "deporte" => $request->deporte,
                 ]);
 
                 DB::commit(); 
@@ -65,8 +66,9 @@ class CanchaController extends Controller
                 DB::rollback();
                 return response()->json(["Mensaje" => "Error!!"]);
             }
-        return response()->json($cancha, 201);
-            }
+        
+            return response()->json($cancha, 201);
+        }
     }
 
     /**
@@ -75,7 +77,7 @@ class CanchaController extends Controller
      * @param  int  $cancha_id
      * @return \Illuminate\Http\Response
      */
-    public function show($club_id , $cancha_id)
+    public function show($club_id, $cancha_id)
     {
         $cancha = DB::table('canchas')
                             ->join('club_configuracions', 'canchas.club_configuracion_id', '=', 'club_configuracions.id')
@@ -98,7 +100,11 @@ class CanchaController extends Controller
     {
         $cancha = Cancha::find($cancha_id);
         $cancha->update($request->all());
-        return response()->json(['Petición' => 'Exitosa', 'Mensaje' => 'Cancha modificada']);
+        
+        return response()->json([
+            'Petición' => 'Exitosa',
+             'Mensaje' => 'Cancha modificada'
+        ], 200);
     }
 
     /**
@@ -110,7 +116,11 @@ class CanchaController extends Controller
     public function destroy(Cancha $cancha, $cancha_id)
     {
         Cancha::destroy($cancha_id);
-        return response()->json(['Petición' => 'Exitosa', 'Mensaje' => 'Cancha eliminada']);
+
+        return response()->json([
+            'Petición' => 'Exitosa',
+             'Mensaje' => 'Cancha eliminada'
+        ], 200);
     }
 }
 ?>

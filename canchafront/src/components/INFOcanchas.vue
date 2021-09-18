@@ -83,11 +83,13 @@ export default {
                     this.datos = res
                 }) */
         },
+
         desplegarABMcancha(accion, id=0) {
             this.accion = accion,
             this.id = id,
             this.abrirABMcancha = !this.abrirABMcancha;
         },
+
         MostrarABMcanchas(ver) {
             this.abrirABMcancha = false 
             if (ver == true) {

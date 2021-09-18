@@ -12,7 +12,8 @@
         <br>
 
         <div class="btncli">
-            <button class="btn btn-primary" @click="desplegarABMcliente('Crear')" style="font-size: 22px"> 
+            <button class="btn btn-primary" @click="desplegarABMcliente('Crear')" 
+                    style="font-size: 22px"> 
                 Agregar un nuevo Cliente 
             </button>
         </div>
@@ -107,9 +108,6 @@ export default {
                 .then(res => {
                         this.datos = res
                 }) */
-
-
-
         },
 
         desplegarABMcliente(accion, id=0) {
@@ -123,7 +121,7 @@ export default {
             if (ver == true) {
                 this.traerDatos();
             }
-        }
+        },
     }
 }
 </script>
