@@ -15,7 +15,7 @@ class ClienteController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($club_id)
+    public function index($club_id, Request $request)
     {
         //$club_id = $request->club_configuracion_id;
 
@@ -25,9 +25,21 @@ class ClienteController extends Controller
                             ->where('cliente_club_configuracion.club_configuracion_id', '=', $club_id)
                             ->select('clientes.*')
                             ->orderBy('id', 'asc')
-                            ->get();
+                            ->paginate(3);
 
-        return $clientes->toJson(JSON_PRETTY_PRINT);
+        return [
+            'paginacion' => [
+                'total'         => $clientes->total(),
+                'current_page'  => $clientes->currentPage(),
+                'per_page'      => $clientes->perPage(),
+                'last_page'     => $clientes->lastPage(),
+                'from'          => $clientes->firstItem(),
+                'to'            => $clientes->lastPage(),
+            ],
+
+            'clientes' => $clientes
+        ];
+        //return $clientes->toJson(JSON_PRETTY_PRINT);
     }
 
     /**
@@ -172,5 +184,9 @@ class ClienteController extends Controller
              'Mensaje' => 'Cliente eliminado'
         ], 200); 
     }
+
+    /* public function filtroNombre($nombre){
+        return response("hola ". $nombre);
+    } */
 }
 ?>

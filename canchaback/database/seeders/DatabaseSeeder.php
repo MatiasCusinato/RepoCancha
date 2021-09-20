@@ -22,7 +22,7 @@ class DatabaseSeeder extends Seeder
         \App\Models\clubConfiguracion::factory(3)->create();
         \App\Models\User::factory(3)->create();
         \App\Models\Cancha::factory(5)->create();
-        \App\Models\Cliente::factory(10)->create();
+        \App\Models\Cliente::factory(20)->create();
         \App\Models\Turno::factory(20)->create();
 
         $this->call(ClienteSeeder::class);

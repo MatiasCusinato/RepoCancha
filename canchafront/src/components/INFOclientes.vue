@@ -1,8 +1,9 @@
 <template>
     <div>
         <h1 class="bg-primary text-white text-center mb-3"> Clientes </h1>
-
-        <br>
+        <!-- <div>
+            <span>{{this.paginacion}}</span>
+        </div> -->
 
         <div class="divFiltros">
             <h4>Filtros:</h4>
@@ -58,7 +59,32 @@
                         </td>
                     </tr>
                 </tbody>
-            </table>    
+            </table> 
+
+            <br>
+
+            <nav aria-label="Page navigation example">
+                <ul class="pagination pagination-lg">
+                    <li class="page-item" v-if="paginacion.current_page > 1">
+                        <a class="page-link" href="#" 
+                            @click.prevent="cambioPagina(paginacion.current_page - 1)">
+                                Atras
+                        </a>
+                    </li>
+
+                    <li class="page-item" v-for="(pagina, id) in NroPaginas" :key="id"
+                            :class="pagina==paginaActiva ? 'active' : ''">
+                        <a class="page-link" href="#" @click.prevent="cambioPagina(pagina)">{{pagina}}</a>
+                    </li>
+
+                    <li class="page-item" v-if="paginacion.current_page < paginacion.last_page">
+                        <a class="page-link" href="#"
+                            @click.prevent="cambioPagina(paginacion.current_page + 1)">
+                                Siguiente
+                        </a>
+                    </li>
+                </ul>
+            </nav>   
     </div>
 </template>
 
@@ -77,14 +103,28 @@ export default {
     data() {
         return {
             datos: [],
+
             abrirABMcliente: false,
+
             accion: '',
+
             id: 0,
+
+            paginacion: {
+                total: 0,
+                current_page: 0,
+                per_page: 0,
+                last_page: 0,  
+                from: 0,        
+                to: 0,
+            },
+
+            offset: 2,
         }
     },
 
     created() {
-        this.traerDatos()
+        this.traerDatos(1)
     },
 
     mounted() {
@@ -92,22 +132,15 @@ export default {
         //this.traerDatos()
     },
 
-
     methods: {
-        traerDatos() {
+        traerDatos(pagina) {
             console.log("Obteniendo CLIENTES desde la API ...");
             let club= localStorage.getItem('club')
-            this.ObtenerDatos(`clientes/${club}`)
+            this.ObtenerDatos(`clientes/${club}?page=${pagina}`)
                 .then(res => {
-                    this.datos = res
+                    this.datos = res.clientes.data;
+                    this.paginacion= res.paginacion
                 }) 
-
-            /* let club= {club_configuracion_id : localStorage.getItem('club')}
-
-            this.InsertarDatos("clientes", club)
-                .then(res => {
-                        this.datos = res
-                }) */
         },
 
         desplegarABMcliente(accion, id=0) {
@@ -122,7 +155,44 @@ export default {
                 this.traerDatos();
             }
         },
-    }
+
+        cambioPagina(pagina){
+            if(pagina != this.paginacion.current_page){
+                this.paginacion.current_page = pagina;
+                this.traerDatos(pagina)
+            }
+        },
+    },
+
+    computed: {
+        paginaActiva(){
+            return this.paginacion.current_page
+        },
+    
+        NroPaginas(){
+            if(!this.paginacion.to){
+                return []
+            }
+
+            let from = this.paginacion.current_page - this.offset;
+            if(from < 1){
+                from= 1;
+            }
+
+            let to= from + (this.offset  * 2);
+            if(to >= this.paginacion.last_page){
+                to= this.paginacion.last_page
+            }
+
+            let paginasArr= [];
+            while(from <= to){
+                paginasArr.push(from)
+                from++;
+            }
+
+            return paginasArr;
+        },
+    },
 }
 </script>
 
