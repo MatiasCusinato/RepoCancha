@@ -7,7 +7,10 @@
 
         <div class="divFiltros">
             <h4>Filtros:</h4>
-            <input type="text" placeholder="Filtro por nombre">
+            <input type="text" placeholder="Filtro por nombre" v-model="filtroNombre">
+            <button @click="traerFiltro()">
+                Buscar
+            </button>
         </div>
 
         <br>
@@ -103,6 +106,8 @@ export default {
     data() {
         return {
             datos: [],
+            
+            filtroNombre:"",
 
             abrirABMcliente: false,
 
@@ -161,6 +166,19 @@ export default {
                 this.paginacion.current_page = pagina;
                 this.traerDatos(pagina)
             }
+        },
+
+        traerFiltro(){
+            let club= localStorage.getItem('club')
+            this.ObtenerDatos(`clientes/${club}/nombre/${this.filtroNombre}`)
+                .then(res => {
+                    if(res.clientes.length!=0){
+                        this.datos = res.clientes;
+                    } else{
+                        alert(`No existe algun cliente con el nombre de "${this.filtroNombre}"`)
+                        this.traerDatos();
+                    }
+                })
         },
     },
 

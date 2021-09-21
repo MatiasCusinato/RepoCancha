@@ -66,7 +66,10 @@ export default {
                             token,
                             numeroClub,
                         });
-    
+                        
+                        setInterval(() => {
+                            location.reload();
+                        }, 200);
                         this.$router.push("/");
                     }
                 });

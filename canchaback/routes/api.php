@@ -54,5 +54,5 @@ Route::post('clientes/guardar', [ClienteController::class, 'store']);
 Route::get('clientes/{club_id}/{cliente_id}', [ClienteController::class, 'show']);
 Route::put('clientes/editar/{cliente_id}', [ClienteController::class, 'update']);
 Route::delete('clientes/eliminar/{cliente_id}', [ClienteController::class, 'destroy']);  
-//Route::get('clientes/{club_id}/nombre/{nombre}', [ClienteController::class, 'filtroNombre']); //Ruta para filtros  
+Route::get('clientes/{club_id}/nombre/{nombre}', [ClienteController::class, 'filtroNombre']); //Ruta para filtros  
 

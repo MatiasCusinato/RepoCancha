@@ -181,12 +181,24 @@ class ClienteController extends Controller
         
         return response()->json([
             'Petición' => 'Exitosa',
-             'Mensaje' => 'Cliente eliminado'
+            'Mensaje' => 'Cliente eliminado'
         ], 200); 
     }
 
-    /* public function filtroNombre($nombre){
-        return response("hola ". $nombre);
-    } */
+    public function filtroNombre($club_id, $nombre){
+        $clientes = DB::table('cliente_club_configuracion')
+                            ->join('clientes', 'cliente_club_configuracion.cliente_id', '=', 'clientes.id')
+                            ->where([
+                                ['cliente_club_configuracion.club_configuracion_id', '=', $club_id],
+                                ['clientes.nombre', 'like', '%' . $nombre . '%'],
+                            ])
+                            ->select('clientes.*')
+                            ->get();
+
+        return response()->json([
+            'Petición' => 'Filtrado Exitoso',
+            'clientes' => $clientes
+        ], 200);
+    }
 }
 ?>
