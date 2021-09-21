@@ -39,7 +39,32 @@
                         </td>
                     </tr>
                 </tbody>
-            </table>  
+            </table> 
+
+            <br>
+
+            <nav aria-label="Page navigation example">
+                <ul class="pagination pagination-lg">
+                    <li class="page-item" v-if="paginacion.current_page > 1">
+                        <a class="page-link" href="#" 
+                            @click.prevent="cambiarPagina(paginacion.current_page - 1)">
+                                Atras
+                        </a>
+                    </li>
+
+                    <li class="page-item" v-for="(pagina, id) in NumeroPaginas" :key="id"
+                            :class="pagina==paginaActiva ? 'active' : ''">
+                        <a class="page-link" href="#" @click.prevent="cambiarPagina(pagina)">{{pagina}}</a>
+                    </li>
+
+                    <li class="page-item" v-if="paginacion.current_page < paginacion.last_page">
+                        <a class="page-link" href="#"
+                            @click.prevent="cambiarPagina(paginacion.current_page + 1)">
+                                Siguiente
+                        </a>
+                    </li>
+                </ul>
+            </nav>
     </div>
 </template>
 
@@ -47,20 +72,37 @@
 import apiRest from "../mixins/apiRest.vue"
 import ABMcanchas from "../components/ABMcanchas.vue"
 export default {
+
     mixins: [apiRest],
+
     components: {
         ABMcanchas
     },
+
     data() {
         return {
             datos: [],
+
             abrirABMcancha: false,
+
             accion: '',
+
             id: 0,
+
+            paginacion: {
+                total: 0,
+                current_page: 0,
+                per_page: 0,
+                last_page: 0,  
+                from: 0,        
+                to: 0,
+            },
+
+            offset: 2,
         }
     },
     created() {
-        this.traerDatos()
+        this.traerDatos(1)
     },
     mounted() {
         console.log("evento mounted")
@@ -71,17 +113,15 @@ export default {
         this.traerDatos()
     }, */
     methods: {
-        traerDatos() {
+        traerDatos(pagina) {
             console.log("Obteniendo CANCHAS desde la API ...");
             let club= localStorage.getItem('club')
-            this.ObtenerDatos(`canchas/${club}`)
+            this.ObtenerDatos(`canchas/${club}?page=${pagina}`)
                 .then(res => {
-                    this.datos = res
+                    this.datos = res.canchas.data;
+                    this.paginacion = res.paginacion
             })
-            /*  this.ObtenerDatos('canchas/1')
-                .then(res => {
-                    this.datos = res
-                }) */
+    
         },
 
         desplegarABMcancha(accion, id=0) {
@@ -95,8 +135,45 @@ export default {
             if (ver == true) {
                 this.traerDatos();
             }
-        }
-    }
+        },
+
+        cambiarPagina(pagina){
+            if(pagina != this.paginacion.current_page){
+                this.paginacion.current_page = pagina;
+                this.traerDatos(pagina)
+            }
+        },
+    },
+
+    computed: {
+        paginaActiva(){
+            return this.paginacion.current_page
+        },
+    
+        NumeroPaginas(){
+            if(!this.paginacion.to){
+                return []
+            }
+
+            let from = this.paginacion.current_page - this.offset;
+            if(from < 1){
+                from= 1;
+            }
+
+            let to= from + (this.offset  * 2);
+            if(to >= this.paginacion.last_page){
+                to= this.paginacion.last_page
+            }
+
+            let paginasArray= [];
+            while(from <= to){
+                paginasArray.push(from)
+                from++;
+            }
+
+            return paginasArray;
+        },
+    },
 }    
 </script>
 
