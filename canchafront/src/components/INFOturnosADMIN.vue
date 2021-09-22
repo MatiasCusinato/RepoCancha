@@ -1,14 +1,6 @@
 <template>
     <div>
         <h2> Turnos </h2>
-        <br>
-        <div>
-            <h4>FILTROS</h4>
-            <input type="text" placeholder="Buscar clientes">
-        </div>
-
-        <br>
-        <br>
         <div class="btn-group" role="group" aria-label="Basic example">
             <button class="btn btn-info" style="margin: 10px">CANCHA 1</button>
             <button class="btn btn-info" style="margin: 10px">CANCHA 2</button>
@@ -24,54 +16,80 @@
 
         <br>
         <div>
-            <table class="table">
-                <thead class="table-dark">
-                    <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Cliente</th>
-                    <th scope="col">Cancha</th>
-                    <th scope="col">Club</th>
-                    <!-- <th scope="col">Tipo turno</th>
-                    <th scope="col">Fecha Desde</th>
-                    <th scope="col">Fecha Hasta</th>
-                    <th scope="col">Grupo</th>
-                    <th scope="col">Precio</th> -->
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                    <th scope="row">1</th>
-                    <td>Mark</td>
-                    <td>Otto</td>
-                    <td>@mdo</td>
-                    </tr>
-                    <tr>
-                    <th scope="row">2</th>
-                    <td>Jacob</td>
-                    <td>Thornton</td>
-                    <td>@fat</td>
-                    </tr>
-                    <tr>
-                    <th scope="row">3</th>
-                    <td>Larry</td>
-                    <td>the Bird</td>
-                    <td>@twitter</td>
-                    </tr>
-                </tbody>
-            </table>
+            <vue-cal class="calendarioVue vuecal--green-theme" 
+                :time="false" active-view="month" :disable-views="['years', 'year',]"
+                :events="events" selected-date="2018-11-19"
+            />
         </div>
     </div>
 </template>
 
 <script>
+import VueCal from 'vue-cal'
+import 'vue-cal/dist/vuecal.css'
+import apiRest from '../mixins/apiRest.vue'
+
 export default {
-    /* mixins: [apiRest], */
-    datos() {
+    components:{VueCal},
+
+    mixins: [apiRest],
+
+    data() {
         return {
             datos: [],
             verABMturnos: false,
+
+            events: [
+                {
+                    start: '2018-11-21',
+                    end: '2018-11-21',
+                    title: 'Need to go shopping',
+                    class: 'leisure'
+                },
+                
+                {
+                    start: '2018-11-21',
+                    end: '2018-11-21',
+                    title: 'Golf with John',
+                    class: 'sport'
+                },
+            ]
         }
-    }
+    },
+
+    created(){
+        this.traerTurnos();
+    },
+
+    methods:{
+        traerTurnos(){
+            let club= localStorage.getItem('club')
+            this.ObtenerDatos(`turnos/${club}/1`)
+                .then(res => {
+                    //console.log(res)
+                    this.datos = res;
+
+                    this.cargarTurnos()
+                })
+
+            
+        },
+
+        cargarTurnos(){
+            for (let i = 0; i < this.datos.length; i++) {
+                //console.log(this.datos[i])
+                this.events.push({
+                    start: this.datos[i].fecha_Desde,
+                    end: this.datos[i].fecha_Hasta,
+                    title: this.datos[i].tipo_turno,
+                    class: 'blue-event'
+                }) 
+            console.log(this.events)
+            }
+
+        },
+        
+    },
 }
 </script>
 
@@ -90,5 +108,11 @@ export default {
 .btnCancha button {
     display: inline-block;
     margin: 0 10px;
+}
+
+.calendarioVue{
+    height: 400px;
+    width: 700px;
+    margin: 5px -150px;
 }
 </style>

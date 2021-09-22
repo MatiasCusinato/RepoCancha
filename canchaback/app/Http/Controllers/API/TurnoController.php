@@ -5,6 +5,9 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Models\Turno;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
+
 
 class TurnoController extends Controller
 {
@@ -13,10 +16,15 @@ class TurnoController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($club_id, $cancha_id)
     {
-        $turno = Turno::all();
-        return $turno->toJson(JSON_PRETTY_PRINT);
+        $turnos = DB::table('turnos')
+                    ->where([
+                        ['turnos.club_configuracion_id', '=', $club_id],
+                        ['turnos.cancha_id', '=', $cancha_id]])
+                    ->get();
+
+        return $turnos->toJson(JSON_PRETTY_PRINT);
     }
 
     /**
@@ -37,10 +45,21 @@ class TurnoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($club_id, $turno_id)
     {
-        $turno = Turno::find($id);
-        return $turno->toJson(JSON_PRETTY_PRINT);
+        $turno = DB::table('turnos')
+                    ->join('clientes', 'turnos.cliente_id', '=', 'clientes.id')
+                    ->join('canchas', 'turnos.cancha_id', '=', 'canchas.id')
+                        ->where('turnos.id', '=', $turno_id)    
+                        ->where('turnos.club_configuracion_id', '=', $club_id)
+                            ->select('turnos.id', 'clientes.nombre', 
+                                        'turnos.cancha_id', 'canchas.deporte',
+                                        'turnos.tipo_turno', 'turnos.fecha_Desde',
+                                        'turnos.fecha_Hasta', 'turnos.precio',
+                                        'turnos.grupo')
+                                ->get();
+        
+        return response()->json($turno, 200);
     }
 
     /**
@@ -53,7 +72,10 @@ class TurnoController extends Controller
     public function update(Request $request, Turno $turno)
     {
         $turno->update($request->all());
-        return response()->json(['Petición' => 'Exitosa', 'Mensaje' => 'Turno modificado']);
+        return response()->json([
+            'Petición' => 'Exitosa', 
+            'Mensaje' => 'Turno modificado'
+        ]);
     }
 
     /**

@@ -28,10 +28,10 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 //APIS
 Route::apiResource('clubes', clubConfiguracionController::class);
-Route::apiResource('turnos', TurnoController::class);
 Route::apiResource('users', UserController::class);
 //Route::apiResource('canchas', CanchaController::class);
 //Route::apiResource('clientes', ClienteController::class);
+//Route::apiResource('turnos', TurnoController::class);
 
 
 //Registro, login y logout
@@ -55,4 +55,8 @@ Route::get('clientes/{club_id}/{cliente_id}', [ClienteController::class, 'show']
 Route::put('clientes/editar/{cliente_id}', [ClienteController::class, 'update']);
 Route::delete('clientes/eliminar/{cliente_id}', [ClienteController::class, 'destroy']);  
 Route::get('clientes/{club_id}/nombre/{nombre}', [ClienteController::class, 'filtroNombre']); //Ruta para filtros  
+
+//Rutas Turnos
+Route::get('turnos/{club_id}/{cancha_id}', [TurnoController::class, 'index']); 
+Route::get('turnos/{club_id}/show/{turno_id}', [TurnoController::class, 'show']); 
 
