@@ -27,5 +27,6 @@ class DatabaseSeeder extends Seeder
 
         $this->call(ClienteSeeder::class);
         $this->call(CanchaSeeder::class);
+        $this->call(TurnoSeeder::class);
     }
 }

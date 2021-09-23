@@ -26,7 +26,7 @@ class AccesoUsuarioController extends Controller
         if($validacionRegistro->fails()){
             return response()->json([
                 'msj' => 'Error', 
-                'Razon' => 'El usuario ya se encuentra registrado'], 422);
+                'razon' => 'El usuario ya se encuentra registrado'], 422);
         }else { 
             $user =  User::create([
                 'nombre' => $request->nombre,
@@ -58,7 +58,7 @@ class AccesoUsuarioController extends Controller
         if($validacionLogin->fails()){
             return response()->json([
                 'msj' => 'Error', 
-                'Mensaje' => 'Ese email no esta registrado'
+                'razon' => 'Ese email no esta registrado'
             ], 422);
 
         }else { 
@@ -68,7 +68,7 @@ class AccesoUsuarioController extends Controller
             if(!Hash::check($request->password, $user->password)){
                 return response()->json([
                     'msj' => 'Error',
-                    'Razon' => 'Password incorrecta'
+                    'razon' => 'Password incorrecta'
                 ], 401);
             }
 
@@ -82,7 +82,7 @@ class AccesoUsuarioController extends Controller
                 } else {
                     return response()->json([
                         'msj' => 'Error',
-                        'Razon' => 'Este usuario ya se encuentra logueado'
+                        'razon' => 'Este usuario ya se encuentra logueado'
                     ], 401);
                 } 
         }

@@ -170,6 +170,9 @@ export default {
 
         traerFiltro(){
             let club= localStorage.getItem('club')
+            if(!this.filtroNombre){
+                alert("Rellene el campo de filtro, por favor.")
+            }
             this.ObtenerDatos(`clientes/${club}/nombre/${this.filtroNombre}`)
                 .then(res => {
                     if(res.clientes.length!=0){

@@ -46,14 +46,8 @@ export default {
                     title: 'Need to go shopping',
                     class: 'leisure'
                 },
-                
-                {
-                    start: '2018-11-21',
-                    end: '2018-11-21',
-                    title: 'Golf with John',
-                    class: 'sport'
-                },
-            ]
+            ],
+
         }
     },
 
@@ -72,19 +66,20 @@ export default {
                     this.cargarTurnos()
                 })
 
-            
+            console.log(this.events)
         },
 
         cargarTurnos(){
-            for (let i = 0; i < this.datos.length; i++) {
+            for (let i=0; i < this.datos.length; i++) {
                 //console.log(this.datos[i])
                 this.events.push({
                     start: this.datos[i].fecha_Desde,
                     end: this.datos[i].fecha_Hasta,
                     title: this.datos[i].tipo_turno,
-                    class: 'blue-event'
+                    class: 'blue-event',
                 }) 
-            console.log(this.events)
+
+                
             }
 
         },
