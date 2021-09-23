@@ -17,7 +17,9 @@
         <br>
         <div>
             <vue-cal class="calendarioVue vuecal--green-theme" 
-                :time="false" active-view="month" :disable-views="['years', 'year',]"
+                :time-from="8 * 60" :time-to="19 * 60" 
+                :time-step="30" active-view="month" 
+                :disable-views="['years', 'year',]"
                 :events="events" selected-date="2018-11-19"
             />
         </div>
@@ -110,4 +112,15 @@ export default {
     width: 700px;
     margin: 5px -150px;
 }
+
+.vuecal--month-view .vuecal__cell {height: 80px;}
+
+.vuecal--month-view .vuecal__cell-content {
+  justify-content: flex-start;
+  height: 100%;
+  align-items: flex-end;
+}
+
+.vuecal--month-view .vuecal__cell-date {padding: 4px;}
+.vuecal--month-view .vuecal__no-event {display: none;}
 </style>

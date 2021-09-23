@@ -3,7 +3,7 @@
         <hr>
             <form>
                 <div class="contenedor" v-if="accion=='Crear' || accion=='Editar'">
-                    <div class="VentanaModal" >
+                    <div :class="this.accion=='Crear' ? 'VentanaModalCrear' : 'VentanaModalEditar'">
                         <div class="cabecera tituloventana">
                         <button class="cierre btn btn-primary" @click="Cancelar()"><font color="#35586F">X</font></button>
                         <p>{{accion}} Clientes</p>
@@ -33,8 +33,8 @@
                                 <label for="" class="form-label campo"> Email:</label>
                                 <input type="text" class="form-control form-control-sm" v-model="datosClientes.email">
                             </div>
-                            <button class="btn  btn-outline-primary" @click="Aceptar()">Ingresar Articulo</button>
-                            <button class="btn btn-outline-danger" @click="Cancelar()">Cancelar</button>
+                            <button class="btn btn-info divBotones" @click="Aceptar()">Guardar</button>
+                            <button class="btn btn-light divBotones" @click="Cancelar()">Cancelar</button>
                         </div>
                     </div>
                 </div>
@@ -42,7 +42,6 @@
 
                 <div v-if="accion=='Borrar'" class="contenedor">
                     <div class="VentanaModalBorrar">
-
                         <div class="alert alert-danger" role="alert" v-if="accion === 'Borrar'">
                             <p>{{accion}} Clientes</p>
                             <hr>
@@ -66,8 +65,10 @@
                             </table>
 
                             <strong>Atención!</strong> ¿Esta seguro de borrar este CLIENTE?.
-                            <button @click="Aceptar()" class="btn btn-danger btn-sm">Si, borrar cliente</button>
-                            <button @click="Cancelar()" class="btn btn-primary btn-sm">No, volver</button> 
+                            <div >
+                                <button @click="Aceptar()" class="btn btn-danger btn-sm divBotones">Si, borrar cliente</button>
+                                <button @click="Cancelar()" class="btn btn-primary btn-sm divBotones">No, volver</button> 
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -96,7 +97,6 @@ export default {
                 club_configuracion_id: "",
             },
 
-            modal: false,
         }
     },
 
@@ -173,7 +173,7 @@ p{
 }
 
 .divBotones{
-    margin: 20px 10px
+    margin: 10px 25px 0px
 }
 
 .contenedor{
@@ -185,10 +185,18 @@ p{
 	background: rgba(0,0,0,0.5);
 }
 
-.VentanaModal {
+.VentanaModalCrear {
   background-color: rgb(85, 84, 167);
   border-radius: 10px;
-  padding: 35px;
+  padding: 28px;
+  width: 400px;
+  margin: 25px auto;
+}
+
+.VentanaModalEditar {
+  background-color: rgb(84, 167, 128);
+  border-radius: 10px;
+  padding: 28px;
   width: 400px;
   margin: 25px auto;
 }
@@ -199,11 +207,11 @@ table{
 }
 
 .VentanaModalBorrar {
-  background-color: rgb(156, 170, 78);
+  background-color: rgb(209, 113, 89);
   border-radius: 10px;
-  padding: 30px;
+  padding: 25px;
   width: 400px;
-  margin: 96px auto;
+  margin: 95px auto;
 }
 
 .cierre{
