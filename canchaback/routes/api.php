@@ -46,7 +46,8 @@ Route::post('canchas/guardar', [CanchaController::class, 'store']);
 Route::get('canchas/{club_id}/{cancha_id}', [CanchaController::class, 'show']);
 Route::put('canchas/editar/{cancha_id}', [CanchaController::class, 'update']);
 Route::delete('canchas/eliminar/{cancha_id}', [CanchaController::class, 'destroy']);
- 
+Route::get('canchas/{club_id}/deporte/{deporte}', [CanchaController::class, 'filtroDeporte']); 
+// ruta para filtro de cancha //
 
 //Rutas Clientes
 Route::get('clientes/{club_id}', [ClienteController::class, 'index']);

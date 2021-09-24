@@ -117,7 +117,7 @@ class CanchaController extends Controller
         
         return response()->json([
             'Petición' => 'Exitosa',
-             'Mensaje' => 'Cancha modificada'
+            'Mensaje' => 'Cancha modificada'
         ], 200);
     }
 
@@ -133,7 +133,23 @@ class CanchaController extends Controller
 
         return response()->json([
             'Petición' => 'Exitosa',
-             'Mensaje' => 'Cancha eliminada'
+            'Mensaje' => 'Cancha eliminada'
+        ], 200);
+    }
+
+    public function filtroDeporte($club_id, $deporte){
+        $cancha = DB::table('canchas')
+                            ->join('club_configuracions', 'canchas.club_configuracion_id', '=', 'club_configuracions.id')
+                            ->where([
+                                ['canchas.club_configuracion_id', '=', $club_id],
+                                ['canchas.deporte', 'like', '%' . $deporte . '%'],
+                            ])
+                            ->select('canchas.*')
+                            ->get();
+
+        return response()->json([
+            'Petición' => 'Filtrado Exitoso',
+            'canchas' => $cancha
         ], 200);
     }
 }

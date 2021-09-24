@@ -15,33 +15,54 @@ class CanchaSeeder extends Seeder
     public function run()
     {
         DB::table('canchas')->insert([
-            'deporte' => 'basket',
             'club_configuracion_id' => '1',
-        ]);
-
-        DB::table('canchas')->insert([
             'deporte' => 'futbol',
+        ]);
+
+        DB::table('canchas')->insert([
             'club_configuracion_id' => '2',
-        ]);
-
-        DB::table('canchas')->insert([
-            'deporte' => 'voley',
-            'club_configuracion_id' => '3',
-        ]);
-
-        DB::table('canchas')->insert([
             'deporte' => 'hockey',
-            'club_configuracion_id' => '1',
+
         ]);
 
         DB::table('canchas')->insert([
-            'deporte' => 'tenis',
             'club_configuracion_id' => '2',
+            'deporte' => 'Entrenamiento',
         ]);
 
         DB::table('canchas')->insert([
-            'deporte' => 'pingpong',
-            'club_configuracion_id' => '3',
+            'club_configuracion_id' => '1',
+            'deporte' => 'futbol',
+        ]);
+
+        DB::table('canchas')->insert([
+            'club_configuracion_id' => '2',
+            'deporte' => 'EscuelaFC',
+        ]);
+
+        DB::table('canchas')->insert([
+            'club_configuracion_id' => '2',
+            'deporte' => 'hockey',
+        ]);
+
+        DB::table('canchas')->insert([
+            'club_configuracion_id' => '2',
+            'deporte' => 'handball',
+        ]);
+
+        DB::table('canchas')->insert([
+            'club_configuracion_id' => '2',
+            'deporte' => 'Entrenamiento'
+        ]);
+
+        DB::table('canchas')->insert([
+            'club_configuracion_id' => '2',
+            'deporte' => 'basquet',
+        ]);
+
+        DB::table('canchas')->insert([
+            'club_configuracion_id' => '2',
+            'deporte' => 'tenis',
         ]);
     }
 }
