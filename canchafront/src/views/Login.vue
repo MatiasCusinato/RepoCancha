@@ -55,7 +55,7 @@ export default {
                     console.log(res)
     
                     if (res.msj == "Error") {
-                        alert(res.Razon)
+                        alert(res.razon)
                     } else {
                         let token = JSON.stringify(res.user.token_actual);
                         let numeroClub = JSON.stringify(

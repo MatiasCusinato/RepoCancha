@@ -35,7 +35,7 @@ class CanchaSeeder extends Seeder
             'deporte' => 'futbol',
         ]);
 
-        DB::table('cnahcas')->insert([
+        DB::table('canchas')->insert([
             'club_configuracion_id' => '2',
             'deporte' => 'EscuelaFC',
         ]);

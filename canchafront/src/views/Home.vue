@@ -1,23 +1,7 @@
 <template>
   <div class="home">
     <div>
-      <ul class="list-group">
-        <!-- <li class="list-group-item">
-          <router-link to="/INFOturnos" class="nav-link">Turnos ADMIN</router-link>
-        </li>
-        <li class="list-group-item">
-          <router-link to="/INFOclientes" class="nav-link">Clientes</router-link>
-        </li>
-        <li class="list-group-item">
-          <router-link to="/INFOcanchas" class="nav-link">Canchas</router-link>
-        </li> -->
-      </ul>
 
-      <!-- <ul class="navbar-nav me-auto mb-2 mb-md-0">
-          <li class="nav-item">
-              <a href="#" class="nav-link">Logout</a>
-          </li>
-      </ul> -->
     </div>
   </div>  
 </template>

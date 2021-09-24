@@ -26,5 +26,7 @@ class DatabaseSeeder extends Seeder
         \App\Models\Turno::factory(20)->create();
 
         $this->call(ClienteSeeder::class);
+        $this->call(CanchaSeeder::class);
+        $this->call(TurnoSeeder::class);
     }
 }

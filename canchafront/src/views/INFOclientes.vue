@@ -66,7 +66,7 @@
 
             <br>
 
-            <nav aria-label="Page navigation example">
+            <nav  v-show="!accion" aria-label="Page navigation example">
                 <ul class="pagination pagination-lg">
                     <li class="page-item" v-if="paginacion.current_page > 1">
                         <a class="page-link" href="#" 
@@ -159,6 +159,7 @@ export default {
             if (ver == true) {
                 this.traerDatos();
             }
+            this.accion=''
         },
 
         cambioPagina(pagina){
@@ -170,6 +171,9 @@ export default {
 
         traerFiltro(){
             let club= localStorage.getItem('club')
+            if(!this.filtroNombre){
+                alert("Rellene el campo de filtro, por favor.")
+            }
             this.ObtenerDatos(`clientes/${club}/nombre/${this.filtroNombre}`)
                 .then(res => {
                     if(res.clientes.length!=0){

@@ -74,7 +74,7 @@ name: 'Registro',
                                                 console.log(res)
 
                                                 if (res.msj == "Error") {
-                                                        alert(res.Razon)
+                                                        alert(res.razon)
                                                 } else {
                                                         this.$router.push("/login");
                                                 }
