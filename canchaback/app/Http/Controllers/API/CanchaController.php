@@ -15,7 +15,7 @@ class CanchaController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($club_id)
+    public function index($club_id, Request $request)
     {
 
         //$cancha: consulta sql de los canchas pertenecientes a tal club
@@ -24,9 +24,23 @@ class CanchaController extends Controller
                             ->join('club_configuracions', 'canchas.club_configuracion_id', '=', 'club_configuracions.id')
                             ->where('canchas.club_configuracion_id', '=', $club_id)
                             ->select('canchas.*')
-                            ->get();
+                            ->orderBy('id', 'asc')
+                            ->paginate(4);
 
-        return $cancha->toJson(JSON_PRETTY_PRINT);
+        return [
+            'paginacion' => [
+                'total'         => $cancha->total(),
+                'current_page'  => $cancha->currentPage(),
+                'per_page'      => $cancha->perPage(),
+                'last_page'     => $cancha->lastPage(),
+                'from'          => $cancha->firstItem(),
+                'to'            => $cancha->lastPage(),
+            ],
+
+            'canchas' => $cancha
+        ];
+
+        //return $cancha->toJson(JSON_PRETTY_PRINT);
     }
 
     /**
@@ -103,7 +117,7 @@ class CanchaController extends Controller
         
         return response()->json([
             'Petición' => 'Exitosa',
-             'Mensaje' => 'Cancha modificada'
+            'Mensaje' => 'Cancha modificada'
         ], 200);
     }
 
@@ -119,7 +133,23 @@ class CanchaController extends Controller
 
         return response()->json([
             'Petición' => 'Exitosa',
-             'Mensaje' => 'Cancha eliminada'
+            'Mensaje' => 'Cancha eliminada'
+        ], 200);
+    }
+
+    public function filtroDeporte($club_id, $deporte){
+        $cancha = DB::table('canchas')
+                            ->join('club_configuracions', 'canchas.club_configuracion_id', '=', 'club_configuracions.id')
+                            ->where([
+                                ['canchas.club_configuracion_id', '=', $club_id],
+                                ['canchas.deporte', 'like', '%' . $deporte . '%'],
+                            ])
+                            ->select('canchas.*')
+                            ->get();
+
+        return response()->json([
+            'Petición' => 'Filtrado Exitoso',
+            'canchas' => $cancha
         ], 200);
     }
 }
