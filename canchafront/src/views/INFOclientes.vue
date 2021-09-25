@@ -29,6 +29,7 @@
             :accion=accion :id=id
             @SalirDeABMclientes = MostrarABMclientes($event)
         />
+        
         <br>
             <table class="light-blue darken-2">
                 <thead>
@@ -171,18 +172,31 @@ export default {
 
         traerFiltro(){
             let club= localStorage.getItem('club')
-            if(!this.filtroNombre){
-                alert("Rellene el campo de filtro, por favor.")
+            if(this.filtroNombre){
+                this.ObtenerDatos(`clientes/${club}/nombre/${this.filtroNombre}`)
+                    .then(res => {
+                        if(res.clientes.length!=0){
+                            this.datos = res.clientes;
+                        } else{
+                            this.$swal({
+                                title: '¡Error!',
+                                text: `No existe algun cliente con el nombre de "${this.filtroNombre}"`,
+                                icon: 'error',
+                                confirmButtonText: 'Ok'
+                            })
+
+                            this.filtroNombre= ""
+                            this.traerDatos(1);
+                        }
+                    })
+            }else{
+                this.$swal({
+                        title: '¡Error!',
+                        text: 'Rellene el campo de filtro, porfavor',
+                        icon: 'warning',
+                        confirmButtonText: 'Ok'
+                    })
             }
-            this.ObtenerDatos(`clientes/${club}/nombre/${this.filtroNombre}`)
-                .then(res => {
-                    if(res.clientes.length!=0){
-                        this.datos = res.clientes;
-                    } else{
-                        alert(`No existe algun cliente con el nombre de "${this.filtroNombre}"`)
-                        this.traerDatos();
-                    }
-                })
         },
     },
 

@@ -88,15 +88,16 @@ export default {
     data() {
         return {
             datosClientes: {
-                id:0,
+                //id:0,
                 nombre: '',
                 apellido:"",
                 edad: "",
                 telefono: "",
                 email: "",
-                club_configuracion_id: "",
+                club_configuracion_id: localStorage.getItem('club'),
             },
 
+            alertaFormulario: [],
         }
     },
 
@@ -113,42 +114,82 @@ export default {
     },
 
     methods: {
+
         Aceptar() {
-            if (this.accion == 'Crear') {
-                let club= localStorage.getItem('club')
-                this.datosClientes.club_configuracion_id= club;
-                console.log(JSON.stringify(this.datosClientes))
+            if(!this.validarCampos(this.datosClientes)){
+                
+                if (this.accion == 'Crear') {
+                    console.log(JSON.stringify(this.datosClientes))
 
-                this.InsertarDatos ('clientes/guardar', this.datosClientes)
-                    .then(res => {
-                        console.log(res)
-                        if(res.msj == "Error"){
-                            alert(""+ res.razon)
-                        }
-                        this.$emit('SalirDeABMclientes', true)
-                    })
-            }
+                    this.InsertarDatos ('clientes/guardar', this.datosClientes)
+                        .then(res => {
+                            console.log(res)
+                            if(res.msj=="Error"){
+                                this.$swal({
+                                    title: '¡Error!',
+                                    text: ''+res.razon,
+                                    icon: 'error',
+                                    confirmButtonText: 'Ok'
+                                })
 
-            if (this.accion == 'Editar') {
-                console.log(JSON.stringify(this.datosClientes))
-                this.EditarDatos(`clientes/editar`, this.id, this.datosClientes)
-                    .then(res => {
-                        this.datosClientes = res
-                        this.$emit('SalirDeABMclientes', true)
-                    })
+                                this.$emit('SalirDeABMclientes', true)
+                            } else {
+                                this.$swal({
+                                    title: '¡Cliente creado!',
+                                    icon: 'success',
+                                    confirmButtonText: 'Ok'
+                                })
+
+                                this.$emit('SalirDeABMclientes', true)  
+                            }
+                        })
+                }
+
+                if (this.accion == 'Editar') {
+                    console.log(JSON.stringify(this.datosClientes))
+                    this.EditarDatos(`clientes/editar`, this.id, this.datosClientes)
+                        .then(res => {
+                            this.datosClientes = res
+                            this.$emit('SalirDeABMclientes', true)
+                        })
+                }
+                
+                if (this.accion == 'Borrar') {
+                    this.EliminarDatos(`clientes/eliminar`, this.id, this.datosClientes)
+                        .then(res => {
+                            this.datosClientes = res
+                            this.$emit('SalirDeABMclientes', true)
+                        })
+                }
+
+            } else {
+                this.$swal({
+                    title: '¡Formulario incompleto!',
+                    text: 'Los siguientes campos estan vacios: '+ this.alertaFormulario,
+                    icon: 'warning',
+                    confirmButtonText: 'Ok'
+                })
             }
             
-            if (this.accion == 'Borrar') {
-                this.EliminarDatos(`clientes/eliminar`, this.id, this.datosClientes)
-                    .then(res => {
-                        this.datosClientes = res
-                        this.$emit('SalirDeABMclientes', true)
-                    })
-            }
         },
         
         Cancelar() {
             this.$emit("SalirDeABMclientes", false)
+        },
+
+        validarCampos(objFormulario){
+                this.alertaFormulario= [];
+                for (let key in objFormulario) {
+                        if(objFormulario[key] == ""){
+                                this.alertaFormulario.push(' '+key.charAt(0).toUpperCase()+ key.slice(1))
+                        }
+                }
+
+                if(this.alertaFormulario.length > 0){
+                    return true
+                } else {
+                    return false
+                }
         },
     }
 }    

@@ -51,11 +51,12 @@ export default {
     data() {
         return {
             datosCancha: {
-                id: 0,
+                //id: 0,
                 deporte: "",
             }
         }
     },
+
     created() {
         console.log("evento created")
         if (this.accion != 'Crear') {
@@ -66,57 +67,77 @@ export default {
             })
         }
     },
-    mounted() {
-        console.log("evento mounted")
-    },
-    beforeDestroyed() {
-        console.log("evento beforeDestroyed")
-    },
-    destroted() {
-        console.log("evento destroyed")
-    },
+
     methods: {
         Aceptar() {
-            if (this.accion == 'Crear') {
-                let club=localStorage.getItem('club')
-                this.datosCancha.club_configuracion_id= club;
-                console.log(JSON.stringify(this.datosCancha))
+            if(!this.validarCampos(this.datosCancha)){
+                if (this.accion == 'Crear') {
+                    let club=localStorage.getItem('club')
+                    this.datosCancha.club_configuracion_id= club;
+                    console.log(JSON.stringify(this.datosCancha))
 
-                this.InsertarDatos ('canchas/guardar', this.datosCancha)
-                    .then(res => {
-                        console.log(res)
-                        if (res.id != 0) {
-                            console.log('El registro fue ingresado con exito')
-                        } else {
-                            console.log('Error al ingresar el registro')
-                        }
-                        this.$emit('SalirDeABMcanchas', true)
-                    })
+                    this.InsertarDatos ('canchas/guardar', this.datosCancha)
+                        .then(res => {
+                            console.log(res)
+                            if (res.id != 0) {
+                                console.log('El registro fue ingresado con exito')
+                            } else {
+                                console.log('Error al ingresar el registro')
+                            }
+                            this.$emit('SalirDeABMcanchas', true)
+                        })
+                }
+
+                if (this.accion == 'Editar') {
+                    console.log(JSON.stringify(this.datosCancha))
+                    this.EditarDatos ('canchas/editar', this.id, this.datosCancha)
+                        .then(res => {
+                            this.datosCancha = res
+                            this.$emit('SalirDeABMcanchas', true)
+                        })
+                }
+
+                if (this.accion == 'Borrar') {
+                    /* this.EliminarDatos ('canchas', this.id)
+                        .then(res => {
+                            this.datosCancha = res
+                            this.$emit('SalirDeABMcanchas', true)
+                        }) */
+                    this.EliminarDatos(`canchas/eliminar`, this.id, this.datosCancha)
+                        .then(res => {
+                            this.datosCancha = res
+                            this.$emit('SalirDeABMcanchas', true)
+                        }) 
+                }
+            }else{
+                this.$swal({
+                    title: '¡Formulario incompleto!',
+                    text: 'Los siguientes campos estan vacios: '+ this.alertaFormulario,
+                    icon: 'warning',
+                    confirmButtonText: 'Ok'
+                })
             }
-            if (this.accion == 'Editar') {
-                console.log(JSON.stringify(this.datosCancha))
-                this.EditarDatos ('canchas/editar', this.id, this.datosCancha)
-                    .then(res => {
-                        this.datosCancha = res
-                        this.$emit('SalirDeABMcanchas', true)
-                    })
-            }
-            if (this.accion == 'Borrar') {
-                /* this.EliminarDatos ('canchas', this.id)
-                    .then(res => {
-                        this.datosCancha = res
-                        this.$emit('SalirDeABMcanchas', true)
-                    }) */
-                this.EliminarDatos(`canchas/eliminar`, this.id, this.datosCancha)
-                    .then(res => {
-                        this.datosCancha = res
-                        this.$emit('SalirDeABMcanchas', true)
-                    })
-                
-            }
+
+            
         },
+
         Cancelar() {
             this.$emit("SalirDeABMcanchas", false)
+        },
+
+        validarCampos(objFormulario){
+                this.alertaFormulario= [];
+                for (let key in objFormulario) {
+                        if(objFormulario[key] == ""){
+                                this.alertaFormulario.push(' '+key.charAt(0).toUpperCase()+ key.slice(1))
+                        }
+                }
+
+                if(this.alertaFormulario.length > 0){
+                    return true
+                } else {
+                    return false
+                }
         },
     }
 }

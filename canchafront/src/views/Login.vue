@@ -13,18 +13,6 @@
                 Iniciar sesión
             </button>
         </form>
-
-        <br>
-        
-        <div class="alert alert-danger" role="alert"
-                v-if="this.alertaLogueado.length > 0" >
-
-                <h5>Complete los siguientes campos, por favor</h5>
-                <ul v-for="(campo, id) in alertaLogueado" 
-                        :key="id">
-                        <li>{{campo}}</li>
-                </ul>
-        </div>
     </div>
 </template>
 
@@ -55,7 +43,12 @@ export default {
                     console.log(res)
     
                     if (res.msj == "Error") {
-                        alert(res.razon)
+                        this.$swal({
+                            title: 'Error!',
+                            text: ''+res.razon,
+                            icon: 'warning',
+                            confirmButtonText: 'Ok'
+                        })
                     } else {
                         let token = JSON.stringify(res.user.token_actual);
                         let numeroClub = JSON.stringify(
@@ -73,6 +66,13 @@ export default {
                         this.$router.push("/");
                     }
                 });
+            } else {
+                this.$swal({
+                    title: '¡Error!',
+                    text: 'Los siguientes campos estan vacios: '+ this.alertaLogueado,
+                    icon: 'warning',
+                    confirmButtonText: 'Ok'
+                })
             }
         },
 
@@ -80,7 +80,7 @@ export default {
                 this.alertaLogueado= [];
                 for (let key in this.datosLoginUser) {
                         if(this.datosLoginUser[key] == ""){
-                                this.alertaLogueado.push(key.charAt(0).toUpperCase()+ key.slice(1))
+                                this.alertaLogueado.push(' '+key.charAt(0).toUpperCase()+ key.slice(1))
                         }
                 }
 
