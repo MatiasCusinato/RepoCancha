@@ -27,18 +27,6 @@
                                 Registrar
                         </button>
                 </form>
-
-                <br>
-
-                <div class="alert alert-danger" role="alert"
-                        v-if="this.alertaRegistrado.length > 0" >
-
-                        <h5>Complete los siguientes campos, por favor</h5>
-                        <ul v-for="(campo, id) in alertaRegistrado" 
-                                :key="id">
-                                <li>{{campo}}</li>
-                        </ul>
-                </div>
         </div>
 </template>
 
@@ -74,13 +62,25 @@ name: 'Registro',
                                                 console.log(res)
 
                                                 if (res.msj == "Error") {
-                                                        alert(res.razon)
+                                                        this.$swal({
+                                                                title: 'Error!',
+                                                                text: ''+res.razon,
+                                                                icon: 'error',
+                                                                confirmButtonText: 'Ok'
+                                                        })
                                                 } else {
                                                         this.$router.push("/login");
                                                 }
 
                                         })
                                         .catch((err) => console.log("Error fetch:", err));
+                        } else {
+                                this.$swal({
+                                        title: '¡Error!',
+                                        text: 'Los siguientes campos estan vacios: '+ this.alertaRegistrado,
+                                        icon: 'warning',
+                                        confirmButtonText: 'Ok'
+                                })
                         }    
 
                 },

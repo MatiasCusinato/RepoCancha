@@ -115,21 +115,21 @@ export default {
             offset: 2,
         }
     },
+
     created() {
         this.traerDatos(1)
     },
+
     mounted() {
         console.log("evento mounted")
         //this.traerDatos()
     },
-    /*  destroyed() {
-        console.log("evento destroyed")
-        this.traerDatos()
-    }, */
+
     methods: {
         traerDatos(pagina) {
             console.log("Obteniendo CANCHAS desde la API ...");
             let club= localStorage.getItem('club')
+
             this.ObtenerDatos(`canchas/${club}?page=${pagina}`)
                 .then(res => {
                     this.datos = res.canchas.data;
@@ -160,16 +160,29 @@ export default {
 
         FiltroCanchas(){
             let club= localStorage.getItem('club')
-            this.ObtenerDatos(`canchas/${club}/deporte/${this.filtroDeporte}`)
-                .then(res => {
-                    if(res.canchas.length!=0){
-                        this.datos = res.canchas;
-                    } else{
-                        alert(`No existe alguna cancha con el deporte de "${this.filtroDeporte}"`)
-                        this.traerDatos();
-                    }
+            if(this.filtroDeporte){
+                this.ObtenerDatos(`canchas/${club}/deporte/${this.filtroDeporte}`)
+                    .then(res => {
+                        if(res.canchas.length!=0){
+                            this.datos = res.canchas;
+                        } else{
+                            alert(`No existe alguna cancha con el deporte de "${this.filtroDeporte}"`)
+                            this.traerDatos();
+                        }
+                    })
+            } else {
+                this.$swal({
+                    title: '¡Error!',
+                    text: 'Rellene el campo de filtro, porfavor',
+                    icon: 'warning',
+                    confirmButtonText: 'Ok'
                 })
+            }
+
         },
+
+
+
     },
 
     computed: {
