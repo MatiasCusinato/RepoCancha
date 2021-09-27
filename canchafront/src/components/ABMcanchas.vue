@@ -53,6 +53,7 @@ export default {
             datosCancha: {
                 //id: 0,
                 deporte: "",
+                club_configuracion_id: localStorage.getItem('club'),
             }
         }
     },
@@ -61,7 +62,7 @@ export default {
         console.log("evento created")
         if (this.accion != 'Crear') {
             let club = localStorage.getItem('club')
-            this.ObtenerDatos(`canchas/${club}/${this.id}`)
+            this.ObtenerDatos(`canchas/${club}/show/${this.id}`)
                 .then (res => {
                     this.datosCancha = res
             })

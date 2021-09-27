@@ -130,7 +130,7 @@ export default {
             console.log("Obteniendo CANCHAS desde la API ...");
             let club= localStorage.getItem('club')
 
-            this.ObtenerDatos(`canchas/${club}?page=${pagina}`)
+            this.ObtenerDatos(`canchas/${club}/4/?page=${pagina}`)
                 .then(res => {
                     this.datos = res.canchas.data;
                     this.paginacion = res.paginacion
