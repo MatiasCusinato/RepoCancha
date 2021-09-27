@@ -1,37 +1,35 @@
 <template>
     <div>
         <h2> Turnos </h2>
+        <!-- <div class="btncli">
+            <button class="btn btn-primary" @click="desplegarABMturnos('Crear')" 
+                    style="font-size: 22px"> 
+                Agregar un nuevo turno 
+            </button>
+        </div> -->
         <div>
             <vue-cal class="calendarioVue vuecal--green-theme" 
                 :time-from="8 * 60" :time-to="19 * 60" 
                 :time-step="30" active-view="month" 
-                :disable-views="['years', 'year',]"
+                
                 :events="events" selected-date="2018-11-19"
                 :editable-events="{ title: false, drag: false, resize: true, delete: true, create: false }"
                 locale="es"
                 :on-event-click="onEventClick"
+                :todayButton="true"
                 
                 :cell-click-hold="false"
                 :drag-to-create-event="false"
                 :on-event-create="onEventCreate"
 
-                v-show="!modal"
+                v-if="!abrirABMturnos"
             />
         </div>
 
-        <div v-if="modal">
-            <div class="card">
-                <h5 class="card-header">Evento: {{ selectedEvent.title }}</h5>
-                <div class="card-body">
-                    <h5 class="card-title">Fecha: {{ selectedEvent.start && selectedEvent.start.format('DD/MM/YYYY') }}</h5>
-                    <p class="card-text">{{ selectedEvent.contentFull }}</p>
-                    <button class="btn btn-info divBotones" @click="modal=!modal">Guardar</button>
-                    <button class="btn btn-dark divBotones" @click="modal=false">Cancelar</button>
-                </div>
-            </div>
-        </div>
-        
-        <!-- <ABMturnos v-if="modal" :accion=accion :id=id /> -->
+        <ABMturnos v-if="abrirABMturnos"
+            :eventoActual="eventoActual"
+            @SalirDeABMturnos = MostrarABMturnos($event)
+        />
     </div>
 </template>
 
@@ -40,25 +38,25 @@ import VueCal from 'vue-cal'
 import 'vue-cal/dist/vuecal.css'
 import 'vue-cal/dist/i18n/es.js'
 import apiRest from '../mixins/apiRest.vue'
-//import ABMturnos from "../components/ABMturnos.vue"
+import ABMturnos from "../components/ABMturnos.vue"
 
 export default {
     components:{
         VueCal,
-        //ABMturnos,
+        ABMturnos,
     },
 
     mixins: [apiRest],
-
+    
     data() {
         return {
             selectedEvent: null,
             showEventCreationDialog: false,
 
             datos: [],
-            verABMturnos: false,
 
-            modal:false,
+            abrirABMturnos: false,
+            eventoActual: null,
 
             events: [
                 {
@@ -78,7 +76,7 @@ export default {
     methods:{
         onEventCreate (event, deleteEventFunction) {
             this.selectedEvent = event
-            this.showEventCreationDialog = true
+            this.abrirABMturnos = true
             this.deleteEventFunction = deleteEventFunction
 
             return event
@@ -90,20 +88,25 @@ export default {
         },
 
         closeCreationDialog () {
-            this.showEventCreationDialog = false
+            this.abrirABMturnos = false
             this.selectedEvent = {}
         },
 
         onEventClick (event, e) {
             this.selectedEvent = event
-            this.modal = true
+            this.abrirABMturnos = true
+            this.accion= "Consultar"
+            //console.log(event)
+            this.eventoActual= event
 
             // Prevent navigating to narrower view (default vue-cal behavior).
             e.stopPropagation()
         },
 
         traerTurnos(){
+            this.events=[]
             let club= localStorage.getItem('club')
+
             this.ObtenerDatos(`turnos/${club}/1`)
                 .then(res => {
                     //console.log(res)
@@ -123,11 +126,18 @@ export default {
                     end: this.datos[i].fecha_Hasta,
                     title: this.datos[i].tipo_turno,
                     class: 'blue-event',
-                }) 
-
-                
+                    objTurnos: this.datos[i]
+                })      
             }
+        },
+        
+        MostrarABMturnos(ver) {
+            this.traerTurnos();
+            this.abrirABMturnos= false
 
+            if (ver === true) {
+                this.traerTurnos();
+            }
         },
         
     },

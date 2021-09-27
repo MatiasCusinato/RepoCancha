@@ -19,10 +19,19 @@ class TurnoController extends Controller
     public function index($club_id, $cancha_id)
     {
         $turnos = DB::table('turnos')
-                    ->where([
-                        ['turnos.club_configuracion_id', '=', $club_id],
-                        ['turnos.cancha_id', '=', $cancha_id]])
-                    ->get();
+                    ->join('clientes', 'turnos.cliente_id', '=', 'clientes.id')
+                    ->join('canchas', 'turnos.cancha_id', '=', 'canchas.id')
+                        ->where([
+                            ['turnos.club_configuracion_id', '=', $club_id],
+                            ['turnos.cancha_id', '=', $cancha_id],
+                        ])
+                            ->select('turnos.id', 'turnos.grupo',
+                                        'clientes.nombre', 'clientes.apellido',
+                                        'turnos.cancha_id', 'canchas.deporte',
+                                        'turnos.club_configuracion_id',
+                                        'turnos.tipo_turno', 'turnos.fecha_Desde',
+                                        'turnos.fecha_Hasta', 'turnos.precio',)
+                            ->get();
 
         return $turnos->toJson(JSON_PRETTY_PRINT);
     }
@@ -52,11 +61,12 @@ class TurnoController extends Controller
                     ->join('canchas', 'turnos.cancha_id', '=', 'canchas.id')
                         ->where('turnos.id', '=', $turno_id)    
                         ->where('turnos.club_configuracion_id', '=', $club_id)
-                            ->select('turnos.id', 'clientes.nombre', 
+                            ->select('turnos.id', 'turnos.grupo',
+                                        'clientes.nombre', 'clientes.apellido',
                                         'turnos.cancha_id', 'canchas.deporte',
-                                        'turnos.tipo_turno', 'turnos.fecha_Desde',
-                                        'turnos.fecha_Hasta', 'turnos.precio',
-                                        'turnos.grupo')
+                                        'turnos.club_configuracion_id',
+                                        'turnos.fecha_Desde', 'turnos.fecha_Hasta', 
+                                        'turnos.tipo_turno', 'turnos.precio',)
                                 ->get();
         
         return response()->json($turno, 200);

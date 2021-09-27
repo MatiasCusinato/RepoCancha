@@ -15,29 +15,39 @@ class CanchaController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($club_id, Request $request)
+    public function index($club_id, $registros=null, Request $request)
     {
 
-        //$cancha: consulta sql de los canchas pertenecientes a tal club
-
-        $cancha = DB::table('canchas')
+        if($registros==null){
+            $canchas = DB::table('canchas')
                             ->join('club_configuracions', 'canchas.club_configuracion_id', '=', 'club_configuracions.id')
                             ->where('canchas.club_configuracion_id', '=', $club_id)
                             ->select('canchas.*')
                             ->orderBy('id', 'asc')
-                            ->paginate(4);
+                            ->get();
+
+            $registros = count($canchas);
+        }
+
+        //$cancha: consulta sql de los canchas pertenecientes a tal club
+        $canchas = DB::table('canchas')
+                            ->join('club_configuracions', 'canchas.club_configuracion_id', '=', 'club_configuracions.id')
+                            ->where('canchas.club_configuracion_id', '=', $club_id)
+                            ->select('canchas.*')
+                            ->orderBy('id', 'asc')
+                            ->paginate($registros);
 
         return [
             'paginacion' => [
-                'total'         => $cancha->total(),
-                'current_page'  => $cancha->currentPage(),
-                'per_page'      => $cancha->perPage(),
-                'last_page'     => $cancha->lastPage(),
-                'from'          => $cancha->firstItem(),
-                'to'            => $cancha->lastPage(),
+                'total'         => $canchas->total(),
+                'current_page'  => $canchas->currentPage(),
+                'per_page'      => $canchas->perPage(),
+                'last_page'     => $canchas->lastPage(),
+                'from'          => $canchas->firstItem(),
+                'to'            => $canchas->lastPage(),
             ],
 
-            'canchas' => $cancha
+            'canchas' => $canchas
         ];
 
         //return $cancha->toJson(JSON_PRETTY_PRINT);

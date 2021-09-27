@@ -104,17 +104,15 @@ export default {
     created() {
         console.log("evento created")
         if (this.accion != 'Crear') {
-            let club=  localStorage.getItem('club')
-            this.datosClientes.club_configuracion_id= club;
-            this.ObtenerDatos(`clientes/${club}/${this.id}`)
+            this.ObtenerDatos(`clientes/${this.datosClientes.club_configuracion_id}/show/${this.id}`)
                 .then (res => {
                     this.datosClientes = res
                 })
+
         }
     },
 
     methods: {
-
         Aceptar() {
             if(!this.validarCampos(this.datosClientes)){
                 

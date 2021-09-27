@@ -117,7 +117,7 @@ export default {
             accion: '',
 
             id: 0,
-
+            
             paginacion: {
                 total: 0,
                 current_page: 0,
@@ -144,7 +144,7 @@ export default {
         traerDatos(pagina) {
             console.log("Obteniendo CLIENTES desde la API ...");
             let club= localStorage.getItem('club')
-            this.ObtenerDatos(`clientes/${club}?page=${pagina}`)
+            this.ObtenerDatos(`clientes/${club}/3/?page=${pagina}`)
                 .then(res => {
                     this.datos = res.clientes.data;
                     this.paginacion= res.paginacion
@@ -152,8 +152,8 @@ export default {
         },
 
         desplegarABMcliente(accion, id=0) {
-            this.accion = accion,
-            this.id = id,
+            this.accion = accion
+            this.id = id
             this.abrirABMcliente = !this.abrirABMcliente;
         },
         
