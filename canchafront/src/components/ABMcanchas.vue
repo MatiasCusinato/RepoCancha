@@ -1,44 +1,56 @@
 <template>
     <div>
         <hr>
-        <p>{{accion}} Canchas</p>
-            <form class="formABM">
-
-                <div v-if="accion=='Borrar'">
-                    <table class="table-bordered light-blue darken-2">
-                        <thead>
-                            <tr class="bg-primary text-light">
-                                <th scope="col">ID</th>
-                                <th scope="col">Club</th>
-                                <th scope="col">Deporte</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <th scope="row"> {{datosCancha.id}} </th>
-                                <td> {{datosCancha.club_configuracion_id}} </td>
-                                <td> {{datosCancha.deporte}} </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-
-                <div v-if="accion=='Crear' || accion=='Editar'">
-                    <!-- <div class="mb-3">
-                        <label for="" class="form-label"> Id Club: </label>
-                        <input type="text" class="form-control" v-model="datosCancha.club_configuracion_id">
-                    </div> -->
-                    <div class="mb-3">
-                        <label for="" class="form-label"> Deporte </label>
-                        <input type="text" class="form-control" v-model="datosCancha.deporte">
+            <form>
+                <div class="contenedor" v-if="accion=='Crear' || accion=='Editar'">
+                    <div :class="this.accion=='Crear' ? 'VentanaModalCrear' : 'VentanaModalEditar'">
+                        <div class="cabecera tituloventana">
+                        <button class="cierre btn btn-danger" @click="Cancelar()"><font color="#ff0000"><i class="bi bi-x-circle-fill"></i></font></button>
+                        <p>{{accion}} Canchas</p>
+                        </div>
+                        <div class="contenido">
+                            <div class="mb-3">
+                                <label for="" class="form-label campo"><i class="bi bi-flag"> Deporte: </i></label>
+                                <input type="text" class="form-control form-control-sm" v-model="datosCancha.deporte">
+                            </div>
+                            <button class="btn btn-primary divBotones" @click="Aceptar()"><i class="bi bi-check2-circle"> Guardar </i></button>
+                            <button class="btn btn-danger divBotones" @click="Cancelar()"><i class="bi bi-x-circle-fill"> Cancelar </i></button>
+                        </div>
                     </div>
                 </div>
 
-                <div class="divBotones">
-                    <button @click="Aceptar()" class="btn btn-primary"> Aceptar </button>
-                    |
-                    <button @click="Cancelar()" class="btn btn-danger"> Cancelar </button>
+
+                <div v-if="accion=='Borrar'" class="contenedor">
+                    <div class="VentanaModalBorrar">
+                        <div class="alert alert-danger" role="alert" v-if="accion === 'Borrar'">
+                            <p>{{accion}} Canchas</p>
+                            <hr>
+                            <table class="table-bordered light-blue darken-2">
+                                <thead>
+                                    <tr class="bg-primary text-light">
+                                        <th scope="col">ID</th>
+                                        <th scope="col">Club</th>
+                                        <th scope="col">Deporte</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <th scope="row">{{datosCancha.id}}</th>
+                                        <td> {{datosCancha.club_configuracion_id}} </td>
+                                        <td> {{datosCancha.deporte}} </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <strong><i class="bi bi-exclamation-triangle"> Atención! </i></strong> ¿Esta seguro de borrar esta CANCHA?.
+                            <div >
+                                <button @click="Aceptar()" class="btn btn-danger btn-sm divBotones">Si, borrar cancha</button>
+                                <button @click="Cancelar()" class="btn btn-primary btn-sm divBotones">No, volver</button> 
+                            </div>
+                        </div>
+                    </div>
                 </div>
+                
             </form>
     </div>
 </template>
@@ -47,11 +59,14 @@
 import apiRest from "@/mixins/apiRest.vue"
 export default {
     props: ['accion','id'],
+
     mixins: [apiRest],
+
     data() {
         return {
             datosCancha: {
                 //id: 0,
+                club_configuracion_id: "",
                 deporte: "",
             }
         }
@@ -154,6 +169,64 @@ p {
     font-family: "Times New Roman", Times, serif;
 } 
 .divBotones{
-    margin: 20px 10px
+    margin: 20px 10px;
+    position: relative;
+    left: 50px;
+}
+.contenedor{
+	position: fixed;
+	top:0;
+	left:0;
+	width: 100%;
+	height: 100%;
+	background: rgba(0,0,0,0.5);
+}
+
+.VentanaModalCrear {
+    background-color: rgb(85, 84, 167);
+    border-radius: 10px;
+    padding: 28px;
+    width: 400px;
+    margin: 25px auto;
+}
+
+.VentanaModalEditar {
+    background-color: rgb(84, 167, 128);
+    border-radius: 10px;
+    padding: 28px;
+    width: 400px;
+    margin: 25px auto;
+}
+
+table{
+    background-color: whitesmoke;
+    margin: 0px 40px 10px;
+}
+
+.VentanaModalBorrar {
+    background-color: rgb(209, 113, 89);
+    border-radius: 10px;
+    padding: 25px;
+    width: 400px;
+    margin: 95px auto;
+}
+
+.cierre{
+    background: white;
+    float: right;
+}
+
+.tituloventana{
+    text-align:center;
+    color:white;
+}
+
+.campo{
+	color: white;
+}
+
+.titulo{
+	float:left;
+	color: white;
 }
 </style>

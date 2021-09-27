@@ -5,17 +5,15 @@
         <div class="divFiltros">
             <h4>Filtros:</h4>
             <input type="text" placeholder="Filtro por deporte" v-model="filtroDeporte">
-            <br>
-            <br>
-            <button type="button" class="btn btn-secondary" @click="FiltroCanchas()">
-                Buscar
+            <button type="button" class="boton btn btn-secondary btn-sm" @click="FiltroCanchas()">
+                <i class="bi bi-search"></i>
             </button>
         </div>
 
 
         <br>
         <button class="btn btn-success" @click="desplegarABMcancha('Crear')" style="font-size: 22px"> 
-            Agregar nueva Cancha 
+            <i class="bi bi-aspect-ratio"> Agregar nueva Cancha </i> 
         </button>
         <br>
         <ABMcanchas
@@ -42,11 +40,11 @@
 
                         <td>
                             <button class="btn btn-info" @click="desplegarABMcancha('Editar', canchas.id)">
-                                Editar
+                                <i class="bi bi-brush"></i>
                             </button>
 
                             <button class="btn btn-danger" @click="desplegarABMcancha('Borrar', canchas.id)">
-                                Borrar
+                                <i class="bi bi-trash-fill"></i>
                             </button>
                         </td>
                     </tr>
@@ -60,7 +58,7 @@
                     <li class="page-item" v-if="paginacion.current_page > 1">
                         <a class="page-link" href="#" 
                             @click.prevent="cambiarPagina(paginacion.current_page - 1)">
-                                Atras
+                                <i class="bi bi-skip-start-fill"></i>
                         </a>
                     </li>
 
@@ -72,7 +70,7 @@
                     <li class="page-item" v-if="paginacion.current_page < paginacion.last_page">
                         <a class="page-link" href="#"
                             @click.prevent="cambiarPagina(paginacion.current_page + 1)">
-                                Siguiente
+                                <i class="bi bi-skip-end-fill"></i>
                         </a>
                     </li>
                 </ul>
@@ -166,7 +164,14 @@ export default {
                         if(res.canchas.length!=0){
                             this.datos = res.canchas;
                         } else{
-                            alert(`No existe alguna cancha con el deporte de "${this.filtroDeporte}"`)
+                            this.$swal({
+                                title: '¡Error!',
+                                text: `No existe algun deporte con el nombre de "${this.filtroDeporte}"`,
+                                icon: 'error',
+                                confirmButtonText: 'Ok'
+                            })
+
+                            this.filtroDeporte= ""
                             this.traerDatos();
                         }
                     })
@@ -241,7 +246,7 @@ h1 {
     border-collapse: collapse;
     /* margin:10px auto 10px auto; */
     padding: 18px;
-    margin: 15px -80px; 
+    margin: 15px -50px; 
     text-align: center;
     border-width: 2px;
     font-size: 15px;
@@ -252,9 +257,16 @@ h1 {
     border-radius: 10px;
     border-collapse: collapse;
     min-height: 100px;
-    margin: 10px;
+    height: 120px;
+    width: 360px;
+    margin: 20px -40px;
     padding: 20px 40px;
     background-color:rgb(243, 214, 159);
+}
+.boton {
+    position: relative;
+    left: 10px;
+    top: -3px;
 }
 .btncli {
     position: absolute;
