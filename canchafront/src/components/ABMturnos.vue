@@ -62,7 +62,7 @@
                                 <select name="cliente_id" v-model="eventoActual.objTurnos.cliente_id" 
                                             class="form-select" aria-label=".form-select-sm example">
                                     <option :value="eventoActual.objTurnos.cliente_id" selected>
-                                        {{eventoActual.objTurnos.id}}| {{eventoActual.objTurnos.nombre}} {{eventoActual.objTurnos.apellido}}
+                                        {{eventoActual.objTurnos.cliente_id}}| {{eventoActual.objTurnos.nombre}} {{eventoActual.objTurnos.apellido}}
                                     </option>
                                     <option v-for="(cliente, $id) in clientes" 
                                         :key="$id"
@@ -118,6 +118,67 @@
             
             <div v-if="accion == 'Borrar'">
                 <h2>Borrando turno</h2>
+                <div class="contenedor" v-if="accion=='Borrar'">
+                    <div class="VentanaModalBorrar">
+                        <div class="cabecera tituloventana">
+                        <button class="cierre btn btn-primary" @click="desplegarABMturnos('Consultar')">
+                            <font color="#35586F">X</font>
+                        </button>
+                        <p>{{accion}} Turnos</p>
+                        
+                        </div>
+                        <div class="contenido">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="" class="form-label campo"> Cliente: </label>
+                                    <input type="text" :value="nombreApellido" 
+                                            class="form-control form-control-sm inputChico" readonly>
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <label for="" class="form-label campo"> Cancha: </label>
+                                    <input type="text" :value="canchaDeporte" 
+                                            class="form-control form-control-sm inputChico" readonly>
+                                </div>
+                            </div>
+
+                            <br>
+
+                            <div class="mb-3">
+                                <label for="" class="form-label campo"> Tipo de turno </label>
+                                <input type="text" class="form-control form-control-sm inputChico" 
+                                            v-model="eventoActual.objTurnos.tipo_turno" readonly>
+                            </div>
+
+                            <br>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="" class="form-label campo"> 
+                                        Comienzo:
+                                    </label>
+                                    <input type="datetime" v-model="eventoActual.objTurnos.fecha_Desde" 
+                                            class="form-control form-control-sm inputChico" readonly>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="" class="form-label campo">
+                                        Fin:
+                                    </label>
+                                    <input type="datetime" v-model="eventoActual.objTurnos.fecha_Hasta"
+                                            class="form-control form-control-sm inputChico" readonly>
+                                </div>
+                            </div>
+
+                            <!-- <div>
+                                <label for="" class="form-label campo"> Precio:</label>
+                                <input type="text" class="form-control form-control-sm inputChico" 
+                                        v-model="eventoActual.objTurnos.precio">
+                            </div> -->
+                            <button class="btn btn-info divBotones" @click="Aceptar()">Borrar</button>
+                            <button class="btn btn-light divBotones" @click="Cancelar()">Cancelar</button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -127,6 +188,23 @@
 import apiRest from '../mixins/apiRest.vue'
 
 export default {
+    computed: {
+        nombreApellido(){
+            let cliente_id= this.eventoActual.objTurnos.cliente_id
+            let nombre= this.eventoActual.objTurnos.nombre
+            let apellido= this.eventoActual.objTurnos.apellido
+
+            return cliente_id+'| '+nombre+' '+apellido
+        },
+
+        canchaDeporte(){
+            let cancha_id= this.eventoActual.objTurnos.cancha_id
+            let deporte= this.eventoActual.objTurnos.deporte
+
+            return cancha_id+'| '+ deporte
+        }, 
+    },
+
     mixins: [apiRest],
 
     props: ['eventoActual'],
@@ -175,6 +253,21 @@ export default {
             this.$emit("SalirDeABMturnos", false)
         },
 
+        Aceptar(){
+            if(this.accion=='Editar'){
+                console.log('El turno fue editado exitosamente')
+            }
+            if(this.accion=='Borrar'){
+                let turno_id = this.eventoActual.objTurnos.id
+                this.EliminarDatos(`turnos/eliminar`, turno_id, this.datosTurno)
+                        .then(res => {
+                            console.log(res)
+                            //this.datosTurno = res
+                            //this.$emit('SalirDeABMturnos', true)
+                        })
+            }
+        },
+
         desplegarABMturnos(accion) {
             this.accion = accion
             this.abrirFormTurnos = !this.abrirFormTurnos
@@ -186,12 +279,16 @@ export default {
                     this.clientes = res.clientes.data
                 })
         },
+
         traerCanchas(){
             this.ObtenerDatos(`canchas/${this.datosTurno.club_configuracion_id}`)
                 .then (res => {
                     this.canchas = res.canchas.data
                 })
         },
+
+
+        
     },
 
     
@@ -245,17 +342,17 @@ p{
   margin: 25px auto;
 }
 
+.VentanaModalBorrar {
+  background-color: rgb(204, 124, 93);
+  border-radius: 10px;
+  padding: 28px;
+  width: 600px;
+  margin: 25px auto;
+}
+
 table{
     background-color: whitesmoke;
     margin: 0px 40px 10px;
-}
-
-.VentanaModalBorrar {
-  background-color: rgb(209, 113, 89);
-  border-radius: 10px;
-  padding: 25px;
-  width: 400px;
-  margin: 95px auto;
 }
 
 .cierre{
