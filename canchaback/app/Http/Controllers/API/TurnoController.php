@@ -79,11 +79,13 @@ class TurnoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Turno $turno)
+    public function update($turno_id, Request $request, Turno $turno)
     {
+        $turno = Turno::find($turno_id);
+
         $turno->update($request->all());
         return response()->json([
-            'Petición' => 'Exitosa', 
+            'msj' => 'Exitosa', 
             'Mensaje' => 'Turno modificado'
         ]);
     }
@@ -99,7 +101,7 @@ class TurnoController extends Controller
         Turno::destroy($turno_id);
 
         return response()->json([
-            'Petición' => 'Exitosa',
+            'msj' => 'Exitosa',
             'Mensaje' => 'Turno eliminado'
         ]);
     }

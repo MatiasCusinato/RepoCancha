@@ -8,17 +8,19 @@
         <div class="divFiltros">
             <h4>Filtros:</h4>
             <input type="text" placeholder="Filtro por nombre" v-model="filtroNombre">
-            <button @click="traerFiltro()">
-                Buscar
+            <br>
+            <br>
+            <button type="button" class="boton btn btn-secondary btn-sm" @click="traerFiltro()">
+                <i class="bi bi-search"></i>
             </button>
         </div>
 
         <br>
 
         <div class="btncli">
-            <button class="btn btn-primary" @click="desplegarABMcliente('Crear')" 
+            <button class="btn btn-success" @click="desplegarABMcliente('Crear')" 
                     style="font-size: 22px"> 
-                Agregar un nuevo Cliente 
+                <i class="bi bi-person-plus-fill"> Agregar un nuevo Cliente </i> 
             </button>
         </div>
 
@@ -54,11 +56,11 @@
 
                         <td>
                             <button class="btn btn-info" @click="desplegarABMcliente('Editar', clientes.id)">
-                                Editar
+                                <i class="bi bi-brush"></i>
                             </button>
 
                             <button class="btn btn-danger" @click="desplegarABMcliente('Borrar', clientes.id)">
-                                Borrar
+                                <i class="bi bi-trash-fill"></i>
                             </button>
                         </td>
                     </tr>
@@ -72,7 +74,7 @@
                     <li class="page-item" v-if="paginacion.current_page > 1">
                         <a class="page-link" href="#" 
                             @click.prevent="cambioPagina(paginacion.current_page - 1)">
-                                Atras
+                                <i class="bi bi-skip-start-fill"></i>
                         </a>
                     </li>
 
@@ -84,7 +86,7 @@
                     <li class="page-item" v-if="paginacion.current_page < paginacion.last_page">
                         <a class="page-link" href="#"
                             @click.prevent="cambioPagina(paginacion.current_page + 1)">
-                                Siguiente
+                                <i class="bi bi-skip-end-fill"></i>
                         </a>
                     </li>
                 </ul>
@@ -256,7 +258,7 @@ h1 {
     border-collapse: collapse;
     margin:10px auto 10px auto;
     padding: 18px;
-    margin: 15px -300px;
+    margin: 15px -240px;
     text-align: center;
     border-width: 2px;
     font-size: 15px;
@@ -267,9 +269,16 @@ h1 {
     border-radius: 10px;
     border-collapse: collapse;
     min-height: 100px;
-    margin: 10px;
+    height: 120px;
+    width: 360px;
+    margin: 20px -40px;
     padding: 20px 40px;
     background-color:rgb(243, 214, 159);
+}
+.boton {
+    position: relative;
+    left: 190px;
+    top: -55px;
 }
 .btncli {
     position: absolute;

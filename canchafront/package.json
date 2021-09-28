@@ -9,7 +9,9 @@
   },
   "dependencies": {
     "axios": "^0.21.1",
+    "bootstrap-icons": "^1.5.0",
     "core-js": "^3.6.5",
+    "sweetalert2": "^11.1.7",
     "vue": "^2.6.11",
     "vue-axios": "^3.2.5",
     "vue-cal": "^3.10.1",

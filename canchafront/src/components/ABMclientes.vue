@@ -5,36 +5,36 @@
                 <div class="contenedor" v-if="accion=='Crear' || accion=='Editar'">
                     <div :class="this.accion=='Crear' ? 'VentanaModalCrear' : 'VentanaModalEditar'">
                         <div class="cabecera tituloventana">
-                        <button class="cierre btn btn-primary" @click="Cancelar()"><font color="#35586F">X</font></button>
+                        <button class="cierre btn btn-danger" @click="Cancelar()"><font color="#ff0000"><i class="bi bi-x-circle-fill"></i></font></button>
                         <p>{{accion}} Clientes</p>
                         </div>
                         <div class="contenido">
                             <div class="mb-3">
-                                <label for="" class="form-label campo"> Nombre: </label>
+                                <label for="" class="form-label campo"><i class="bi bi-person"> Nombre: </i></label>
                                 <input type="text" class="form-control form-control-sm" v-model="datosClientes.nombre">
                             </div>
 
                             <div class="mb-3">
-                                <label for="" class="form-label campo" > Apellido: </label>
+                                <label for="" class="form-label campo" ><i class="bi bi-person"> Apellido: </i></label>
                                 <input type="text" class="form-control form-control-sm" v-model="datosClientes.apellido">
                             </div>
 
                             <div class="mb-3">
-                                <label for="" class="form-label campo"> Telefono: </label>
+                                <label for="" class="form-label campo"><i class="bi bi-telephone"> Telefono: </i></label>
                                 <input type="text" class="form-control form-control-sm" v-model="datosClientes.telefono">
                             </div>
 
                             <div class="mb-3">
-                                <label for="" class="form-label campo"> Edad: </label>
+                                <label for="" class="form-label campo"><i class="bi bi-calendar2-date"> Edad: </i></label>
                                 <input type="text" class="form-control form-control-sm" v-model="datosClientes.edad">
                             </div>
 
                             <div class="mb-3">
-                                <label for="" class="form-label campo"> Email:</label>
+                                <label for="" class="form-label campo"><i class="bi bi-envelope"> Email: </i></label>
                                 <input type="text" class="form-control form-control-sm" v-model="datosClientes.email">
                             </div>
-                            <button class="btn btn-info divBotones" @click="Aceptar()">Guardar</button>
-                            <button class="btn btn-light divBotones" @click="Cancelar()">Cancelar</button>
+                            <button class="btn btn-primary divBotones" @click="Aceptar()"><i class="bi bi-check2-circle"> Guardar </i></button>
+                            <button class="btn btn-danger divBotones" @click="Cancelar()"><i class="bi bi-x-circle-fill"> Cancelar </i></button>
                         </div>
                     </div>
                 </div>
@@ -212,7 +212,9 @@ p{
 }
 
 .divBotones{
-    margin: 10px 25px 0px
+    margin: 10px 25px 0px;
+    position: relative;
+    left: 20px;
 }
 
 .contenedor{

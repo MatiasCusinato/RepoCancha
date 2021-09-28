@@ -2,13 +2,17 @@
     <div>
         <nav class="navbar navbar-expand-md navbar-dark bg-dark mb-4">
             <div class="container-fluid">
-                <router-link to="/" class="navbar-brand">Inicio</router-link>
+                <router-link to="/" class="navbar-brand"><i class="bi bi-house">Inicio</i></router-link>
                 
                 <div class="collapse navbar-collapse" v-if="this.token">
                     <div class="navbar-nav">
-                        <router-link to="/INFOturnosADMIN" class="nav-item nav-link">Turnos ADM</router-link>
-                        <router-link to="/INFOclientes" class="nav-item nav-link">Clientes</router-link>
-                        <router-link to="/INFOcanchas" class="nav-item nav-link">Canchas</router-link>
+                        <router-link to="/INFOturnosADMIN" class="nav-item nav-link"><i class="bi bi-folder"> Turnos ADM </i></router-link>
+
+                        <router-link to="/INFOturnosDISPONIBLES" class="nav-item nav-link"><i class="bi bi-folder"> Turnos DISPONIBLES </i></router-link>
+
+                        <router-link to="/INFOclientes" class="nav-item nav-link"><i class="bi bi-folder"> Clientes </i></router-link>
+                        
+                        <router-link to="/INFOcanchas" class="nav-item nav-link"><i class="bi bi-folder"> Canchas </i></router-link>
                     </div>
                 </div>
 
@@ -26,7 +30,7 @@
 
                     <ul class="navbar-nav me-auto mb-2 mb-md-0" v-if="this.token">
                         <li class="nav-item">
-                            <a @click="logoutUser" href="#" class="nav-link">Logout</a>
+                            <a @click="logoutUser" href="#" class="nav-link"><i class="bi bi-box-arrow-right"> Cerrar Sesión </i></a>
                         </li>
                     </ul>
                 </div>
