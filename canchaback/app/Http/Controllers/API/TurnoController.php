@@ -25,7 +25,7 @@ class TurnoController extends Controller
                             ['turnos.club_configuracion_id', '=', $club_id],
                             ['turnos.cancha_id', '=', $cancha_id],
                         ])
-                            ->select('turnos.id', 'turnos.grupo',
+                            ->select('turnos.id', 'turnos.grupo', 'turnos.cliente_id',
                                         'clientes.nombre', 'clientes.apellido',
                                         'turnos.cancha_id', 'canchas.deporte',
                                         'turnos.club_configuracion_id',
@@ -61,7 +61,7 @@ class TurnoController extends Controller
                     ->join('canchas', 'turnos.cancha_id', '=', 'canchas.id')
                         ->where('turnos.id', '=', $turno_id)    
                         ->where('turnos.club_configuracion_id', '=', $club_id)
-                            ->select('turnos.id', 'turnos.grupo',
+                            ->select('turnos.id', 'turnos.grupo', 'turnos.cliente_id',
                                         'clientes.nombre', 'clientes.apellido',
                                         'turnos.cancha_id', 'canchas.deporte',
                                         'turnos.club_configuracion_id',
@@ -79,11 +79,13 @@ class TurnoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Turno $turno)
+    public function update($turno_id, Request $request, Turno $turno)
     {
+        $turno = Turno::find($turno_id);
+
         $turno->update($request->all());
         return response()->json([
-            'Petición' => 'Exitosa', 
+            'msj' => 'Exitosa', 
             'Mensaje' => 'Turno modificado'
         ]);
     }
@@ -94,9 +96,13 @@ class TurnoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Turno $turno)
+    public function destroy($turno_id, Turno $turno)
     {
-        Turno::destroy($turno->id);
-        return response()->json(['Petición' => 'Exitosa', 'Mensaje' => 'Turno eliminado']);
+        Turno::destroy($turno_id);
+
+        return response()->json([
+            'msj' => 'Exitosa',
+            'Mensaje' => 'Turno eliminado'
+        ]);
     }
 }

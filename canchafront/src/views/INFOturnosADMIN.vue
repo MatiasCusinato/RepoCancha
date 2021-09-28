@@ -9,7 +9,7 @@
         </div> -->
         <div>
             <vue-cal class="calendarioVue vuecal--green-theme" 
-                :time-from="8 * 60" :time-to="19 * 60" 
+                :time-from="9 * 60" :time-to="24.5 * 60" 
                 :time-step="30" active-view="month" 
                 
                 :events="events" selected-date="2018-11-19"
@@ -70,6 +70,7 @@ export default {
     },
 
     created(){
+        this.events= []
         this.traerTurnos();
     },
 
@@ -125,14 +126,13 @@ export default {
                     start: this.datos[i].fecha_Desde,
                     end: this.datos[i].fecha_Hasta,
                     title: this.datos[i].tipo_turno,
-                    class: 'blue-event',
+                    class: 'sport',
                     objTurnos: this.datos[i]
                 })      
             }
         },
         
         MostrarABMturnos(ver) {
-            this.traerTurnos();
             this.abrirABMturnos= false
 
             if (ver === true) {
@@ -259,4 +259,7 @@ table{
 	float:left;
 	color: white;
 }
+
+.vuecal__event.leisure {background-color: rgba(253, 156, 66, 0.9);border: 1px solid rgb(233, 136, 46);color: #fff;}
+.vuecal__event.sport {background-color: rgba(255, 102, 102, 0.9);border: 1px solid rgb(235, 82, 82);color: #fff;}
 </style>

@@ -59,5 +59,7 @@ Route::get('clientes/{club_id}/nombre/{nombre}', [ClienteController::class, 'fil
 //Rutas Turnos
 Route::get('turnos/{club_id}/{cancha_id}', [TurnoController::class, 'index']); 
 Route::get('turnos/{club_id}/show/{turno_id}', [TurnoController::class, 'show']);
+Route::put('turnos/editar/{turno_id}', [TurnoController::class, 'update']);
+Route::delete('turnos/eliminar/{turno_id}', [TurnoController::class, 'destroy']);
  
 
