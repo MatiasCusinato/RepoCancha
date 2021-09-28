@@ -1,51 +1,90 @@
 <template>
     <div>
-        <h1>ABMTURNOS</h1>
-        <div class="card w-100" v-if="!abrirFormTurnos">
-            <h5 class="card-header">Evento: {{ eventoActual.title }}</h5>
-            <div class="card-body">
-                <h5 class="card-title">Fecha: {{ eventoActual.start && eventoActual.start.format('DD/MM/YYYY') }}</h5>
-                <p class="card-text">
-                    <strong>Cliente: </strong>
-                        {{ eventoActual.objTurnos.nombre }} 
-                        {{ eventoActual.objTurnos.apellido }}
-                </p>
-
-                <p class="card-text">
-                    <strong>Cancha:</strong> {{ eventoActual.objTurnos.cancha_id }}
-                </p>
-
-                <p class="card-text">
-                    <strong>Comienzo:</strong> {{ eventoActual.objTurnos.fecha_Desde }}
-                </p>
-
-                <p class="card-text">
-                    <strong>Fin: </strong> {{ eventoActual.objTurnos.fecha_Hasta }}
-                </p>
-
-                <p class="card-text">
-                    <strong>Tipo turno: </strong> {{ eventoActual.objTurnos.tipo_turno }}
-                </p>
-
-                <p class="card-text">
-                    <strong>Precio: </strong> ${{ eventoActual.objTurnos.precio }}
-                </p>           
-
-                <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
-                    <div class="btn-group mr-2" role="group" aria-label="First group"
-                            style="margin: 0px 50px 0px 10px">
-                        <button type="button" class="btn btn-secondary" @click="Cancelar()">
-                            Atras
-                        </button>
+        <h1 class="bg-primary text-white text-center mb-3"> ABMTURNOS </h1>
+        <br>
+        <div class="divCard">
+            <div class="card w-100" v-if="!abrirFormTurnos">
+                <h5 class="card-header">Evento: {{ eventoActual.title }}</h5>
+                <div class="card-body">
+                    <!-- <h5 class="card-title"><i class="bi bi-calendar"> Fecha: {{ eventoActual.start && eventoActual.start.format('DD/MM/YYYY') }} </i></h5> -->
+                    <div>
+                        <span><i class="bi bi-calendar"> Fecha: </i></span>
+                        <input type="text" class="form-control form-control-sm" :value="Actual" readonly>
+                    </div>    
+                    
+                    <!-- <p class="card-text">
+                        <strong><i class="bi bi-person"> Cliente: </i></strong>
+                            {{ eventoActual.objTurnos.nombre }} 
+                            {{ eventoActual.objTurnos.apellido }}
+                    </p> -->
+                    <br>
+                    <div >
+                        <span><i class="bi bi-person"> Cliente: </i></span>
+                        <input type="text" class="form-control form-control-sm" :value="NombreApellido" readonly>
                     </div>
-                    <div class="btn-group mr-2" role="group" aria-label="Second group">
-                        <button type="button" class="btn btn-success" @click="desplegarABMturnos('Editar')">Editar</button>
-                        <button type="button" class="btn btn-danger" @click="desplegarABMturnos('Borrar')">Borrar</button>
-                    </div>
-                </div>
                 
+                    <!-- <p class="card-text">
+                        <strong><i class="bi bi-aspect-ratio"> Cancha: </i></strong> {{ eventoActual.objTurnos.cancha_id }}
+                    </p> -->
+                    <br>
+                    <div>
+                        <span><i class="bi bi-aspect-ratio"> Cancha: </i></span>
+                        <input type="text" class="form-control form-control-sm" :value="Cancha" readonly>
+                    </div>
+
+                    <!-- <p class="card-text">
+                        <strong><i class="bi bi-calendar2-day"> Comienzo: </i></strong> {{ eventoActual.objTurnos.fecha_Desde }}
+                    </p> -->
+                    <br>
+                    <div>
+                        <span><i class="bi bi-calendar2-day"> Comienzo: </i></span>
+                        <input type="text" class="form-control form-control-sm" :value="Comienzo" readonly>
+                    </div>
+
+                    <!-- <p class="card-text">
+                        <strong><i class="bi bi-calendar2-day"> Fin: </i></strong> {{ eventoActual.objTurnos.fecha_Hasta }}
+                    </p> -->
+                    <br>
+                    <div>
+                        <span><i class="bi bi-calendar2-day"> Fin: </i></span>
+                        <input type="text" class="form-control form-control-sm" :value="Fin" readonly>
+                    </div>
+
+                    <!-- <p class="card-text">
+                        <strong><i class="bi bi-flag"> Tipo turno: </i></strong> {{ eventoActual.objTurnos.tipo_turno }}
+                    </p> -->
+                    <br>
+                    <div>
+                        <span><i class="bi bi-flag"> Tipo de turno </i></span>
+                        <input type="text" class="form-control form-control-sm" :value="TipoTurno" readonly>
+                    </div>
+
+                    <!-- <p class="card-text">
+                        <strong><i class="bi bi-currency-dollar"> Precio: </i></strong> ${{ eventoActual.objTurnos.precio }}
+                    </p> -->
+                    <br>
+                    <div>
+                        <span><i class="bi bi-currency-dollar"> Precio: </i></span>
+                        <input type="text" class="form-control form-control-sm" :value="Precio" readonly>
+                    </div>       
+
+                    <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+                        <div class="btn-group mr-2" role="group" aria-label="First group"
+                                style="margin: 0px 50px 0px 10px">
+
+                            <button type="button" class="botones btn btn-secondary" @click="Cancelar()">
+                                <i class="bi bi-skip-start-fill"></i>
+                            </button>
+                        </div>
+                        <div class="btn-group mr-2" role="group" aria-label="Second group">
+                            <button type="button" class="boton btn btn-success" @click="desplegarABMturnos('Editar')">Editar</button>
+                            <button type="button" class="boton btn btn-danger" @click="desplegarABMturnos('Borrar')">Borrar</button>
+                    </div>
+                    </div>
+                    
+                </div>
             </div>
-        </div>
+        </div>    
         
         <div v-if="abrirFormTurnos">
             <div v-if="accion == 'Editar'">
@@ -53,12 +92,12 @@
                 <div class="contenedor" v-if="accion=='Editar'">
                     <div class="VentanaModalEditar">
                         <div class="cabecera tituloventana">
-                        <button class="cierre btn btn-primary" @click="desplegarABMturnos('Consultar')"><font color="#35586F">X</font></button>
+                        <button class="cierre btn btn-primary" @click="desplegarABMturnos('Consultar')"><font color="#ff0000"><i class="bi bi-x-circle-fill"></i></font></button>
                         <p>{{accion}} Turnos</p>
                         </div>
                         <div class="contenido">
                             <div class="mb-3">
-                                <label for="" class="form-label campo"> Cliente: </label>
+                                <label for="" class="form-label campo"><i class="bi bi-person"> Cliente: </i></label>
                                 <select name="cliente_id" v-model="eventoActual.objTurnos.cliente_id" 
                                             class="form-select" aria-label=".form-select-sm example">
                                     <option :value="eventoActual.objTurnos.cliente_id" selected>
@@ -73,7 +112,7 @@
                             </div>
 
                             <div class="mb-3">
-                                <label for="" class="form-label campo"> Cancha: </label>
+                                <label for="" class="form-label campo"><i class="bi bi-aspect-ratio"> Cancha: </i></label>
                                 <select name="cancha_id" v-model="eventoActual.objTurnos.cancha_id" 
                                             class="form-select" aria-label=".form-select-sm example">
                                     <option :value="eventoActual.objTurnos.cancha_id" selected>
@@ -88,29 +127,31 @@
                             </div>
 
                             <div class="mb-3">
-                                <label for="" class="form-label campo"> Tipo de turno </label>
+                                <label for="" class="form-label campo"><i class="bi bi-flag"> Tipo de turno </i></label>
                                 <input type="text" class="form-control form-control-sm inputChico" v-model="eventoActual.objTurnos.tipo_turno">
                             </div>
 
                             <div class="row">
                                 <div class="col-md-6 mb-3">
-                                    <label for="" class="form-label campo"> Comienzo:<strong> {{eventoActual.objTurnos.fecha_Desde}}</strong> </label>
+                                    <label for="" class="form-label campo"><i class="bi bi-calendar2-day"> Comienzo: </i><strong> {{eventoActual.objTurnos.fecha_Desde}}</strong> </label>
                                     <input type="datetime-local" v-model="eventoActual.objTurnos.fecha_Desde" 
                                             class="form-control form-control-sm inputChico">
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <label for="" class="form-label campo">Fin:<strong>{{eventoActual.objTurnos.fecha_Hasta}}</strong> </label>
+                                    <label for="" class="form-label campo"><i class="bi bi-calendar2-day"> Fin: </i><strong>{{eventoActual.objTurnos.fecha_Hasta}}</strong> </label>
                                     <input type="datetime-local" v-model="eventoActual.objTurnos.fecha_Hasta"
                                             value="eventoActual.objTurnos.fecha_Hasta" class="form-control form-control-sm inputChico">
                                 </div>
                             </div>
 
                             <div>
-                                <label for="" class="form-label campo"> Precio:</label>
+                                <label for="" class="form-label campo"><i class="bi bi-currency-dollar"> Precio: </i></label>
                                 <input type="text" class="form-control form-control-sm inputChico" v-model="eventoActual.objTurnos.precio">
                             </div>
-                            <button class="btn btn-info divBotones" @click="Cancelar()">Guardar</button>
-                            <button class="btn btn-light divBotones" @click="Cancelar()">Cancelar</button>
+                            <div>
+                                <button class="btn btn-primary divBotones" @click="Cancelar()"> <i class="bi bi-check2-circle"> Guardar </i></button>
+                                <button class="btn btn-danger divBotones" @click="Cancelar()"><i class="bi bi-x-circle-fill"> Cancelar </i></button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -130,6 +171,38 @@ export default {
     mixins: [apiRest],
 
     props: ['eventoActual'],
+    
+    computed: {
+        Actual() {
+            let fechActual = this.eventoActual.start.format('DD/MM/YYYY');
+            return fechActual + " "
+        },
+        NombreApellido() {
+            let nombre = this.eventoActual.objTurnos.nombre;
+            let apellido = this.eventoActual.objTurnos.apellido;
+            return nombre + " " + apellido 
+        },
+        Cancha() {
+            let cancha = this.eventoActual.objTurnos.cancha_id;
+            return cancha + " "
+        },
+        Comienzo() {
+            let comienzo = this.eventoActual.objTurnos.fecha_Desde;
+            return comienzo + " "
+        },
+        Fin() {
+            let fin = this.eventoActual.objTurnos.fecha_Hasta;
+            return fin + " "
+        },
+        TipoTurno() {
+            let tipoTurno = this.eventoActual.objTurnos.tipo_turno;
+            return tipoTurno + " "
+        },
+        Precio(){
+            let precio = this.eventoActual.objTurnos.precio;
+            return precio + " "
+        }
+    },
 
     created() {
         console.log(JSON.stringify(this.eventoActual))
@@ -217,8 +290,22 @@ p{
 }
 
 .divBotones{
-    margin: 10px 25px 0px
+    margin: 10px 25px 0px;
+    position: relative;
+    left: 105px;
+    top: 10px;
 }
+
+.boton {
+    top: 2px;
+    left: 70px;
+    margin: 20px;
+}
+
+.botones {
+    left: 20px;
+    top: 58px;
+} 
 
 .contenedor{
 	position: fixed;
@@ -230,19 +317,19 @@ p{
 }
 
 .VentanaModalCrear {
-  background-color: rgb(85, 84, 167);
-  border-radius: 10px;
-  padding: 28px;
-  width: 400px;
-  margin: 25px auto;
+    background-color: rgb(85, 84, 167);
+    border-radius: 10px;
+    padding: 28px;
+    width: 400px;
+    margin: 25px auto;
 }
 
 .VentanaModalEditar {
-  background-color: rgb(84, 167, 128);
-  border-radius: 10px;
-  padding: 28px;
-  width: 550px;
-  margin: 25px auto;
+    background-color: rgb(84, 167, 128);
+    border-radius: 10px;
+    padding: 28px;
+    width: 550px;
+    margin: 25px auto;
 }
 
 table{
@@ -251,16 +338,16 @@ table{
 }
 
 .VentanaModalBorrar {
-  background-color: rgb(209, 113, 89);
-  border-radius: 10px;
-  padding: 25px;
-  width: 400px;
-  margin: 95px auto;
+    background-color: rgb(209, 113, 89);
+    border-radius: 10px;
+    padding: 25px;
+    width: 400px;
+    margin: 95px auto;
 }
 
 .cierre{
-  background: white;
-  float: right;
+    background: white;
+    float: right;
 }
 
 .tituloventana{

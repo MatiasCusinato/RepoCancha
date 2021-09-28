@@ -66,7 +66,6 @@ export default {
         return {
             datosCancha: {
                 //id: 0,
-                club_configuracion_id: "",
                 deporte: "",
                 club_configuracion_id: localStorage.getItem('club'),
             }
