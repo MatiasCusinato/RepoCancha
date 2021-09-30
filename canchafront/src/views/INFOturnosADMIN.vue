@@ -1,12 +1,12 @@
 <template>
     <div>
         <h2> Turnos </h2>
-        <!-- <div class="btncli">
-            <button class="btn btn-primary" @click="desplegarABMturnos('Crear')" 
-                    style="font-size: 22px"> 
+        <div class="btncli">
+            <button class="btn btn-primary" @click="crearTurno('Crear')"  
+                    v-if="!abrirABMturnos" style="font-size: 20px"> 
                 Agregar un nuevo turno 
             </button>
-        </div> -->
+        </div> 
         <div>
             <vue-cal class="calendarioVue vuecal--green-theme" 
                 :time-from="9 * 60" :time-to="24.5 * 60" 
@@ -28,6 +28,7 @@
 
         <ABMturnos v-if="abrirABMturnos"
             :eventoActual="eventoActual"
+            :accion="accion"
             @SalirDeABMturnos = MostrarABMturnos($event)
         />
     </div>
@@ -102,6 +103,27 @@ export default {
 
             // Prevent navigating to narrower view (default vue-cal behavior).
             e.stopPropagation()
+        },
+
+        crearTurno(accion){
+            this.abrirABMturnos = true
+            this.accion= accion
+            this.eventoActual= {
+                //"start":"00-0-00",
+                "objTurnos":{
+                    "grupo":0,
+                    "cliente_id":null,
+                    "nombre":"",
+                    "apellido":"",
+                    "cancha_id":null,
+                    "deporte":"",
+                    "club_configuracion_id":null,
+                    "tipo_turno":"",
+                    "fecha_Desde":"0000-00-00 00:00:00",
+                    "fecha_Hasta":"0000-0-0 00:00:00",
+                    "precio":"0"
+                }
+            }
         },
 
         traerTurnos(){

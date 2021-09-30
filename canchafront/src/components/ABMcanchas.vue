@@ -65,7 +65,7 @@ export default {
     data() {
         return {
             datosCancha: {
-                //id: 0,
+                id: 0,
                 deporte: "",
                 club_configuracion_id: localStorage.getItem('club'),
             }
@@ -93,12 +93,21 @@ export default {
 
                     this.InsertarDatos ('canchas/guardar', this.datosCancha)
                         .then(res => {
-                            console.log(res)
-                            if (res.id != 0) {
-                                console.log('El registro fue ingresado con exito')
+                            if (res.msj == 'Error') {
+                                this.$swal({
+                                    title: `¡${res.msj}!`,
+                                    text: `Razon : ${res.razon}`,
+                                    icon: 'warning',
+                                    confirmButtonText: 'Ok'
+                                })
                             } else {
-                                console.log('Error al ingresar el registro')
+                                this.$swal({
+                                    title: `¡${res.msj}!`,
+                                    icon: 'success',
+                                    confirmButtonText: 'Ok'
+                                })
                             }
+
                             this.$emit('SalirDeABMcanchas', true)
                         })
                 }
@@ -107,7 +116,24 @@ export default {
                     console.log(JSON.stringify(this.datosCancha))
                     this.EditarDatos ('canchas/editar', this.id, this.datosCancha)
                         .then(res => {
-                            this.datosCancha = res
+                            //this.datosCancha = res
+
+                            if (res.msj == 'Error') {
+                                this.$swal({
+                                    title: `¡${res.msj}!`,
+                                    text: `Razon : ${res.razon}`,
+                                    icon: 'error',
+                                    confirmButtonText: 'Ok'
+                                })
+                            } else {
+                                this.$swal({
+                                    title: `¡${res.msj}!`,
+                                    text: `${res.razon}`,
+                                    icon: 'success',
+                                    confirmButtonText: 'Ok'
+                                })
+                            }
+
                             this.$emit('SalirDeABMcanchas', true)
                         })
                 }
@@ -120,9 +146,25 @@ export default {
                         }) */
                     this.EliminarDatos(`canchas/eliminar`, this.id, this.datosCancha)
                         .then(res => {
-                            this.datosCancha = res
+                            //this.datosCancha = res
+                            if (res.msj == 'Error') {
+                                this.$swal({
+                                    title: `¡${res.msj}!`,
+                                    text: `Razon : ${res.razon}`,
+                                    icon: 'error',
+                                    confirmButtonText: 'Ok'
+                                })
+                            } else {
+                                this.$swal({
+                                    title: `¡Eliminacion exitosa!`,
+                                    text: `La cancha ha sido eliminada`,
+                                    icon: 'success',
+                                    confirmButtonText: 'Ok'
+                                })
+                            }
+
                             this.$emit('SalirDeABMcanchas', true)
-                        }) 
+                        })
                 }
             }else{
                 this.$swal({

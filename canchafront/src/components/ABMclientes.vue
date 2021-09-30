@@ -121,7 +121,6 @@ export default {
 
                     this.InsertarDatos ('clientes/guardar', this.datosClientes)
                         .then(res => {
-                            console.log(res)
                             if(res.msj=="Error"){
                                 this.$swal({
                                     title: '¡Error!',
@@ -147,15 +146,48 @@ export default {
                     console.log(JSON.stringify(this.datosClientes))
                     this.EditarDatos(`clientes/editar`, this.id, this.datosClientes)
                         .then(res => {
-                            this.datosClientes = res
+                            //this.datosClientes = res
+                            if(res.msj=='Error'){
+                                this.$swal({
+                                        title: `${res.msj}`,
+                                        text: `${res.razon}`,
+                                        icon: 'error',
+                                        confirmButtonText: 'Ok'
+                                    })
+                            } else {
+                                this.$swal({
+                                        title: `${res.msj}`,
+                                        text: `${res.razon}`,
+                                        icon: 'success',
+                                        confirmButtonText: 'Ok'
+                                    })
+                            }
+
                             this.$emit('SalirDeABMclientes', true)
                         })
                 }
                 
                 if (this.accion == 'Borrar') {
-                    this.EliminarDatos(`clientes/eliminar`, this.id, this.datosClientes)
+                    let club = localStorage.getItem('club')
+                    this.EliminarDatos(`clientes/eliminar/${club}`, this.id, this.datosClientes)
                         .then(res => {
-                            this.datosClientes = res
+                            //this.datosClientes = res
+                            if (res.msj == 'Error') {
+                                this.$swal({
+                                    title: `¡${res.msj}!`,
+                                    text: `Razon : ${res.razon}`,
+                                    icon: 'error',
+                                    confirmButtonText: 'Ok'
+                                })
+                            } else {
+                                this.$swal({
+                                    title: `¡Eliminacion exitosa!`,
+                                    text: `El cliente ha sido eliminado`,
+                                    icon: 'success',
+                                    confirmButtonText: 'Ok'
+                                })
+                            }
+                            
                             this.$emit('SalirDeABMclientes', true)
                         })
                 }

@@ -172,14 +172,42 @@ class ClienteController extends Controller
      */
     public function update(Request $request, Cliente $cliente, $cliente_id)
     {
-        //dd($cliente_id);
-        $cliente = Cliente::find($cliente_id);
-        $cliente->update($request->all());
+        $val = Validator::make($request->all(), [
+            "nombre" => 'required',
+            "apellido" => 'required',
+            "telefono" => 'required',
+            "edad" => 'required',
+            "email" => 'required',
+        ]); 
 
-        return response()->json([
-            'Petición' => 'Exitosa',
-            'Mensaje' => 'Cliente modificado'
-        ], 200);
+        if($val->fails()){
+            return response()->json([
+                    'msj' => 'Error', 
+                    'razon' => 'Faltan datos o alguno de ellos esta mal ingresado.'
+            ], 400);
+        }else { 
+            try {
+                DB::beginTransaction();
+
+                //dd($cliente_id);    
+                $cliente = Cliente::find($cliente_id);
+                $cliente->update($request->all());
+
+                DB::commit(); 
+            }
+            // Ha ocurrido un error, devolvemos la BD a su estado previo
+            catch (\Exception $e)
+            {
+                dd($e);
+                DB::rollback();
+                return response()->json(["msj" => "Error!!, rollback"], 400);
+            }
+            
+            return response()->json([
+                'msj' => 'Modificacion exitosa',
+                'razon' => 'El cliente ha sido modificado'
+            ], 200);
+        } 
     }
 
     /**
@@ -188,14 +216,46 @@ class ClienteController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Cliente $cliente, $cliente_id)
-    {
-        Cliente::destroy($cliente_id);
+    public function destroy($club_id, $cliente_id, Cliente $cliente)
+    {   
+        $club = DB::table('club_configuracions')
+                    ->select('club_configuracions.id')
+                    ->where('club_configuracions.id', '=', $club_id)
+                    ->get();
+
+        if(count($club) < 1){
+            return response()->json([
+                'msj' => 'Error',
+                'razon' => 'El club especificado no existe'
+            ], 400);
+        }
+
+        try {
+            DB::beginTransaction();
+            
+            DB::table('cliente_club_configuracion')
+                    ->where([
+                        ['cliente_id', '=', $cliente_id],
+                        ['club_configuracion_id', '=', $club_id],
+                    ])
+                    ->delete();
+
+            DB::commit(); 
+        }
+        // Ha ocurrido un error, devolvemos la BD a su estado previo
+        catch (\Exception $e)
+        {
+            dd($e);
+            DB::rollback();
+            return response()->json(["msj" => "Error!!, rollback"], 400);
+        }
         
         return response()->json([
-            'Petición' => 'Exitosa',
-            'Mensaje' => 'Cliente eliminado'
-        ], 200); 
+            'msj' => 'Exitosa',
+            'razon' => 'Cliente eliminado'
+        ], 200);
+        
+         
     }
 
     public function filtroNombre($club_id, $nombre){

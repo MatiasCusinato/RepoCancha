@@ -63,14 +63,14 @@ class CanchaController extends Controller
     {
         
         $val = Validator::make($request->all(), [
-            'club_configuracion_id' => 'required',
+            'club_configuracion_id' => ['required', 'exists:club_configuracions,id'],
             'deporte' => 'required',
         ]); 
 
         if($val->fails()){
             return response()->json([
-                    'Respuesta' => 'Error', 
-                    'Mensaje' => 'Faltan datos por ingresar'
+                    'msj' => 'Error', 
+                    'razon' => 'Faltan datos o alguno de ellos esta mal ingresado.'
             ], 400);
         }else { 
             try {
@@ -88,10 +88,12 @@ class CanchaController extends Controller
             {
                 dd($e);
                 DB::rollback();
-                return response()->json(["Mensaje" => "Error!!"]);
+                return response()->json(["msj" => "Error!!"], 400);
             }
-        
-            return response()->json($cancha, 201);
+            return response()->json([
+                'msj' => 'Cancha creada exitosamente',
+            ], 200);
+            //return response()->json($cancha, 201);
         }
     }
 
@@ -122,13 +124,39 @@ class CanchaController extends Controller
      */
     public function update(Request $request, Cancha $cancha, $cancha_id)
     {
-        $cancha = Cancha::find($cancha_id);
-        $cancha->update($request->all());
-        
-        return response()->json([
-            'Petición' => 'Exitosa',
-            'Mensaje' => 'Cancha modificada'
-        ], 200);
+    
+        $val = Validator::make($request->all(), [
+            'club_configuracion_id' => ['required', 'exists:club_configuracions,id'],
+            'deporte' => 'required',
+        ]); 
+
+        if($val->fails()){
+            return response()->json([
+                    'msj' => 'Error', 
+                    'razon' => 'Faltan datos o alguno de ellos esta mal ingresado.'
+            ], 400);
+        }else { 
+            try {
+                DB::beginTransaction();
+
+                $cancha = Cancha::find($cancha_id);
+                $cancha->update($request->all());
+
+                DB::commit(); 
+            }
+            // Ha ocurrido un error, devolvemos la BD a su estado previo
+            catch (\Exception $e)
+            {
+                dd($e);
+                DB::rollback();
+                return response()->json(["msj" => "Error!!, rollback"], 400);
+            }
+            
+            return response()->json([
+                'msj' => 'Modificacion exitosa',
+                'razon' => 'La cancha ha sido modificada'
+            ], 200);
+        }
     }
 
     /**
@@ -137,13 +165,35 @@ class CanchaController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Cancha $cancha, $cancha_id)
+    public function destroy(Cancha $cancha, $cancha_id) 
     {
-        Cancha::destroy($cancha_id);
+        try {
+            DB::beginTransaction();
 
+            $cancha= Cancha::find($cancha_id);                
+
+            if(!$cancha){
+                return response()->json([
+                    'msj' => 'Fallida',
+                    'razon' => 'Cancha no encontrada o no existente'
+                ], 400);
+            }
+
+            Cancha::destroy($cancha_id);
+
+            DB::commit(); 
+        }
+        // Ha ocurrido un error, devolvemos la BD a su estado previo
+        catch (\Exception $e)
+        {
+            dd($e);
+            DB::rollback();
+            return response()->json(["msj" => "Error!!"], 400);
+        }
+        
         return response()->json([
-            'Petición' => 'Exitosa',
-            'Mensaje' => 'Cancha eliminada'
+            'msj' => 'Eliminacion exitosa',
+            'razon' => 'La cancha ha sido eliminada'
         ], 200);
     }
 
@@ -158,7 +208,7 @@ class CanchaController extends Controller
                             ->get();
 
         return response()->json([
-            'Petición' => 'Filtrado Exitoso',
+            'msj' => 'Filtrado Exitoso',
             'canchas' => $cancha
         ], 200);
     }
