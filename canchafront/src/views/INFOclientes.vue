@@ -236,6 +236,8 @@ export default {
 
 <style scoped>
 h1 {
+    left: -5px;
+    position: relative;
     text-align: center;
     border-style: solid;
     border-width: 2px;
@@ -269,11 +271,13 @@ h1 {
     border-radius: 10px;
     border-collapse: collapse;
     min-height: 100px;
-    height: 120px;
-    width: 360px;
+    height: 110px;
+    width: 285px;
     margin: 20px -40px;
     padding: 20px 40px;
     background-color:rgb(243, 214, 159);
+    position: relative;
+    left: 40px;
 }
 .boton {
     position: relative;

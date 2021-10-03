@@ -1,81 +1,74 @@
 <template>
     <div>
         <h1 class="bg-primary text-white text-center mb-3"> ABMTURNOS </h1>
-        <br>
-        <div class="divCard">
-            <div class="card w-100" v-if="!abrirFormTurnos">
-                <h5 class="card-header">Evento: {{ eventoActual.title }}</h5>
-                <div class="card-body">
-                    <!-- <h5 class="card-title"><i class="bi bi-calendar"> Fecha: {{ eventoActual.start && eventoActual.start.format('DD/MM/YYYY') }} </i></h5> -->
+            <div>
+                <div class="contenedor">
+                    <div class="VentanaModalConsultar">
+                        <div class="cabecera tituloventana">
+                            <h5>Evento: {{ eventoActual.title }}</h5>
+                            <div>
+                                <!-- <h5 class="card-title"><i class="bi bi-calendar"> Fecha: {{ eventoActual.start && eventoActual.start.format('DD/MM/YYYY') }} </i></h5> -->
+                                <div>
+                                    <span><i class="bi bi-calendar"> Fecha: </i></span>
+                                    <input type="text" class="form-control form-control-sm" 
+                                            :value="Actual" readonly>
+                                </div>    
                     
-                    <div>
-                        <span><i class="bi bi-calendar"> Fecha: </i></span>
-                        <input type="text" class="form-control form-control-sm" 
-                                :value="Actual" readonly>
-                    </div>    
-                
-                    <br>
-                    <div >
-                        <span><i class="bi bi-person"> Cliente: </i></span>
-                        <input type="text" class="form-control form-control-sm" 
-                                :value="NombreApellido" readonly>
-                    </div>
-                
-                    <br>
-                    <div>
-                        <span>
-                            <i class="bi bi-aspect-ratio"> Cancha: </i>
-                        </span>
-                        <input type="text" class="form-control form-control-sm" 
-                                :value="Cancha" readonly>
-                    </div>
+                                <div >
+                                    <span><i class="bi bi-person"> Cliente: </i></span>
+                                    <input type="text" class="form-control form-control-sm" 
+                                            :value="NombreApellido" readonly>
+                                </div>
+                            
+                                <div>
+                                    <span>
+                                        <i class="bi bi-aspect-ratio"> Cancha: </i>
+                                    </span>
+                                    <input type="text" class="form-control form-control-sm" 
+                                            :value="Cancha" readonly>
+                                </div>
 
-                    <br>
-                    <div>
-                        <span><i class="bi bi-calendar2-day"> Comienzo: </i></span>
-                        <input type="text" class="form-control form-control-sm" 
-                                :value="Comienzo" readonly>
-                    </div>
+                                <div>
+                                    <span><i class="bi bi-calendar2-day"> Comienzo: </i></span>
+                                    <input type="text" class="form-control form-control-sm" 
+                                            :value="Comienzo" readonly>
+                                </div>
 
-                
-                    <br>
-                    <div>
-                        <span><i class="bi bi-calendar2-day"> Fin: </i></span>
-                        <input type="text" class="form-control form-control-sm" :value="Fin" readonly>
-                    </div>
+                                <div>
+                                    <span><i class="bi bi-calendar2-day"> Fin: </i></span>
+                                    <input type="text" class="form-control form-control-sm" :value="Fin" readonly>
+                                </div>
 
-                    <br>
-                    <div>
-                        <span><i class="bi bi-flag"> Tipo de turno </i></span>
-                        <input type="text" class="form-control form-control-sm" 
-                                :value="TipoTurno" readonly>
-                    </div>
+                                <div>
+                                    <span><i class="bi bi-flag"> Tipo de turno </i></span>
+                                    <input type="text" class="form-control form-control-sm" 
+                                            :value="TipoTurno" readonly>
+                                </div>
 
-                    <br>
-                    <div>
-                        <span><i class="bi bi-currency-dollar"> Precio: </i></span>
-                        <input type="text" class="form-control form-control-sm" 
-                                :value="Precio" readonly>
-                    </div>       
+                                <div>
+                                    <span><i class="bi bi-currency-dollar"> Precio: </i></span>
+                                    <input type="text" class="form-control form-control-sm" 
+                                            :value="Precio" readonly>
+                                </div>
 
-                    <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
-                        <div class="btn-group mr-2" role="group" aria-label="First group"
-                                style="margin: -30px 50px 0px 10px">
+                                <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+                                    <div class="btn-group mr-2" role="group" aria-label="First group"
+                                        style="margin: -30px 50px 0px 10px">
+                                        <button type="button" class="botones btn btn-secondary" @click="Cancelar()">
+                                            <i class="bi bi-skip-start-fill"></i>
+                                        </button>
+                                    </div>
 
-                            <button type="button" class="botones btn btn-secondary" @click="Cancelar()">
-                                <i class="bi bi-skip-start-fill"> </i>
-                            </button>
-                        </div>
-
-                        <div class="btn-group mr-2" role="group" aria-label="Second group">
-                            <button type="button" class="boton btn btn-success" @click="desplegarABMturnos('Editar')">Editar</button>
-                            <button type="button" class="boton btn btn-danger" @click="desplegarABMturnos('Borrar')">Borrar</button>
+                                    <div class="btn-group mr-2" role="group" aria-label="Second group">
+                                        <button class="boton btn btn-success" @click="desplegarABMturnos('Editar')">Editar</button>
+                                        <button class="boton btn btn-danger" @click="desplegarABMturnos('Borrar')">Borrar</button>
+                                    </div>
+                                </div>    
+                            </div>
                         </div>
                     </div>
-                    
                 </div>
-            </div>
-        </div>    
+            </div>    
         
         <div v-if="abrirFormTurnos">
             <div v-if="accion == 'Editar'">
@@ -159,11 +152,11 @@
                                         v-model="datosTurno.precio">
                             </div>
                             <div>
-                                <button class="btn btn-primary divBotones" @click="Aceptar()">
+                                <button class="btn btn-primary divBoton" @click="Aceptar()">
                                     <i class="bi bi-check2-circle"> Guardar </i>
                                 </button>
                                 
-                                <button class="btn btn-danger divBotones" @click="desplegarABMturnos('Consultar')">
+                                <button class="btn btn-danger divBoton" @click="desplegarABMturnos('Consultar')">
                                     <i class="bi bi-x-circle-fill"> Cancelar </i>
                                 </button>
                             </div>
@@ -178,7 +171,7 @@
                     <div class="VentanaModalBorrar">
                         <div class="cabecera tituloventana">
                             <button class="cierre btn btn-primary" @click="desplegarABMturnos('Consultar')">
-                                <font color="#35586F">X</font>
+                                <font color="#ff0000"><i class="bi bi-x-circle-fill"></i></font>
                             </button>
                             <p>{{accion}} Turnos</p>
                         </div>
@@ -186,13 +179,13 @@
                         <div class="contenido">
                             <div class="row">
                                 <div class="col-md-5 mb-3">
-                                    <label for="" class="form-label campo"> Cliente: </label>
+                                    <label for="" class="form-label campo"><i class="bi bi-person"> Cliente: </i></label>
                                     <input type="text" :value="NombreApellido" 
                                             class="form-control form-control-sm inputChico" readonly>
                                 </div>
 
                                 <div class="col-md-5 mb-3">
-                                    <label for="" class="form-label campo"> Cancha: </label>
+                                    <label for="" class="form-label campo"><i class="bi bi-aspect-ratio"> Cancha: </i></label>
                                     <input type="text" :value="Cancha" 
                                             class="form-control form-control-sm inputChico" readonly>
                                 </div>
@@ -201,7 +194,7 @@
                             <br>
 
                             <div class="mb-3">
-                                <label for="" class="form-label campo"> Tipo de turno </label>
+                                <label for="" class="form-label campo"><i class="bi bi-flag"> Tipo de turno </i> </label>
                                 <input type="text" v-model="eventoActual.objTurnos.tipo_turno" readonly
                                         class="form-control form-control-sm inputChico">
                             </div>
@@ -211,7 +204,7 @@
                             <div class="row">
                                 <div class="col-md-5 mb-3">
                                     <label for="" class="form-label campo"> 
-                                        Comienzo:
+                                        <i class="bi bi-calendar2-day"> Comienzo: </i>
                                     </label>
                                     <input type="datetime" v-model="eventoActual.objTurnos.fecha_Desde" 
                                             class="form-control form-control-sm inputChico" readonly>
@@ -219,7 +212,7 @@
 
                                 <div class="col-md-5 mb-3">
                                     <label for="" class="form-label campo">
-                                        Fin:
+                                        <i class="bi bi-calendar2-day"> Fin: </i>
                                     </label>
                                     <input type="datetime" v-model="eventoActual.objTurnos.fecha_Hasta"
                                             class="form-control form-control-sm inputChico" readonly>
@@ -231,12 +224,12 @@
                                 <input type="text" class="form-control form-control-sm inputChico" 
                                         v-model="eventoActual.objTurnos.precio">
                             </div> -->
-                            <button class="btn btn-info divBotones" @click="Aceptar()">
-                                Borrar
+                            <button class="btn btn-danger divBotones" @click="Aceptar()">
+                                <i class="bi bi-check2-circle"> Borrar </i>
                             </button>
 
-                            <button class="btn btn-light divBotones" @click="desplegarABMturnos('Consultar')">
-                                Cancelar
+                            <button class="btn btn-primary divBotones" @click="desplegarABMturnos('Consultar')">
+                                <i class="bi bi-x-circle-fill"> Cancelar </i>
                             </button>
                         </div>
                     </div>
@@ -480,24 +473,36 @@ p{
 .divBotones{
     margin: 10px 25px 0px;
     position: relative;
-    left: 105px;
+    left: 75px;
+    top: 10px;
+}
+
+.divBoton{
+    margin: 10px 25px 0px;
+    position: relative;
+    left: 120px;
     top: 10px;
 }
 
 .boton {
-    top: 2px;
-    left: 70px;
-    margin: 20px;
+    top: -10px;
+    position: relative;
+    left: -20px;
+    margin: 20px 25px 0px;
 }
 
 .botones {
+    top: 40px;
     left: 20px;
-    top: 58px;
+    padding: 8px;
+    width: 50px;
+    height: 40px;
 } 
 
 .contenedor{
+    background-color: rgb(255, 255, 255) !important;
 	position: fixed;
-	top:0;
+	top: 0px;
 	left:0;
 	width: 100%;
 	height: 100%;
@@ -521,11 +526,19 @@ p{
 }
 
 .VentanaModalBorrar {
-  background-color: rgb(204, 124, 93);
-  border-radius: 10px;
-  padding: 28px;
-  width: 500px;
-  margin: 25px auto;
+    background-color: rgb(204, 124, 93);
+    border-radius: 10px;
+    padding: 28px;
+    width: 500px;
+    margin: 25px auto;
+}
+
+.VentanaModalConsultar {
+    background-color: rgb(0, 128, 255);
+    border-radius: 10px;
+    padding: 28px;
+    width: 400px;
+    margin: 25px auto;
 }
 
 table{
