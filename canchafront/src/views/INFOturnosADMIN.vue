@@ -30,10 +30,14 @@
         <div>
             <vue-cal class="calendarioVue vuecal--green-theme" 
                 :time-from="9 * 60" :time-to="24.5 * 60" 
-                :time-step="30" active-view="month" 
+                :time-step="30" active-view="week" 
                 
                 :events="events" selected-date="2018-11-19"
-                :editable-events="{ title: false, drag: false, resize: true, delete: false, create: false }"
+                :editable-events="{ 
+                                    title: false, drag: false, 
+                                    resize: false, delete: false, 
+                                    create: false
+                                }"
                 locale="es"
                 :on-event-click="onEventClick"
                 :todayButton="true"
@@ -167,9 +171,18 @@ export default {
             this.ObtenerDatos(`turnos/${club}/${this.canchaActual}`)
                 .then(res => {
                     console.log(res)
-                    this.datos = res;
-
-                    this.cargarTurnos()
+                    if(res.length==0){
+                        this.$swal({
+                            title: '¡Error!',
+                            text: 'Esta cancha no contiene turnos',
+                            icon: 'error',
+                            confirmButtonText: 'Ok'
+                        })
+                    } else {
+                        this.datos = res;
+    
+                        this.cargarTurnos()
+                    }
                 })
 
             //console.log(this.events)

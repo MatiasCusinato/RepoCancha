@@ -224,6 +224,8 @@ export default {
 
 <style scoped>
 h1 {
+    position: relative;
+    left: -30px;
     text-align: center;
     border-style: solid;
     border-width: 2px;
@@ -257,15 +259,17 @@ h1 {
     border-radius: 10px;
     border-collapse: collapse;
     min-height: 100px;
-    height: 120px;
-    width: 360px;
+    height: 105px;
+    width: 305px;
     margin: 20px -40px;
     padding: 20px 40px;
     background-color:rgb(243, 214, 159);
+    position: relative;
+    left: 10px;
 }
 .boton {
     position: relative;
-    left: 10px;
+    left: 5px;
     top: -3px;
 }
 .btncli {

@@ -258,19 +258,19 @@ p{
 }
 
 .VentanaModalCrear {
-  background-color: rgb(85, 84, 167);
-  border-radius: 10px;
-  padding: 28px;
-  width: 400px;
-  margin: 25px auto;
-}
+    background-color: rgb(85, 84, 167);
+    border-radius: 10px;
+    padding: 28px;
+    width: 400px;
+    margin: 25px auto;
+    }
 
 .VentanaModalEditar {
-  background-color: rgb(84, 167, 128);
-  border-radius: 10px;
-  padding: 28px;
-  width: 400px;
-  margin: 25px auto;
+    background-color: rgb(84, 167, 128);
+    border-radius: 10px;
+    padding: 28px;
+    width: 400px;
+    margin: 25px auto;
 }
 
 table{
@@ -279,16 +279,16 @@ table{
 }
 
 .VentanaModalBorrar {
-  background-color: rgb(209, 113, 89);
-  border-radius: 10px;
-  padding: 25px;
-  width: 400px;
-  margin: 95px auto;
+    background-color: rgb(209, 113, 89);
+    border-radius: 10px;
+    padding: 25px;
+    width: 400px;
+    margin: 95px auto;
 }
 
 .cierre{
-  background: white;
-  float: right;
+    background: white;
+    float: right;
 }
 
 .tituloventana{
