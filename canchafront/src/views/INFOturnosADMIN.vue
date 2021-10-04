@@ -1,19 +1,43 @@
 <template>
     <div>
         <h2> Turnos </h2>
-        <!-- <div class="btncli">
-            <button class="btn btn-primary" @click="desplegarABMturnos('Crear')" 
-                    style="font-size: 22px"> 
-                Agregar un nuevo turno 
-            </button>
-        </div> -->
+        <div v-if="!abrirABMturnos">
+            <div class="btncli">
+                <button class="btn btn-primary" @click="crearTurno('Crear')"  
+                        style="font-size: 20px"> 
+                    Agregar un nuevo turno 
+                </button>
+            </div> 
+
+            <div>
+                <label for="" class="form-label campo"><i class="bi bi-person"> Cancha: </i></label>
+                <select name="cliente_id" v-model="canchaActual" 
+                        class="form-select" aria-label=".form-select-sm example">
+
+                    <option v-for="(cancha, $id) in canchas" 
+                        :key="$id"
+                        :value="cancha.id">
+                            {{cancha.id}}| {{cancha.deporte}}
+                    </option>
+                </select>
+
+                <button @click="traerTurnos()">
+                    Traer turnos (cancha: {{canchaActual}})
+                </button>
+            </div>
+        </div>
+
         <div>
             <vue-cal class="calendarioVue vuecal--green-theme" 
                 :time-from="9 * 60" :time-to="24.5 * 60" 
-                :time-step="30" active-view="month" 
+                :time-step="30" active-view="week" 
                 
                 :events="events" selected-date="2018-11-19"
-                :editable-events="{ title: false, drag: false, resize: true, delete: true, create: false }"
+                :editable-events="{ 
+                                    title: false, drag: false, 
+                                    resize: false, delete: false, 
+                                    create: false
+                                }"
                 locale="es"
                 :on-event-click="onEventClick"
                 :todayButton="true"
@@ -28,6 +52,7 @@
 
         <ABMturnos v-if="abrirABMturnos"
             :eventoActual="eventoActual"
+            :accion="accion"
             @SalirDeABMturnos = MostrarABMturnos($event)
         />
     </div>
@@ -54,6 +79,8 @@ export default {
             showEventCreationDialog: false,
 
             datos: [],
+            canchas:[],
+            canchaActual: null,
 
             abrirABMturnos: false,
             eventoActual: null,
@@ -71,7 +98,8 @@ export default {
 
     created(){
         this.events= []
-        this.traerTurnos();
+        this.traerCanchas();
+        //this.traerTurnos();
     },
 
     methods:{
@@ -104,19 +132,60 @@ export default {
             e.stopPropagation()
         },
 
+        crearTurno(accion){
+            this.abrirABMturnos = true
+            this.accion= accion
+            this.eventoActual= {
+                //"start":"00-0-00",
+                "objTurnos":{
+                    "grupo":0,
+                    "cliente_id":null,
+                    "nombre":"",
+                    "apellido":"",
+                    "cancha_id":null,
+                    "deporte":"",
+                    "club_configuracion_id":null,
+                    "tipo_turno":"",
+                    "fecha_Desde":"0000-00-00 00:00:00",
+                    "fecha_Hasta":"0000-0-0 00:00:00",
+                    "precio":"0"
+                }
+            }
+        },
+
+        traerCanchas(){
+            let club= localStorage.getItem('club')
+            this.ObtenerDatos(`canchas/${club}`)
+                .then (res => {
+                    this.canchas = res.canchas.data
+                    this.canchaActual= this.canchas[0].id
+                    this.traerTurnos(this.canchaActual);
+                })
+        },
+
         traerTurnos(){
             this.events=[]
             let club= localStorage.getItem('club')
+            console.log()
 
-            this.ObtenerDatos(`turnos/${club}/1`)
+            this.ObtenerDatos(`turnos/${club}/${this.canchaActual}`)
                 .then(res => {
-                    //console.log(res)
-                    this.datos = res;
-
-                    this.cargarTurnos()
+                    console.log(res)
+                    if(res.length==0){
+                        this.$swal({
+                            title: '¡Error!',
+                            text: 'Esta cancha no contiene turnos',
+                            icon: 'error',
+                            confirmButtonText: 'Ok'
+                        })
+                    } else {
+                        this.datos = res;
+    
+                        this.cargarTurnos()
+                    }
                 })
 
-            console.log(this.events)
+            //console.log(this.events)
         },
 
         cargarTurnos(){

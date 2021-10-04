@@ -44,8 +44,52 @@ class TurnoController extends Controller
      */
     public function store(Request $request)
     {
-        $turno = Turno::create($request->all());
-        return response()->json($turno, 201);
+        $val = Validator::make($request->all(), [
+            'club_configuracion_id' => 'required',
+            "cliente_id" => ['required', 'exists:clientes,id'],
+            "cancha_id" => ['required', 'exists:canchas,id'],
+            "fecha_Desde" => "required",
+            "fecha_Hasta" => "required",
+            "tipo_turno" => "required",
+            "precio" => "required",
+            "grupo" => "required",
+        ]);
+
+        if($val->fails()){
+            return response()->json([
+                    'Respuesta' => 'Error', 
+                    'Mensaje' => 'Faltan datos por ingresar'
+            ], 400);
+        }else { 
+            try {
+                DB::beginTransaction();
+
+                $turno = Turno::create([
+                    "club_configuracion_id" => $request->club_configuracion_id,
+                    "cliente_id" => $request->cliente_id,
+                    "cancha_id" => $request->cancha_id,
+                    "fecha_Desde" => $request->fecha_Desde,
+                    "fecha_Hasta" => $request->fecha_Hasta,
+                    "tipo_turno" => $request->tipo_turno,
+                    "precio" => $request->precio,
+                    "grupo" => $request->grupo
+                ]);
+
+                DB::commit(); 
+            }
+            // Ha ocurrido un error, devolvemos la BD a su estado previo
+            catch (\Exception $e)
+            {
+                dd($e);
+                DB::rollback();
+                return response()->json(["Mensaje" => "Error!!"]);
+            }
+        
+            return response()->json($turno, 201);
+        }
+
+        
+        
     }
 
     /**
