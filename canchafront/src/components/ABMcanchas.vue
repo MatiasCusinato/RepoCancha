@@ -139,12 +139,8 @@ export default {
                 }
 
                 if (this.accion == 'Borrar') {
-                    /* this.EliminarDatos ('canchas', this.id)
-                        .then(res => {
-                            this.datosCancha = res
-                            this.$emit('SalirDeABMcanchas', true)
-                        }) */
-                    this.EliminarDatos(`canchas/eliminar`, this.id, this.datosCancha)
+                    let club = localStorage.getItem('club')
+                    this.EliminarDatos(`canchas/eliminar/${club}`, this.id)
                         .then(res => {
                             //this.datosCancha = res
                             if (res.msj == 'Error') {

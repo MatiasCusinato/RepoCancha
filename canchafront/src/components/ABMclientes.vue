@@ -169,7 +169,7 @@ export default {
                 
                 if (this.accion == 'Borrar') {
                     let club = localStorage.getItem('club')
-                    this.EliminarDatos(`clientes/eliminar/${club}`, this.id, this.datosClientes)
+                    this.EliminarDatos(`clientes/eliminar/${club}`, this.id)
                         .then(res => {
                             //this.datosClientes = res
                             if (res.msj == 'Error') {
@@ -191,7 +191,6 @@ export default {
                             this.$emit('SalirDeABMclientes', true)
                         })
                 }
-
             } else {
                 this.$swal({
                     title: '¡Formulario incompleto!',

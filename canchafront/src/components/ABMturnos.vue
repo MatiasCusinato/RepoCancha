@@ -136,22 +136,69 @@
                                         v-model="datosTurno.tipo_turno">
                             </div>
 
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label for="" class="form-label campo">
-                                        <i class="bi bi-calendar2-day"> Comienzo: </i>
-                                    </label>
-                                    <input type="datetime-local" v-model="datosTurno.fecha_Desde" 
-                                            class="form-control form-control-sm">
+                            <div>
+                                <div v-if="accionAux=='Editar'" class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="" class="form-label campo">
+                                            <i class="bi bi-calendar2-day"> Comienzo: </i>
+                                        </label>
+                                        <input type="datetime-local" v-model="datosTurno.fecha_Desde" 
+                                                class="form-control form-control-sm">
+                                    </div>
+
+                                    <div class="col-md-6 mb-3">
+                                        <label for="" class="form-label campo">
+                                            <i class="bi bi-calendar2-day"> Fin: </i> 
+                                        </label>
+                                        <input type="datetime-local" v-model="datosTurno.fecha_Hasta"
+                                                class="form-control form-control-sm ">
+                                    </div>
                                 </div>
 
-                                <div class="col-md-6 mb-3">
-                                    <label for="" class="form-label campo">
-                                        <i class="bi bi-calendar2-day"> Fin: </i> 
-                                    </label>
-                                    <input type="datetime-local" v-model="datosTurno.fecha_Hasta"
-                                            class="form-control form-control-sm ">
+                                <div v-if="accionAux=='Crear'" class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="" class="form-label campo">
+                                            <i class="bi bi-calendar2-day"> Comienzo: </i>
+                                        </label>
+                                        <input type="datetime-local" v-model="datosTurno.fecha_Desde" 
+                                                class="form-control form-control-sm">
+                                    </div>
+
+                                    <div class="col-md-6 mb-3">
+                                        <label for="" class="form-label campo">
+                                            <i class="bi bi-calendar2-day"> Comienzo: </i>
+                                        </label>
+                                        <input type="datetime-local" v-model="datosTurno.fecha_Hasta" 
+                                                class="form-control form-control-sm">
+                                    </div>
+
+                                    <!-- <div class="col-md-6 mb-3">
+                                        <label for="" class="form-label campo">
+                                            <i class="bi bi-alarm"> Duracion del turno: </i> 
+                                        </label>
+                                        <select name="cancha_id" v-model="horasIntervalo" 
+                                            class="form-select inputChico" aria-label=".form-select-sm example">
+                                            <option value="1">
+                                                1 hora
+                                            </option>
+                                            <option value="1.5">
+                                                1 hora con 30 minutos
+                                            </option>
+                                            <option value="2">
+                                                2 hora
+                                            </option>
+                                        </select>
+                                    </div>
+
+                                    <div class="col-md-6 mb-3">
+                                        <label for="" class="form-label campo">
+                                            <i class="bi bi-calendar2-day"> Fin: </i>
+                                        </label>
+                                        <input type="datetime-local" v-model="datosTurno.fecha_Hasta" 
+                                                class="form-control form-control-sm">
+                                    </div> -->
                                 </div>
+
                             </div>
 
                             <div>
@@ -318,12 +365,18 @@ export default {
                 tipo_turno: "",
                 fecha_Desde: "",
                 fecha_Hasta: "",
-                grupo: 0,
+                grupo: 1,
                 precio: "",
             },
-        
+
+            fechaComienzo: "",
+            horasIntervalo: "",
+
+
             clientes: [],
             canchas: [],
+
+            alertaFormulario:[],
 
             accionAux: this.accion,
             
@@ -337,14 +390,83 @@ export default {
         },
 
         Aceptar(){
-            if(this.accionAux=='Crear'){
-                this.datosTurno.fecha_Desde= this.transformarFecha(this.datosTurno.fecha_Desde, 'enviar')
-                this.datosTurno.fecha_Hasta= this.transformarFecha(this.datosTurno.fecha_Hasta, 'enviar')
+            if(this.accionAux=='Editar' || this.accionAux=='Crear'){
+                if(!this.validarCampos(this.datosTurno)){
+                    if(this.accionAux=='Crear'){
+                        this.datosTurno.fecha_Desde= this.transformarFecha(this.datosTurno.fecha_Desde, 'enviar')
+                        this.datosTurno.fecha_Hasta= this.transformarFecha(this.datosTurno.fecha_Hasta, 'enviar')
+                        
 
-                this.InsertarDatos ('turnos/guardar', this.datosTurno)
-                        .then(res => {
-                            console.log(res)
-                            if(res.msj=="Error"){
+                        console.log(this.datosTurno)
+                        this.InsertarDatos ('turnos/guardar', this.datosTurno)
+                                .then(res => {
+                                    console.log(res)
+                                    if(res.msj=="Error"){
+                                        this.$swal({
+                                            title: '¡Error!',
+                                            text: ''+res.razon,
+                                            icon: 'error',
+                                            confirmButtonText: 'Ok'
+                                        })
+
+                                        this.$emit('SalirDeABMturnos', true)
+                                    } else {
+                                        this.$swal({
+                                            title: 'Turno creado!',
+                                            icon: 'success',
+                                            confirmButtonText: 'Ok'
+                                        })
+
+                                        this.$emit('SalirDeABMturnos', true)  
+                                    }
+                                })
+                        }
+
+                        if(this.accionAux=='Editar'){
+                            this.datosTurno.fecha_Desde= this.transformarFecha(this.datosTurno.fecha_Desde, 'enviar')
+                            this.datosTurno.fecha_Hasta= this.transformarFecha(this.datosTurno.fecha_Hasta, 'enviar')
+                            
+                            this.EditarDatos(`turnos/editar`, this.eventoActual.objTurnos.id, this.datosTurno)
+                                .then(res => {
+                                    console.log(res)
+                                    if(res.msj=="Error"){
+                                        this.$swal({
+                                            title: '¡Error!',
+                                            text: ''+res.razon,
+                                            icon: 'error',
+                                            confirmButtonText: 'Ok'
+                                        })
+
+                                        this.$emit('SalirDeABMturnos', true)
+                                    } else {
+                                        this.$swal({
+                                            title: 'Turno editado!',
+                                            icon: 'success',
+                                            confirmButtonText: 'Ok'
+                                        })
+
+                                        this.$emit('SalirDeABMturnos', true)  
+                                    }
+                                })
+                            
+                            console.log(this.datosTurno)
+                    } 
+                } else {
+                    this.$swal({
+                        title: '¡Formulario incompleto!',
+                        text: 'Los siguientes campos estan vacios: '+ this.alertaFormulario,
+                        icon: 'warning',
+                        confirmButtonText: 'Ok'
+                    })
+                }            
+            }
+
+            if(this.accionAux=='Borrar'){
+                    let turno_id = this.eventoActual.objTurnos.id
+                    this.EliminarDatos(`turnos/eliminar`, turno_id, this.datosTurno)
+                            .then(res => {
+                                console.log(res)
+                                if(res.msj=="Error"){
                                 this.$swal({
                                     title: '¡Error!',
                                     text: ''+res.razon,
@@ -355,7 +477,7 @@ export default {
                                 this.$emit('SalirDeABMturnos', true)
                             } else {
                                 this.$swal({
-                                    title: 'Turno creado!',
+                                    title: 'Turno borrado!',
                                     icon: 'success',
                                     confirmButtonText: 'Ok'
                                 })
@@ -363,63 +485,8 @@ export default {
                                 this.$emit('SalirDeABMturnos', true)  
                             }
                         })
-            }
-
-            if(this.accionAux=='Editar'){
-                this.datosTurno.fecha_Desde= this.transformarFecha(this.datosTurno.fecha_Desde, 'enviar')
-                this.datosTurno.fecha_Hasta= this.transformarFecha(this.datosTurno.fecha_Hasta, 'enviar')
-                
-                this.EditarDatos(`turnos/editar`, this.eventoActual.objTurnos.id, this.datosTurno)
-                    .then(res => {
-                        console.log(res)
-                        if(res.msj=="Error"){
-                            this.$swal({
-                                title: '¡Error!',
-                                text: ''+res.razon,
-                                icon: 'error',
-                                confirmButtonText: 'Ok'
-                            })
-
-                            this.$emit('SalirDeABMturnos', true)
-                        } else {
-                            this.$swal({
-                                title: 'Turno editado!',
-                                icon: 'success',
-                                confirmButtonText: 'Ok'
-                            })
-
-                            this.$emit('SalirDeABMturnos', true)  
-                        }
-                    })
-                
-                console.log(this.datosTurno)
-            }
-
-            if(this.accionAux=='Borrar'){
-                let turno_id = this.eventoActual.objTurnos.id
-                this.EliminarDatos(`turnos/eliminar`, turno_id, this.datosTurno)
-                        .then(res => {
-                            console.log(res)
-                            if(res.msj=="Error"){
-                            this.$swal({
-                                title: '¡Error!',
-                                text: ''+res.razon,
-                                icon: 'error',
-                                confirmButtonText: 'Ok'
-                            })
-
-                            this.$emit('SalirDeABMturnos', true)
-                        } else {
-                            this.$swal({
-                                title: 'Turno borrado!',
-                                icon: 'success',
-                                confirmButtonText: 'Ok'
-                            })
-
-                            this.$emit('SalirDeABMturnos', true)  
-                        }
-                    })
-            }
+                }
+            
         },
 
         desplegarABMturnos(accion) {
@@ -470,7 +537,20 @@ export default {
             return fecha
         },
 
+        validarCampos(objFormulario){
+            this.alertaFormulario= [];
+            for (let key in objFormulario) {
+                    if(objFormulario[key] == ""){
+                            this.alertaFormulario.push(' '+key.charAt(0).toUpperCase()+ key.slice(1))
+                    }
+            }
 
+            if(this.alertaFormulario.length > 0){
+                return true
+            } else {
+                return false
+            }
+        },
         
     },
 

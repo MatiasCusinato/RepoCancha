@@ -165,21 +165,31 @@ class CanchaController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Cancha $cancha, $cancha_id) 
+    public function destroy($club_id, $cancha_id ) 
     {
+        $cancha= DB::table('canchas')
+                        ->where([
+                            ['club_configuracion_id', '=', $club_id],
+                            ['id', '=', $cancha_id]
+                        ])
+                        ->get();
+
+        if(count($cancha) < 1){
+            return response()->json([
+                'msj' => 'Eliminacion fallida',
+                'razon' => 'La cancha no pudo ser eliminada porque no existe o no se encuentra'
+            ], 400);
+        }
+
         try {
             DB::beginTransaction();
-
-            $cancha= Cancha::find($cancha_id);                
-
-            if(!$cancha){
-                return response()->json([
-                    'msj' => 'Fallida',
-                    'razon' => 'Cancha no encontrada o no existente'
-                ], 400);
-            }
-
-            Cancha::destroy($cancha_id);
+            
+            DB::table('canchas')
+                        ->where([
+                            ['club_configuracion_id', '=', $club_id],
+                            ['id', '=', $cancha_id]
+                        ])
+                        ->delete();
 
             DB::commit(); 
         }
@@ -190,7 +200,7 @@ class CanchaController extends Controller
             DB::rollback();
             return response()->json(["msj" => "Error!!"], 400);
         }
-        
+
         return response()->json([
             'msj' => 'Eliminacion exitosa',
             'razon' => 'La cancha ha sido eliminada'
