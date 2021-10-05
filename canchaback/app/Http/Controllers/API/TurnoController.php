@@ -44,6 +44,39 @@ class TurnoController extends Controller
      */
     public function store(Request $request)
     {
+        $fechaDesde= substr($request->fecha_Desde, -20, -9); //$fechaDesde= "2018-12-25"
+        $fechaHasta= substr($request->fecha_Hasta, -20, -9);
+    
+        $fechaDesdeInt = strtotime($fechaDesde); //Convierte el $fechaDesde en unix time --> 1543104000
+        $fechaHastaInt = strtotime($fechaHasta);
+
+        if($fechaDesde == $fechaHasta){
+            echo "turno normal";
+        } else {
+            echo "turno fijo";
+            echo "<br>";
+            $diaDesde= date("d", $fechaDesdeInt);
+            $mesDesde= date("m", $fechaDesdeInt);
+            $anioDesde= date("Y", $fechaDesdeInt);
+            echo "".$anioDesde.'-'.$mesDesde."-".$diaDesde;
+            echo "<br>";
+            
+            $diaHasta= date("d", $fechaHastaInt);
+            $mesHasta= date("m", $fechaHastaInt);
+            $anioHasta= date("Y", $fechaHastaInt);
+
+            $diaDesde= intval($diaDesde);
+            $diaHasta= intval($diaHasta);
+
+            $mesDesde= intval($mesDesde);
+            $mesHasta= intval($mesHasta);
+
+            //echo "".$anioHasta.'/'.$mesHasta."/".$diaHasta;
+            //dd(var_dump($diaDesde));
+
+        }
+        dd("stop");
+
         $val = Validator::make($request->all(), [
             'club_configuracion_id' => 'required',
             "cliente_id" => ['required', 'exists:clientes,id'],

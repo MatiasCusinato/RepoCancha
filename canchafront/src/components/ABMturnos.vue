@@ -77,15 +77,10 @@
         <!-- MODAL CREAR/EDITAR -->
         <div v-if="abrirFormTurnos">
             <div v-if="accionAux=='Editar' || accionAux=='Crear'">
-                <div class="contenedor" >
+                <div class="contenedor">
                     <div :class="accionAux=='Editar' ? 'VentanaModalEditar' : 'VentanaModalCrear'">
                         <div class="cabecera tituloventana">
-                            <button class="cierre btn btn-primary" @click="desplegarABMturnos('Consultar')" v-if="accion=='Editar'">
-                                <font color="#ff0000">
-                                    <i class="bi bi-x-circle-fill"></i>
-                                </font>
-                            </button>
-                            <button class="cierre btn btn-primary" @click="Cancelar()" v-if="accion=='Crear'">
+                            <button class="cierre btn btn-primary" @click="accionAux=='Editar'? desplegarABMturnos('Consultar'): Cancelar()">
                                 <font color="#ff0000">
                                     <i class="bi bi-x-circle-fill"></i>
                                 </font>
@@ -94,6 +89,15 @@
                         </div>
 
                         <div class="contenido">
+                            <div class="row" v-if="accionAux=='Crear'">
+                                <div class="col-md-6 mb-3">
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" @click="turnoFijo=!turnoFijo">
+                                        <label class="form-check-label campo" for="flexSwitchCheckDefault">Turno fijo</label>
+                                    </div>
+                                </div>
+                            </div>
+
                             <div class="row">
                                 <div class="col-md-6 mb-3">
                                     <label for="" class="form-label campo"><i class="bi bi-person"> Cliente: </i></label>
@@ -160,7 +164,7 @@
 
                                     <div class="col-md-6 mb-3">
                                         <label for="" class="form-label campo">
-                                            <i class="bi bi-calendar2-day"> Comienzo: </i>
+                                            <i class="bi bi-calendar2-day"> Fin: </i>
                                         </label>
                                         <input type="datetime-local" v-model="datosTurno.fecha_Hasta" 
                                                 class="form-control form-control-sm">
@@ -191,6 +195,19 @@
                                         <input type="datetime-local" v-model="datosTurno.fecha_Hasta" 
                                                 class="form-control form-control-sm">
                                     </div> -->
+                                </div>
+
+                                <div class="row" v-if="turnoFijo && accionAux=='Crear'">
+                                    <h4 class="campo">Seleccione los dias del turno fijo</h4>
+                                    <div class="col-md-6 mb-3">
+                                        <div class="form-check" v-for="(dia, id) in diasFijos" :key="id">
+                                            <input class="form-check-input" type="checkbox" :value="dia.diaEN" 
+                                                    v-model="datosTurno.diasFijos" id="flexCheckDefault">
+                                            <label class="form-check-label" for="flexCheckDefault">
+                                                {{dia.diaES}}
+                                            </label>
+                                        </div>
+                                    </div>
                                 </div>
 
                             </div>
@@ -366,14 +383,25 @@ export default {
                 fecha_Hasta: "",
                 grupo: 1,
                 precio: "",
+                diasFijos:[]
             },
 
-            fechaComienzo: "",
-            horasIntervalo: "",
-
+            //horasIntervalo: "",
+            turnoFijo: false,
+            //diasFijos: ["Lunes", "Martes", "Miercoles", "Jueves", "Viernes", "Sabado", "Domingo"],
+            diasFijos: [
+                {diaES: "Lunes", diaEN: "Mon"}, 
+                {diaES: "Martes", diaEN: "Tue"}, 
+                {diaES: "Miercoles", diaEN: "Wed"}, 
+                {diaES: "Jueves", diaEN: "Thu"}, 
+                {diaES: "Viernes", diaEN: "Fri"}, 
+                {diaES: "Sabado", diaEN: "Sat"}, 
+                {diaES: "Domingo", diaEN: "Sun"}
+            ],
 
             clientes: [],
             canchas: [],
+    
 
             alertaFormulario:[],
 
@@ -390,13 +418,12 @@ export default {
 
         Aceptar(){
             if(this.accionAux=='Editar' || this.accionAux=='Crear'){
+                this.datosTurno.fecha_Desde= this.transformarFecha(this.datosTurno.fecha_Desde, 'enviar')
+                this.datosTurno.fecha_Hasta= this.transformarFecha(this.datosTurno.fecha_Hasta, 'enviar')
+                
+                console.log(this.datosTurno)
                 if(!this.validarCampos(this.datosTurno)){
                     if(this.accionAux=='Crear'){
-                        this.datosTurno.fecha_Desde= this.transformarFecha(this.datosTurno.fecha_Desde, 'enviar')
-                        this.datosTurno.fecha_Hasta= this.transformarFecha(this.datosTurno.fecha_Hasta, 'enviar')
-                        
-
-                        console.log(this.datosTurno)
                         this.InsertarDatos ('turnos/guardar', this.datosTurno)
                                 .then(res => {
                                     console.log(res)
@@ -421,10 +448,7 @@ export default {
                                 })
                         }
 
-                        if(this.accionAux=='Editar'){
-                            this.datosTurno.fecha_Desde= this.transformarFecha(this.datosTurno.fecha_Desde, 'enviar')
-                            this.datosTurno.fecha_Hasta= this.transformarFecha(this.datosTurno.fecha_Hasta, 'enviar')
-                            
+                        if(this.accionAux=='Editar'){  
                             this.EditarDatos(`turnos/editar`, this.eventoActual.objTurnos.id, this.datosTurno)
                                 .then(res => {
                                     console.log(res)
@@ -457,7 +481,7 @@ export default {
                         icon: 'warning',
                         confirmButtonText: 'Ok'
                     })
-                }            
+                }           
             }
 
             if(this.accionAux=='Borrar'){
@@ -612,6 +636,7 @@ p{
 	width: 100%;
 	height: 100%;
 	background: rgba(0,0,0,0.5);
+    overflow-y: scroll;
 }
 
 .VentanaModalCrear {

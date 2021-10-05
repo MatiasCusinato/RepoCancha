@@ -28,7 +28,7 @@
         </div>
 
         <div>
-            <vue-cal class="calendarioVue vuecal--green-theme" 
+            <vue-cal class="calendarioVue vuecal--green-theme " 
                 :time-from="9 * 60" :time-to="24.5 * 60" 
                 :time-step="30" active-view="week" 
                 
@@ -90,7 +90,7 @@ export default {
                     start: '2018-11-21',
                     end: '2018-11-21',
                     title: 'Need to go shopping',
-                    class: 'leisure'
+                    class: 'sport'
                 },
             ],
         }
@@ -148,7 +148,8 @@ export default {
                     "tipo_turno":"",
                     "fecha_Desde":"0000-00-00 00:00:00",
                     "fecha_Hasta":"0000-0-0 00:00:00",
-                    "precio":"0"
+                    "precio":"0",
+                    "diasFijos":[],
                 }
             }
         },
@@ -195,8 +196,8 @@ export default {
                     start: this.datos[i].fecha_Desde,
                     end: this.datos[i].fecha_Hasta,
                     title: this.datos[i].tipo_turno,
-                    class: 'sport',
-                    objTurnos: this.datos[i]
+                    objTurnos: this.datos[i],
+                    class: 'sport'
                 })      
             }
         },
@@ -213,7 +214,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
 .btnTurno {
     position: fixed;
     float: left;
@@ -236,17 +237,19 @@ export default {
     margin: 50px auto auto -300px;
 }
 
-.vuecal--month-view .vuecal__cell {height: 80px;}
+.vuecal__event {cursor: pointer;}
 
-.vuecal--month-view .vuecal__cell-content {
-  justify-content: flex-start;
-  height: 100%;
-  align-items: flex-end;
+.vuecal__event-title {
+  font-size: 14px;
+  font-weight: 700;
+  margin: 4px 0 8px;
 }
 
-.vuecal--month-view .vuecal__cell-date {padding: 4px;}
-.vuecal--month-view .vuecal__no-event {display: none;}
-
+.vuecal__event.sport {
+    background-color: rgba(255, 102, 102, 0.9);
+    border: 1px solid rgb(235, 82, 82);
+    color: #fff;
+}
 
 
 
@@ -329,6 +332,5 @@ table{
 	color: white;
 }
 
-.vuecal__event.leisure {background-color: rgba(253, 156, 66, 0.9);border: 1px solid rgb(233, 136, 46);color: #fff;}
-.vuecal__event.sport {background-color: rgba(255, 102, 102, 0.9);border: 1px solid rgb(235, 82, 82);color: #fff;}
+
 </style>
