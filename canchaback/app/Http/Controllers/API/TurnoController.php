@@ -47,7 +47,7 @@ class TurnoController extends Controller
         $fechaDesde= substr($request->fecha_Desde, -20, -9); //$fechaDesde= "2018-12-25"
         $fechaHasta= substr($request->fecha_Hasta, -20, -9);
     
-        $fechaDesdeInt = strtotime($fechaDesde); //Convierte el $fechaDesde en unix time --> 1543104000
+        $fechaDesdeInt = strtotime($fechaDesde); //Convierte el $fechaDesde a timestamp --> 1543104000
         $fechaHastaInt = strtotime($fechaHasta);
 
         if($fechaDesde == $fechaHasta){
@@ -55,29 +55,20 @@ class TurnoController extends Controller
         } else {
             echo "turno fijo";
             echo "<br>";
-            $diaDesde= date("d", $fechaDesdeInt);
-            $mesDesde= date("m", $fechaDesdeInt);
-            $anioDesde= date("Y", $fechaDesdeInt);
-            echo "".$anioDesde.'-'.$mesDesde."-".$diaDesde;
-            echo "<br>";
-            
-            $diaHasta= date("d", $fechaHastaInt);
-            $mesHasta= date("m", $fechaHastaInt);
-            $anioHasta= date("Y", $fechaHastaInt);
 
-            $diaDesde= intval($diaDesde);
-            $diaHasta= intval($diaHasta);
+            $cantDiasFijo= count($request->diasFijo);
 
-            $mesDesde= intval($mesDesde);
-            $mesHasta= intval($mesHasta);
+            for ($i = $fechaDesdeInt; $i <= $fechaHastaInt; $i += 86400 *7){
+                for($j=0; $j < $cantDiasFijo; $j++){
+                    echo date("Y-m-d", strtotime($request->diasFijo[$j], $i))."  Dia: ".$request->diasFijo[$j].'<br>';
+                }
+            }
 
-            //echo "".$anioHasta.'/'.$mesHasta."/".$diaHasta;
-            //dd(var_dump($diaDesde));
+            //dd("stopppp");
 
         }
-        dd("stop");
 
-        $val = Validator::make($request->all(), [
+        /* $val = Validator::make($request->all(), [
             'club_configuracion_id' => 'required',
             "cliente_id" => ['required', 'exists:clientes,id'],
             "cancha_id" => ['required', 'exists:canchas,id'],
@@ -119,7 +110,7 @@ class TurnoController extends Controller
             }
         
             return response()->json($turno, 201);
-        }
+        } */
 
         
         
