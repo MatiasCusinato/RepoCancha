@@ -30,7 +30,7 @@ class TurnoFactory extends Factory
             'fecha_Desde' => "2018-11-21 11:00:00",
             //'fecha_Hasta' => $this->faker->date($format = 'Y-m-d', $max = 'now'),
             'fecha_Hasta' => "2018-11-21 12:00:00",
-            'grupo' => $this->faker->numberBetween($min = 1, $max = 50),
+            'grupo' => $this->faker->numberBetween($min = 1, $max = 1),
             'precio' => $this->faker->numberBetween($min = 1, $max = 3),
         ];
     }

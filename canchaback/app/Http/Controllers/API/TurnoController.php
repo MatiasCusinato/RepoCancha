@@ -44,31 +44,7 @@ class TurnoController extends Controller
      */
     public function store(Request $request)
     {
-        $fechaDesde= substr($request->fecha_Desde, -20, -9); //$fechaDesde= "2018-12-25"
-        $fechaHasta= substr($request->fecha_Hasta, -20, -9);
-    
-        $fechaDesdeInt = strtotime($fechaDesde); //Convierte el $fechaDesde a timestamp --> 1543104000
-        $fechaHastaInt = strtotime($fechaHasta);
-
-        if($fechaDesde == $fechaHasta){
-            echo "turno normal";
-        } else {
-            echo "turno fijo";
-            echo "<br>";
-
-            $cantDiasFijo= count($request->diasFijo);
-
-            for ($i = $fechaDesdeInt; $i <= $fechaHastaInt; $i += 86400 *7){
-                for($j=0; $j < $cantDiasFijo; $j++){
-                    echo date("Y-m-d", strtotime($request->diasFijo[$j], $i))."  Dia: ".$request->diasFijo[$j].'<br>';
-                }
-            }
-
-            //dd("stopppp");
-
-        }
-
-        /* $val = Validator::make($request->all(), [
+        $val = Validator::make($request->all(), [
             'club_configuracion_id' => 'required',
             "cliente_id" => ['required', 'exists:clientes,id'],
             "cancha_id" => ['required', 'exists:canchas,id'],
@@ -81,23 +57,81 @@ class TurnoController extends Controller
 
         if($val->fails()){
             return response()->json([
-                    'Respuesta' => 'Error', 
-                    'Mensaje' => 'Faltan datos por ingresar'
+                    'msj' => 'Error', 
+                    'razon' => 'Faltan datos por ingresar'
             ], 400);
         }else { 
             try {
                 DB::beginTransaction();
 
-                $turno = Turno::create([
-                    "club_configuracion_id" => $request->club_configuracion_id,
-                    "cliente_id" => $request->cliente_id,
-                    "cancha_id" => $request->cancha_id,
-                    "fecha_Desde" => $request->fecha_Desde,
-                    "fecha_Hasta" => $request->fecha_Hasta,
-                    "tipo_turno" => $request->tipo_turno,
-                    "precio" => $request->precio,
-                    "grupo" => $request->grupo
-                ]);
+                $fechaDesde= substr($request->fecha_Desde, -20, -9); //$fechaDesde= "2018-12-25"
+                $fechaHasta= substr($request->fecha_Hasta, -20, -9);
+                
+                $horaDesde= substr($request->fecha_Desde, -8, -1); //$horaDesde= "10:00:00"
+                $horaHasta= substr($request->fecha_Hasta, -8, -1);
+            
+                $fechaDesdeInt = strtotime($fechaDesde); //Convierte el $fechaDesde a timestamp --> 1543104000
+                $fechaHastaInt = strtotime($fechaHasta);
+
+                //Distingo si la fechaDesde y la FechaHasta son iguales(turno normal). Si son distintas (Turno fijo). 
+                if($fechaDesde == $fechaHasta){
+                    // PARTE DE TURNO NORMAL
+                    
+                    $turno = Turno::create([
+                        "club_configuracion_id" => $request->club_configuracion_id,
+                        "cliente_id" => $request->cliente_id,
+                        "cancha_id" => $request->cancha_id,
+                        "fecha_Desde" => $request->fecha_Desde,
+                        "fecha_Hasta" => $request->fecha_Hasta,
+                        "tipo_turno" => $request->tipo_turno,
+                        "precio" => $request->precio,
+                        "grupo" => 1
+                    ]);
+
+                } else {
+                    //PARTE DE TURNO FIJO
+                    $cantDiasFijo= count($request->diasFijo);
+
+                    
+                    $sqlGrupo= DB::table('club_configuracions')
+                                    ->select('club_configuracions.ultimo_grupo')
+                                    ->where('id', '=', $request->club_configuracion_id)
+                                    ->get();
+
+                    //Veo si el grupo tiene un turno fijo:
+                    if($sqlGrupo[0]->ultimo_grupo > 1){
+                        //Si tiene, incremento el turno fijo y actualizo el ultimo_grupo de la tabla club_configuracions
+                        $grupoTurnoFijo= $sqlGrupo[0]->ultimo_grupo + 1;
+
+                        DB::table('club_configuracions')
+                                ->where('id', '=', $request->club_configuracion_id)
+                                ->update(['ultimo_grupo' => $grupoTurnoFijo]);
+                    } else {
+                        //Si no tiene un turno fijo, asigno el numero 11 como inicial.
+                        $grupoTurnoFijo= 11;
+                    }
+                    
+                    //Recorro los dias seleccionados del turno fijo
+                    for($j=0; $j < $cantDiasFijo; $j++){
+                        //Por cada dia seleccionado, recorro todos los dias entre dos fechas
+                        for ($i = $fechaDesdeInt; $i <= $fechaHastaInt; $i+= 86400){
+                            //Si el dia actual es igual al dia seleccionado, creo un turno con su grupo y fecha correspondiente
+                            if(date("D", $i) == $request->diasFijo[$j]){
+                                //echo "". date("Y-m-d", $i). "<br>";
+                                $turno = Turno::create([
+                                    "club_configuracion_id" => $request->club_configuracion_id,
+                                    "cliente_id" => $request->cliente_id,
+                                    "cancha_id" => $request->cancha_id,
+                                    "fecha_Desde" => date("Y-m-d", $i)." ". $horaDesde,
+                                    "fecha_Hasta" => date("Y-m-d", $i)." ". $horaHasta,
+                                    "tipo_turno" => $request->tipo_turno,
+                                    "precio" => $request->precio,
+                                    "grupo" => $grupoTurnoFijo
+                                ]);      
+                            }
+                        }
+                    }
+                }
 
                 DB::commit(); 
             }
@@ -109,11 +143,18 @@ class TurnoController extends Controller
                 return response()->json(["Mensaje" => "Error!!"]);
             }
         
-            return response()->json($turno, 201);
-        } */
-
-        
-        
+            if($fechaDesde == $fechaHasta){
+                return response()->json([
+                    'msj' => 'Creacion de turno exitosa', 
+                    'razon' => 'El turno NORMAL ha sido creado exitosamente'
+                ], 201);
+            } else {
+                return response()->json([
+                    'msj' => 'Creacion de turno exitosa', 
+                    'razon' => 'El turno FIJO ha sido creado exitosamente'
+                ], 201);
+            }
+        }
     }
 
     /**
@@ -164,13 +205,29 @@ class TurnoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($turno_id, Turno $turno)
+    public function destroy($grupo, $turno_id=null, Turno $turno)
     {
-        Turno::destroy($turno_id);
+        //Turno::destroy($turno_id);
+        if(($grupo <= 1) && ($turno_id==null)){
+            return response()->json([
+                'msj' => 'Error',
+                'razon' => 'Los turnos normales (grupo 1), no pueden ser eliminados '
+            ]);
+        }
+
+        DB::table('turnos')
+                ->where([
+                    ['turnos.grupo', '=', $grupo],
+                ])
+                ->when($turno_id, function ($sql, $turno_id) {
+                    return $sql->where('turnos.id', $turno_id);
+                })
+                ->delete();
 
         return response()->json([
             'msj' => 'Exitosa',
-            'Mensaje' => 'Turno eliminado'
+            'razon' => 'Turno eliminado'
         ]);
     }
+
 }

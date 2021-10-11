@@ -61,6 +61,4 @@ Route::get('turnos/{club_id}/{cancha_id}', [TurnoController::class, 'index']);
 Route::post('turnos/guardar', [TurnoController::class, 'store']);
 Route::get('turnos/{club_id}/show/{turno_id}', [TurnoController::class, 'show']);
 Route::put('turnos/editar/{turno_id}', [TurnoController::class, 'update']);
-Route::delete('turnos/eliminar/{turno_id}', [TurnoController::class, 'destroy']);
- 
-
+Route::delete('turnos/eliminar/{grupo}/{turno_id?}', [TurnoController::class, 'destroy']); 

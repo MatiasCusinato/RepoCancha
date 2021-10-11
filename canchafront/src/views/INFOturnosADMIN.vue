@@ -30,12 +30,12 @@
         <div>
             <vue-cal class="calendarioVue vuecal--green-theme " 
                 :time-from="9 * 60" :time-to="24.5 * 60" 
-                :time-step="30" active-view="week" 
+                :time-step="30" active-view="month" 
                 
                 :events="events" selected-date="2018-11-19"
                 :editable-events="{ 
                                     title: false, drag: false, 
-                                    resize: false, delete: false, 
+                                    resize: true, delete: false, 
                                     create: false
                                 }"
                 locale="es"

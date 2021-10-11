@@ -62,7 +62,7 @@
 
                                     <div class="btn-group mr-2" role="group" aria-label="Second group">
                                         <button class="boton btn btn-success" @click="desplegarABMturnos('Editar')">Editar</button>
-                                        <button class="boton btn btn-danger" @click="desplegarABMturnos('Borrar')">Borrar</button>
+                                        <button class="boton btn btn-danger" @click="BorrarTurno()">Borrar</button>
                                     </div>
                                 </div>    
                             </div>
@@ -101,7 +101,7 @@
                             <div class="row">
                                 <div class="col-md-6 mb-3">
                                     <label for="" class="form-label campo"><i class="bi bi-person"> Cliente: </i></label>
-                                    <select name="cliente_id" v-model="datosTurno.cliente_id" 
+                                    <select name="cliente_id" v-model="datosTurno.cliente_id"
                                             class="form-select" aria-label=".form-select-sm example">
 
                                         <option v-for="(cliente, $id) in clientes" 
@@ -200,9 +200,9 @@
                                 <div class="row" v-if="turnoFijo && accionAux=='Crear'">
                                     <h4 class="campo">Seleccione los dias del turno fijo</h4>
                                     <div class="col-md-6 mb-3">
-                                        <div class="form-check" v-for="(dia, id) in diasFijos" :key="id">
+                                        <div class="form-check" v-for="(dia, id) in diasFijo" :key="id">
                                             <input class="form-check-input" type="checkbox" :value="dia.diaEN" 
-                                                    v-model="datosTurno.diasFijos" id="flexCheckDefault">
+                                                    v-model="datosTurno.diasFijo" id="flexCheckDefault">
                                             <label class="form-check-label" for="flexCheckDefault">
                                                 {{dia.diaES}}
                                             </label>
@@ -229,79 +229,6 @@
                                     <i class="bi bi-x-circle-fill"> Cancelar </i>
                                 </button>
                             </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-
-
-
-            <!-- MODAL BORRAR -->
-            <div v-if="accionAux == 'Borrar'">
-                <h2>Borrando turno</h2>
-                <div class="contenedor" v-if="accionAux=='Borrar'">
-                    <div class="VentanaModalBorrar">
-                        <div class="cabecera tituloventana">
-                            <button class="cierre btn btn-primary" @click="desplegarABMturnos('Consultar')">
-                                <font color="#ff0000"><i class="bi bi-x-circle-fill"></i></font>
-                            </button>
-                            <p>{{accionAux}} Turnos</p>
-                        </div>
-
-                        <div class="contenido">
-                            <div class="row">
-                                <div class="col-md-5 mb-3">
-                                    <label for="" class="form-label campo"><i class="bi bi-person"> Cliente: </i></label>
-                                    <input type="text" :value="NombreApellido" 
-                                            class="form-control form-control-sm inputChico" readonly>
-                                </div>
-
-                                <div class="col-md-5 mb-3">
-                                    <label for="" class="form-label campo"><i class="bi bi-aspect-ratio"> Cancha: </i></label>
-                                    <input type="text" :value="Cancha" 
-                                            class="form-control form-control-sm inputChico" readonly>
-                                </div>
-                            </div>
-
-                            <br>
-                            <div class="mb-3">
-                                <label for="" class="form-label campo"><i class="bi bi-flag"> Tipo de turno </i> </label>
-                                <input type="text" v-model="eventoActual.objTurnos.tipo_turno" readonly
-                                        class="form-control form-control-sm inputChico">
-                            </div>
-
-                            <br>
-                            <div class="row">
-                                <div class="col-md-5 mb-3">
-                                    <label for="" class="form-label campo"> 
-                                        <i class="bi bi-calendar2-day"> Comienzo: </i>
-                                    </label>
-                                    <input type="datetime" v-model="eventoActual.objTurnos.fecha_Desde" 
-                                            class="form-control form-control-sm inputChico" readonly>
-                                </div>
-
-                                <div class="col-md-5 mb-3">
-                                    <label for="" class="form-label campo">
-                                        <i class="bi bi-calendar2-day"> Fin: </i>
-                                    </label>
-                                    <input type="datetime" v-model="eventoActual.objTurnos.fecha_Hasta"
-                                            class="form-control form-control-sm inputChico" readonly>
-                                </div>
-                            </div>
-
-                            <!-- <div>
-                                <label for="" class="form-label campo"> Precio:</label>
-                                <input type="text" class="form-control form-control-sm inputChico" 
-                                        v-model="eventoActual.objTurnos.precio">
-                            </div> -->
-                            <button class="btn btn-danger divBotones" @click="Aceptar()">
-                                <i class="bi bi-check2-circle"> Borrar </i>
-                            </button>
-
-                            <button class="btn btn-primary divBotones" @click="desplegarABMturnos('Consultar')">
-                                <i class="bi bi-x-circle-fill"> Cancelar </i>
-                            </button>
                         </div>
                     </div>
                 </div>
@@ -383,13 +310,12 @@ export default {
                 fecha_Hasta: "",
                 grupo: 1,
                 precio: "",
-                diasFijos:[]
+                diasFijo:[]
             },
 
             //horasIntervalo: "",
             turnoFijo: false,
-            //diasFijos: ["Lunes", "Martes", "Miercoles", "Jueves", "Viernes", "Sabado", "Domingo"],
-            diasFijos: [
+            diasFijo: [
                 {diaES: "Lunes", diaEN: "Mon"}, 
                 {diaES: "Martes", diaEN: "Tue"}, 
                 {diaES: "Miercoles", diaEN: "Wed"}, 
@@ -412,6 +338,60 @@ export default {
     },
 
     methods: {
+        BorrarTurno(){
+            this.$swal.fire({
+                title: 'Borrando el turno',
+                showCancelButton: true,
+                showDenyButton: true,
+                confirmButtonText: 'Borrar solo el turno',
+                denyButtonText: 'Borrar todo los turnos fijos',
+                cancelButtonText: 'Cancelar',
+            }).then((result) => {
+                //Read more about isConfirmed, isDenied below
+                let grupo= ""+this.eventoActual.objTurnos.grupo;
+                let turno_id= ""+ this.eventoActual.objTurnos.id;
+                let grupo_turno_id = "";
+
+                result.isConfirmed ? grupo_turno_id= grupo+"/"+turno_id : grupo_turno_id= grupo;
+                
+                if((result.isDenied) && (this.eventoActual.objTurnos.grupo <= 1)){
+                    this.$swal({
+                        title: '¡Error!',
+                        text: 'No se pueden eliminar todos los turnos normales (grupo 1)',
+                        icon: 'error',
+                        confirmButtonText: 'Ok'
+                    })
+
+                    return
+                } else if(result.dismiss){
+                    return  
+                }
+
+                this.EliminarDatos(`turnos/eliminar`, grupo_turno_id, this.datosTurno)
+                        .then(res => {
+                            console.log(res)
+                            if(res.msj=="Error"){
+                                this.$swal({
+                                    title: '¡Error!',
+                                    text: ''+res.razon,
+                                    icon: 'error',
+                                    confirmButtonText: 'Ok'
+                                })
+
+                                this.$emit('SalirDeABMturnos', true)
+                            } else {
+                                this.$swal({
+                                    title: 'Turno/s borrado!',
+                                    icon: 'success',
+                                    confirmButtonText: 'Ok'
+                                })
+
+                                this.$emit('SalirDeABMturnos', true)  
+                            }
+                        })
+            })
+        },
+
         Cancelar() {
             this.$emit("SalirDeABMturnos", false)
         },
@@ -422,7 +402,7 @@ export default {
                 this.datosTurno.fecha_Hasta= this.transformarFecha(this.datosTurno.fecha_Hasta, 'enviar')
                 
                 console.log(this.datosTurno)
-                if(!this.validarCampos(this.datosTurno)){
+                //if(!this.validarCampos(this.datosTurno)){
                     if(this.accionAux=='Crear'){
                         this.InsertarDatos ('turnos/guardar', this.datosTurno)
                                 .then(res => {
@@ -474,41 +454,15 @@ export default {
                             
                             console.log(this.datosTurno)
                     } 
-                } else {
+                /* } else {
                     this.$swal({
                         title: '¡Formulario incompleto!',
                         text: 'Los siguientes campos estan vacios: '+ this.alertaFormulario,
                         icon: 'warning',
                         confirmButtonText: 'Ok'
                     })
-                }           
+                }    */       
             }
-
-            if(this.accionAux=='Borrar'){
-                    let turno_id = this.eventoActual.objTurnos.id
-                    this.EliminarDatos(`turnos/eliminar`, turno_id, this.datosTurno)
-                            .then(res => {
-                                console.log(res)
-                                if(res.msj=="Error"){
-                                this.$swal({
-                                    title: '¡Error!',
-                                    text: ''+res.razon,
-                                    icon: 'error',
-                                    confirmButtonText: 'Ok'
-                                })
-
-                                this.$emit('SalirDeABMturnos', true)
-                            } else {
-                                this.$swal({
-                                    title: 'Turno borrado!',
-                                    icon: 'success',
-                                    confirmButtonText: 'Ok'
-                                })
-
-                                this.$emit('SalirDeABMturnos', true)  
-                            }
-                        })
-                }
             
         },
 
@@ -521,15 +475,18 @@ export default {
                 let fechaDesde= this.eventoActual.objTurnos.fecha_Desde
                 let fechaHasta= this.eventoActual.objTurnos.fecha_Hasta
 
+                this.datosTurno = this.eventoActual.objTurnos;
+                this.datosTurno.fecha_Desde = this.transformarFecha(fechaDesde, 'abm')
+                this.datosTurno.fecha_Hasta = this.transformarFecha(fechaHasta, 'abm')
 
-                this.datosTurno.cliente_id = this.eventoActual.objTurnos.cliente_id
+                /* this.datosTurno.cliente_id = this.eventoActual.objTurnos.cliente_id
                 this.datosTurno.cancha_id = this.eventoActual.objTurnos.cancha_id
                 this.datosTurno.club_configuracion_id = this.eventoActual.objTurnos.club_configuracion_id
                 this.datosTurno.tipo_turno = this.eventoActual.objTurnos.tipo_turno
                 this.datosTurno.fecha_Desde = this.transformarFecha(fechaDesde, 'abm')
                 this.datosTurno.fecha_Hasta = this.transformarFecha(fechaHasta, 'abm')
                 this.datosTurno.grupo = this.eventoActual.objTurnos.grupo
-                this.datosTurno.precio = this.eventoActual.objTurnos.precio 
+                this.datosTurno.precio = this.eventoActual.objTurnos.precio */
             }
         },
     
@@ -543,6 +500,7 @@ export default {
         traerCanchas(){
             this.ObtenerDatos(`canchas/${this.datosTurno.club_configuracion_id}`)
                 .then (res => {
+                    console.log()
                     this.canchas = res.canchas.data
                 })
         },
