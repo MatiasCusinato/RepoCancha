@@ -184,11 +184,11 @@
                                             </option>
                                             <option value="2">
                                                 2 hora
-                                            </option>
+                                            </option> 
                                         </select>
-                                    </div>
+                                    </div> -->
 
-                                    <div class="col-md-6 mb-3">
+                                    <!-- <div class="col-md-6 mb-3">
                                         <label for="" class="form-label campo">
                                             <i class="bi bi-calendar2-day"> Fin: </i>
                                         </label>

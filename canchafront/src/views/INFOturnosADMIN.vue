@@ -167,7 +167,6 @@ export default {
         traerTurnos(){
             this.events=[]
             let club= localStorage.getItem('club')
-            console.log()
 
             this.ObtenerDatos(`turnos/${club}/${this.canchaActual}`)
                 .then(res => {
