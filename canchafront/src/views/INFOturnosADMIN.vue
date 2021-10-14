@@ -135,6 +135,7 @@ export default {
         crearTurno(accion){
             this.abrirABMturnos = true
             this.accion= accion
+
             this.eventoActual= {
                 //"start":"00-0-00",
                 "objTurnos":{
@@ -147,7 +148,7 @@ export default {
                     "club_configuracion_id":null,
                     "tipo_turno":"",
                     "fecha_Desde":"0000-00-00 00:00:00",
-                    "fecha_Hasta":"0000-0-0 00:00:00",
+                    "fecha_Hasta":"0000-00-00 00:00:00",
                     "precio":"0",
                     "diasFijos":[],
                 }
@@ -231,9 +232,9 @@ export default {
 }
 
 .calendarioVue{
-    height: 400px;
-    width: 1000px;
-    margin: 50px auto auto -300px;
+    height: 500px;
+    width: 1200px;
+    margin: 20px auto auto -450px;
 }
 
 .vuecal__event {cursor: pointer;}

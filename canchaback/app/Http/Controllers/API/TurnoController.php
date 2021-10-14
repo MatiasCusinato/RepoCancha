@@ -64,6 +64,23 @@ class TurnoController extends Controller
             try {
                 DB::beginTransaction();
 
+                //verif turno normal
+                $sqlDisponibilidadTurno= DB::table('turnos')
+                                            ->where([
+                                                ['club_configuracion_id', '=', $request->club_configuracion_id],
+                                                ['cancha_id', '=', $request->cancha_id],
+                                                ['fecha_Desde', '=', $request->fecha_Desde],
+                                            ])
+                                            ->get();
+
+                if(count($sqlDisponibilidadTurno) > 1){
+                    return response()->json([
+                        'msj' => 'Error', 
+                        'razon' => 'Esa fecha ya esta reservada'
+                    ], 401);
+                }
+                                            
+
                 $fechaDesde= substr($request->fecha_Desde, -20, -9); //$fechaDesde= "2018-12-25"
                 $fechaHasta= substr($request->fecha_Hasta, -20, -9);
                 
@@ -92,7 +109,6 @@ class TurnoController extends Controller
                     //PARTE DE TURNO FIJO
                     $cantDiasFijo= count($request->diasFijo);
 
-                    
                     $sqlGrupo= DB::table('club_configuracions')
                                     ->select('club_configuracions.ultimo_grupo')
                                     ->where('id', '=', $request->club_configuracion_id)
@@ -102,14 +118,14 @@ class TurnoController extends Controller
                     if($sqlGrupo[0]->ultimo_grupo > 1){
                         //Si tiene, incremento el turno fijo y actualizo el ultimo_grupo de la tabla club_configuracions
                         $grupoTurnoFijo= $sqlGrupo[0]->ultimo_grupo + 1;
-
-                        DB::table('club_configuracions')
-                                ->where('id', '=', $request->club_configuracion_id)
-                                ->update(['ultimo_grupo' => $grupoTurnoFijo]);
                     } else {
                         //Si no tiene un turno fijo, asigno el numero 11 como inicial.
                         $grupoTurnoFijo= 11;
                     }
+
+                    DB::table('club_configuracions')
+                            ->where('id', '=', $request->club_configuracion_id)
+                            ->update(['ultimo_grupo' => $grupoTurnoFijo]);
                     
                     //Recorro los dias seleccionados del turno fijo
                     for($j=0; $j < $cantDiasFijo; $j++){
@@ -190,6 +206,23 @@ class TurnoController extends Controller
      */
     public function update($turno_id, Request $request, Turno $turno)
     {
+        $sqlDisponibilidadTurno= DB::table('turnos')
+                                    ->where([
+                                        ['club_configuracion_id', '=', $request->club_configuracion_id],
+                                        ['cancha_id', '=', $request->cancha_id],
+                                        ['fecha_Desde', '=', $request->fecha_Desde],
+                                        ['id', '<>', $turno_id],
+                                    ])
+                                    ->orWhere('fecha_Hasta', '=', $request->fecha_Hasta)
+                                    ->get();
+
+        if(count($sqlDisponibilidadTurno) > 1){
+            return response()->json([
+                'msj' => 'Error', 
+                'razon' => 'No se puede editar porque esa fecha ya esta reservada'
+            ], 401);
+        }
+
         $turno = Turno::find($turno_id);
 
         $turno->update($request->all());

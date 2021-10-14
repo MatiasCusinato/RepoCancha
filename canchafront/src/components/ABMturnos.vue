@@ -92,7 +92,7 @@
                             <div class="row" v-if="accionAux=='Crear'">
                                 <div class="col-md-6 mb-3">
                                     <div class="form-check form-switch">
-                                        <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" @click="turnoFijo=!turnoFijo">
+                                        <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" @click="cambiarTurno()">
                                         <label class="form-check-label campo" for="flexSwitchCheckDefault">Turno fijo</label>
                                     </div>
                                 </div>
@@ -199,11 +199,11 @@
 
                                 <div class="row" v-if="turnoFijo && accionAux=='Crear'">
                                     <h4 class="campo">Seleccione los dias del turno fijo</h4>
-                                    <div class="col-md-6 mb-3">
+                                    <div class="col-md-6 mb-3 divDias">
                                         <div class="form-check" v-for="(dia, id) in diasFijo" :key="id">
                                             <input class="form-check-input" type="checkbox" :value="dia.diaEN" 
                                                     v-model="datosTurno.diasFijo" id="flexCheckDefault">
-                                            <label class="form-check-label" for="flexCheckDefault">
+                                            <label class="form-check-label campo" for="flexCheckDefault">
                                                 {{dia.diaES}}
                                             </label>
                                         </div>
@@ -239,6 +239,7 @@
 
 <script>
 import apiRest from '../mixins/apiRest.vue'
+import * as moment from "moment/moment";
 
 export default {
     mixins: [apiRest],
@@ -310,7 +311,7 @@ export default {
                 fecha_Hasta: "",
                 grupo: 1,
                 precio: "",
-                diasFijo:[]
+                diasFijo:[],
             },
 
             //horasIntervalo: "",
@@ -338,6 +339,15 @@ export default {
     },
 
     methods: {
+        cambiarTurno(){
+            this.turnoFijo=!this.turnoFijo
+            if(this.turnoFijo){
+                this.datosTurno.grupo= 11;
+            } else{
+                this.datosTurno.grupo= 1;
+            }
+        },
+
         BorrarTurno(){
             this.$swal.fire({
                 title: 'Borrando el turno',
@@ -347,7 +357,6 @@ export default {
                 denyButtonText: 'Borrar todo los turnos fijos',
                 cancelButtonText: 'Cancelar',
             }).then((result) => {
-                //Read more about isConfirmed, isDenied below
                 let grupo= ""+this.eventoActual.objTurnos.grupo;
                 let turno_id= ""+ this.eventoActual.objTurnos.id;
                 let grupo_turno_id = "";
@@ -401,8 +410,10 @@ export default {
                 this.datosTurno.fecha_Desde= this.transformarFecha(this.datosTurno.fecha_Desde, 'enviar')
                 this.datosTurno.fecha_Hasta= this.transformarFecha(this.datosTurno.fecha_Hasta, 'enviar')
                 
+                this.datosTurno.diasFijo[0]= moment(this.datosTurno.fecha_Desde).format("ddd");
+
                 console.log(this.datosTurno)
-                //if(!this.validarCampos(this.datosTurno)){
+                if(!this.validarCampos(this.datosTurno)){
                     if(this.accionAux=='Crear'){
                         this.InsertarDatos ('turnos/guardar', this.datosTurno)
                                 .then(res => {
@@ -454,14 +465,14 @@ export default {
                             
                             console.log(this.datosTurno)
                     } 
-                /* } else {
+                 } else {
                     this.$swal({
                         title: '¡Formulario incompleto!',
                         text: 'Los siguientes campos estan vacios: '+ this.alertaFormulario,
                         icon: 'warning',
                         confirmButtonText: 'Ok'
                     })
-                }    */       
+                }       
             }
             
         },
@@ -475,18 +486,18 @@ export default {
                 let fechaDesde= this.eventoActual.objTurnos.fecha_Desde
                 let fechaHasta= this.eventoActual.objTurnos.fecha_Hasta
 
-                this.datosTurno = this.eventoActual.objTurnos;
-                this.datosTurno.fecha_Desde = this.transformarFecha(fechaDesde, 'abm')
-                this.datosTurno.fecha_Hasta = this.transformarFecha(fechaHasta, 'abm')
+                
+                console.log(moment(fechaDesde).format('YYYY-MM-DD'));
+                console.log(this.datosTurno.fecha_Desde);
 
-                /* this.datosTurno.cliente_id = this.eventoActual.objTurnos.cliente_id
+                this.datosTurno.cliente_id = this.eventoActual.objTurnos.cliente_id
                 this.datosTurno.cancha_id = this.eventoActual.objTurnos.cancha_id
                 this.datosTurno.club_configuracion_id = this.eventoActual.objTurnos.club_configuracion_id
                 this.datosTurno.tipo_turno = this.eventoActual.objTurnos.tipo_turno
                 this.datosTurno.fecha_Desde = this.transformarFecha(fechaDesde, 'abm')
                 this.datosTurno.fecha_Hasta = this.transformarFecha(fechaHasta, 'abm')
                 this.datosTurno.grupo = this.eventoActual.objTurnos.grupo
-                this.datosTurno.precio = this.eventoActual.objTurnos.precio */
+                this.datosTurno.precio = this.eventoActual.objTurnos.precio
             }
         },
     
@@ -509,10 +520,12 @@ export default {
             if(razon=='abm'){
                 //La fecha pasa de esto: 2018-11-14 10:00:00 a esto --> 2018-11-14T10:00 
                 //  para poder mostrarla en input datetime-local
-                fecha= fecha.replace(fecha[10], 'T').slice(0, 16)
+                //fecha= fecha.replace(fecha[10], 'T').slice(0, 16)
+                fecha= moment(fecha).format('YYYY-MM-DDTHH:mm')
             } else if(razon=='enviar'){
                 //Metodo viceversa: La fecha pasa de esto: 2018-11-14T10:00 a esto --> 2018-11-14 10:00:00 para enviarla a la BD
-                fecha= fecha.replace('T', ' ')+':00'
+                //fecha= fecha.replace('T', ' ')+':00'
+                fecha= moment(fecha).format('YYYY-MM-DD HH:mm:ss')
             }
 
             return fecha
@@ -521,7 +534,7 @@ export default {
         validarCampos(objFormulario){
             this.alertaFormulario= [];
             for (let key in objFormulario) {
-                    if(objFormulario[key] == ""){
+                    if( (objFormulario[key] == "") || (objFormulario[key] == 'Invalid date')){
                             this.alertaFormulario.push(' '+key.charAt(0).toUpperCase()+ key.slice(1))
                     }
             }
@@ -646,6 +659,7 @@ table{
 
 .campo{
 	color: white;
+    font-size: 20px;
 }
 
 .titulo{
@@ -655,5 +669,14 @@ table{
 
 .inputChico{
     width: 180px;
+}
+
+.divDias{
+    min-width: 50px;
+    min-height: 100px;
+    border-style: solid;
+    border-color: whitesmoke;
+    border-radius: 5%;
+    padding: 2.5%;
 }
 </style>
