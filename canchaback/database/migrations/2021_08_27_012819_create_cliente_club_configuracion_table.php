@@ -16,15 +16,17 @@ class CreateClienteClubConfiguracionTable extends Migration
         Schema::create('cliente_club_configuracion', function (Blueprint $table) {
             $table->id();
 
-            $table->unsignedBigInteger("cliente_id")->nullable();
+            $table->unsignedBigInteger("cliente_id");
             $table->foreign('cliente_id')
                     ->references('id')->on('clientes')
-                    ->onDelete('set null');
+                    ->onDelete('cascade')
+                    ->onUpdate('cascade');
 
-            $table->unsignedBigInteger("club_configuracion_id")->nullable();
+            $table->unsignedBigInteger("club_configuracion_id");
             $table->foreign('club_configuracion_id')
                     ->references('id')->on('club_configuracions')
-                    ->onDelete('set null');
+                    ->onDelete('cascade')
+                    ->onUpdate('cascade');
 
             $table->timestamps();
         });
