@@ -307,8 +307,8 @@ export default {
                 cancha_id: 0,
                 club_configuracion_id: localStorage.getItem('club'),
                 tipo_turno: "",
-                fecha_Desde: "",
-                fecha_Hasta: "",
+                fecha_Desde: moment().format('YYYY-MM-DDTHH:mm'),
+                fecha_Hasta: moment().add(1, 'hours').format('YYYY-MM-DDTHH:mm'),
                 grupo: 1,
                 precio: "",
                 diasFijo:[],
@@ -333,6 +333,8 @@ export default {
             alertaFormulario:[],
 
             accionAux: this.accion,
+            fechaDesdeAux: "",
+            fechaHastaAux: "",
             
             abrirFormTurnos: false,
         }
@@ -409,7 +411,10 @@ export default {
             if(this.accionAux=='Editar' || this.accionAux=='Crear'){
                 this.datosTurno.fecha_Desde= this.transformarFecha(this.datosTurno.fecha_Desde, 'enviar')
                 this.datosTurno.fecha_Hasta= this.transformarFecha(this.datosTurno.fecha_Hasta, 'enviar')
-                
+
+                this.fechaDesdeAux= this.transformarFecha(this.datosTurno.fecha_Desde, 'abm')
+                this.fechaHastaAux= this.transformarFecha(this.datosTurno.fecha_Hasta, 'abm')
+
                 this.datosTurno.diasFijo[0]= moment(this.datosTurno.fecha_Desde).format("ddd");
 
                 console.log(this.datosTurno)
@@ -467,12 +472,15 @@ export default {
                     } 
                  } else {
                     this.$swal({
-                        title: '¡Formulario incompleto!',
-                        text: 'Los siguientes campos estan vacios: '+ this.alertaFormulario,
+                        title: '¡Error en el formulario!',
+                        text: 'Errores: '+ this.alertaFormulario,
                         icon: 'warning',
                         confirmButtonText: 'Ok'
-                    })
-                }       
+                    })   
+                }
+
+                this.datosTurno.fecha_Desde= this.transformarFecha(this.fechaDesdeAux, 'abm')
+                this.datosTurno.fecha_Hasta= this.transformarFecha(this.fechaHastaAux, 'abm')
             }
             
         },
@@ -535,8 +543,13 @@ export default {
             this.alertaFormulario= [];
             for (let key in objFormulario) {
                     if( (objFormulario[key] == "") || (objFormulario[key] == 'Invalid date')){
-                            this.alertaFormulario.push(' '+key.charAt(0).toUpperCase()+ key.slice(1))
+                            this.alertaFormulario.push(' '+key.charAt(0).toUpperCase()+ key.slice(1)+' (campo vacio)')
                     }
+            }
+
+            if(moment(this.datosTurno.fecha_Desde).format('x') > moment(this.datosTurno.fecha_Hasta).format('x') ||
+                    moment(this.datosTurno.fecha_Hasta).format('x') < moment(this.datosTurno.fecha_Desde).format('x')){
+                        this.alertaFormulario= "Fechas invalidas o incorrectas"
             }
 
             if(this.alertaFormulario.length > 0){

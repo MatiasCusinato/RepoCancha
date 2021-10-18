@@ -7,6 +7,7 @@ use App\Models\Turno;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use Carbon\Carbon;
 
 
 class TurnoController extends Controller
@@ -44,6 +45,8 @@ class TurnoController extends Controller
      */
     public function store(Request $request)
     {
+        $turno_id=0;
+        
         $val = Validator::make($request->all(), [
             'club_configuracion_id' => 'required',
             "cliente_id" => ['required', 'exists:clientes,id'],
@@ -55,6 +58,7 @@ class TurnoController extends Controller
             "grupo" => "required",
         ]);
 
+
         if($val->fails()){
             return response()->json([
                     'msj' => 'Error', 
@@ -64,28 +68,11 @@ class TurnoController extends Controller
             try {
                 DB::beginTransaction();
 
-                //verif turno normal
-                $sqlDisponibilidadTurno= DB::table('turnos')
-                                            ->where([
-                                                ['club_configuracion_id', '=', $request->club_configuracion_id],
-                                                ['cancha_id', '=', $request->cancha_id],
-                                                ['fecha_Desde', '=', $request->fecha_Desde],
-                                            ])
-                                            ->get();
-
-                if(count($sqlDisponibilidadTurno) > 1){
-                    return response()->json([
-                        'msj' => 'Error', 
-                        'razon' => 'Esa fecha ya esta reservada'
-                    ], 401);
-                }
-                                            
-
                 $fechaDesde= substr($request->fecha_Desde, -20, -9); //$fechaDesde= "2018-12-25"
                 $fechaHasta= substr($request->fecha_Hasta, -20, -9);
                 
-                $horaDesde= substr($request->fecha_Desde, -8, -1); //$horaDesde= "10:00:00"
-                $horaHasta= substr($request->fecha_Hasta, -8, -1);
+                $horaDesde= substr($request->fecha_Desde, -8); //$horaDesde= "10:00:00"
+                $horaHasta= substr($request->fecha_Hasta, -8);
             
                 $fechaDesdeInt = strtotime($fechaDesde); //Convierte el $fechaDesde a timestamp --> 1543104000
                 $fechaHastaInt = strtotime($fechaHasta);
@@ -93,6 +80,16 @@ class TurnoController extends Controller
                 //Distingo si la fechaDesde y la FechaHasta son iguales(turno normal). Si son distintas (Turno fijo). 
                 if($fechaDesde == $fechaHasta){
                     // PARTE DE TURNO NORMAL
+
+                    $valTurno = $this->validarTurno($request->fecha_Desde, $request->fecha_Hasta, 
+                                            $request->club_configuracion_id, $request->cancha_id, $turno_id);
+                
+                    if(!$valTurno){
+                        return response()->json([
+                            "msj" => "Error",
+                            "razon" => "No se pudo realizar el turno debido a que ya esta reservado por otro turno en la misma hora o fecha"
+                        ],400);
+                    }
                     
                     $turno = Turno::create([
                         "club_configuracion_id" => $request->club_configuracion_id,
@@ -133,7 +130,15 @@ class TurnoController extends Controller
                         for ($i = $fechaDesdeInt; $i <= $fechaHastaInt; $i+= 86400){
                             //Si el dia actual es igual al dia seleccionado, creo un turno con su grupo y fecha correspondiente
                             if(date("D", $i) == $request->diasFijo[$j]){
-                                //echo "". date("Y-m-d", $i). "<br>";
+                                $diaDesdeIndex= "". date("Y-m-d", $i)." ".$horaDesde;
+                                $diaHastaIndex= "". date("Y-m-d", $i)." ".$horaHasta;
+                                $valTurno = $this->validarTurno($diaDesdeIndex, $diaHastaIndex, 
+                                            $request->club_configuracion_id, $request->cancha_id, $turno_id);
+                
+                                if(!$valTurno){
+                                    continue;
+                                }
+
                                 $turno = Turno::create([
                                     "club_configuracion_id" => $request->club_configuracion_id,
                                     "cliente_id" => $request->cliente_id,
@@ -206,26 +211,20 @@ class TurnoController extends Controller
      */
     public function update($turno_id, Request $request, Turno $turno)
     {
-        $sqlDisponibilidadTurno= DB::table('turnos')
-                                    ->where([
-                                        ['club_configuracion_id', '=', $request->club_configuracion_id],
-                                        ['cancha_id', '=', $request->cancha_id],
-                                        ['fecha_Desde', '=', $request->fecha_Desde],
-                                        ['id', '<>', $turno_id],
-                                    ])
-                                    ->orWhere('fecha_Hasta', '=', $request->fecha_Hasta)
-                                    ->get();
-
-        if(count($sqlDisponibilidadTurno) > 1){
+        //validarTurno()...
+        $valTurno = $this->validarTurno($request->fecha_Desde, $request->fecha_Hasta, $request->club_configuracion_id, $request->cancha_id, $turno_id);
+        
+        if(!$valTurno){
             return response()->json([
-                'msj' => 'Error', 
-                'razon' => 'No se puede editar porque esa fecha ya esta reservada'
-            ], 401);
+                "msj" => "Error",
+                "razon" => "No se pudo modificar ya que ese horario/fecha ya esta reservado"
+            ], 400);
         }
 
         $turno = Turno::find($turno_id);
-
+        //dd($turno);
         $turno->update($request->all());
+
         return response()->json([
             'msj' => 'Exitosa', 
             'Mensaje' => 'Turno modificado'
@@ -261,6 +260,68 @@ class TurnoController extends Controller
             'msj' => 'Exitosa',
             'razon' => 'Turno eliminado'
         ]);
+    }
+
+    //Funcion que valida si las fechas del turno a crear o editar, estan ocupadas o no
+    public function validarTurno($fechaComienzo, $fechaFin, $club, $cancha, $turno_id=0)
+    {
+
+        //dd($fechaComienzo, $fechaFin, $club, $cancha, intval($turno_id));
+
+        if($turno_id == 0){
+            $sqlDisponibilidadTurno= DB::table('turnos')
+                                    ->whereRaw("(fecha_Desde >= ? AND fecha_Hasta <= ? 
+                                                    AND club_configuracion_id = ? AND cancha_id = ?)", 
+                                        [
+                                            $fechaComienzo, 
+                                            $fechaFin,
+                                            $club,
+                                            $cancha,
+                                        ]
+                                    )
+                                    ->orWhereRaw("(fecha_Desde <= ? AND fecha_Hasta >= ? 
+                                                    AND club_configuracion_id = ? AND cancha_id = ?)", 
+                                        [
+                                            $fechaComienzo, 
+                                            $fechaFin,
+                                            $club,
+                                            $cancha,
+                                        ]
+                                    )
+                                    ->get();
+        }else {
+            $sqlDisponibilidadTurno= DB::table('turnos')
+                                    ->whereRaw("(fecha_Desde >= ? AND fecha_Desde <= ? 
+                                                    AND club_configuracion_id = ? AND cancha_id = ? AND id <> ?)", 
+                                        [
+                                            $fechaComienzo, 
+                                            $fechaFin,
+                                            $club,
+                                            $cancha,
+                                            $turno_id,
+                                        ]
+                                    )
+                                    ->orWhereRaw("(fecha_Hasta <= ? AND fecha_Hasta >= ? 
+                                                    AND club_configuracion_id = ? AND cancha_id = ? AND id <> ?)", 
+                                        [
+                                            $fechaComienzo, 
+                                            $fechaFin,
+                                            $club,
+                                            $cancha,
+                                            $turno_id,
+                                        ]
+                                    )
+                                    ->get();
+        }
+        //dd($sqlDisponibilidadTurno);
+                                    
+        if(count($sqlDisponibilidadTurno) >= 1){
+            //Ya hay un turno reservado, retorno false, NO PUEDE reservar
+            return false;
+        } else {
+            //No hay turnos a esa hora, retorno true, PUEDE reservar
+            return true;
+        }
     }
 
 }
