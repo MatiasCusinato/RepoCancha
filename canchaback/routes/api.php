@@ -27,7 +27,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 //APIS
-Route::apiResource('clubes', clubConfiguracionController::class);
+/* Route::apiResource('clubes', clubConfiguracionController::class); */
 Route::apiResource('users', UserController::class);
 //Route::apiResource('canchas', CanchaController::class);
 //Route::apiResource('clientes', ClienteController::class);
@@ -39,6 +39,12 @@ Route::post('registro',[AccesoUsuarioController::class, 'registro']);
 Route::post('login',[AccesoUsuarioController::class, 'login']);
 Route::post('logout',[AccesoUsuarioController::class, 'logout']); 
 
+//Ruta Clubes
+Route::get('clubes', [clubConfiguracionController::class, 'index']);
+Route::post('clubes/guardar', [clubConfiguracionController::class, 'store']);
+Route::get('clubes/show/{club_id}', [clubConfiguracionController::class, 'show']);
+Route::put('clubes/editar/{club_id}', [clubConfiguracionController::class, 'update']);
+Route::delete('clubes/eliminar/{club_id}', [clubConfiguracionController::class, 'destroy']);
 
 //Rutas Canchas
 Route::get('canchas/{club_id}/{registros?}', [CanchaController::class, 'index']);
@@ -62,4 +68,3 @@ Route::post('turnos/guardar', [TurnoController::class, 'store']);
 Route::get('turnos/{club_id}/show/{turno_id}', [TurnoController::class, 'show']);
 Route::put('turnos/editar/{turno_id}', [TurnoController::class, 'update']);
 Route::delete('turnos/eliminar/{grupo}/{turno_id?}', [TurnoController::class, 'destroy']); 
-

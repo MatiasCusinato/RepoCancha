@@ -37,9 +37,9 @@ class clubConfiguracionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($club_id)
     {
-        $club_configuracion = clubConfiguracion::find($id);
+        $club_configuracion = clubConfiguracion::find($club_id);
         return $club_configuracion->toJson(JSON_PRETTY_PRINT);
     }
 
@@ -50,10 +50,15 @@ class clubConfiguracionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, clubConfiguracion $club_configuracion)
+    public function update(Request $request, clubConfiguracion $club_configuracion, $club_id)
     {
+        $club_configuracion = clubConfiguracion::find($club_id);
         $club_configuracion->update($request->all());
-        return response()->json(['Petición' => 'Exitosa', 'Mensaje' => 'Club modificado']);
+
+        return response()->json([
+            'Petición' => 'Modificacion exitosa',
+            'Mensaje' => 'El club ha sido modificado'
+        ]);
     }
 
     /**
@@ -62,9 +67,13 @@ class clubConfiguracionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(clubConfiguracion $club_configuracion)
+    public function destroy($club_id, clubConfiguracion $club_configuracion)
     {
-        clubConfiguracion::destroy($club_configuracion->id);
-        return response()->json(['Petición' => 'Exitosa', 'Mensaje' => 'Club eliminado']);
+        /* clubConfiguracion::destroy($club_configuracion->id); */
+        clubConfiguracion::destroy($club_id);
+        return response()->json([
+            'Petición' => 'Eliminacion exitosa', 
+            'Mensaje' => 'El club ha sido eliminado'
+        ]);
     }
 }
