@@ -52,7 +52,7 @@ Route::post('canchas/guardar', [CanchaController::class, 'store']);
 Route::get('canchas/{club_id}/show/{cancha_id}', [CanchaController::class, 'show']);
 Route::put('canchas/editar/{cancha_id}', [CanchaController::class, 'update']);
 Route::delete('canchas/eliminar/{club_id}/{cancha_id}', [CanchaController::class, 'destroy']);
-Route::get('canchas/{club_id}/deporte/{deporte}', [CanchaController::class, 'filtroDeporte']); // ruta para filtro de cancha //
+Route::get('canchas/{club_id}/deporte/{deporte}', [CanchaController::class, 'filtroDeporte']); //Ruta filtro x deportes de Canchas
 
 //Rutas Clientes
 Route::get('clientes/{club_id}/{registros?}', [ClienteController::class, 'index']);
@@ -60,11 +60,12 @@ Route::post('clientes/guardar', [ClienteController::class, 'store']);
 Route::get('clientes/{club_id}/show/{cliente_id}', [ClienteController::class, 'show']);
 Route::put('clientes/editar/{cliente_id}', [ClienteController::class, 'update']);
 Route::delete('clientes/eliminar/{club_id}/{cliente_id}', [ClienteController::class, 'destroy']);  
-Route::get('clientes/{club_id}/nombre/{nombre}', [ClienteController::class, 'filtroNombre']); //Ruta para filtros  
+Route::get('clientes/{club_id}/nombre/{nombre}', [ClienteController::class, 'filtroNombre']); //Ruta filtro x nombre de Clientes 
 
 //Rutas Turnos
 Route::get('turnos/{club_id}/{cancha_id}', [TurnoController::class, 'index']); 
 Route::post('turnos/guardar', [TurnoController::class, 'store']);
 Route::get('turnos/{club_id}/show/{turno_id}', [TurnoController::class, 'show']);
 Route::put('turnos/editar/{turno_id}', [TurnoController::class, 'update']);
-Route::delete('turnos/eliminar/{turno_id}', [TurnoController::class, 'destroy']);
+Route::delete('turnos/eliminar/{grupo}/{turno_id?}', [TurnoController::class, 'destroy']); 
+

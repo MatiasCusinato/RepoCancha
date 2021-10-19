@@ -24,6 +24,8 @@ class ClubConfiguracionFactory extends Factory
         return [
             'nombre_club' => $this->faker->firstNameMale,
             'razon_social' => $this->faker->firstNameMale,
+            'ubicacion' => $this->faker->streetAddress,
+            'contacto' => $this->faker->phoneNumber,
             'ultimo_grupo' => $this->faker->numberBetween($min = 1, $max = 50),
             'cuit' => $this->faker->ean8,
         ];

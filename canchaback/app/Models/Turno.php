@@ -9,7 +9,6 @@ class Turno extends Model
 {
     use HasFactory;
 
-    //Relacion inversa 1 a 1
     protected $fillable = [
         'cliente_id',
         'cancha_id',
@@ -19,6 +18,7 @@ class Turno extends Model
         'fecha_Hasta',
         'grupo',
         'precio',
+        'estado',
     ];
 
     protected $hidden = [

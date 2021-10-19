@@ -12,6 +12,8 @@ class clubConfiguracion extends Model
     protected $fillable = [
         'nombre_club',
         'razon_social',
+        'ubicacion',
+        'contacto',
         'ultimo_grupo',
         'cuit',
     ];

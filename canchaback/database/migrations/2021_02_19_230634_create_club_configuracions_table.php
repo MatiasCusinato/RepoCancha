@@ -17,6 +17,8 @@ class CreateClubConfiguracionsTable extends Migration
             $table->id();
             $table->string("nombre_club");
             $table->string("razon_social");
+            $table->string("ubicacion");
+            $table->string("contacto");
             $table->integer("ultimo_grupo");
             $table->integer("cuit");
             $table->timestamps();
