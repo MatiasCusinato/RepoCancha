@@ -444,7 +444,9 @@ export default {
                 this.fechaDesdeAux= this.transformarFecha(this.datosTurno.fecha_Desde, 'abm')
                 this.fechaHastaAux= this.transformarFecha(this.datosTurno.fecha_Hasta, 'abm')
 
-                this.datosTurno.diasFijo[0]= moment(this.datosTurno.fecha_Desde).format("ddd");
+                if(this.datosTurno.grupo == 1){
+                    this.datosTurno.diasFijo[0]= moment(this.datosTurno.fecha_Desde).format("ddd");
+                }
 
                 console.log(this.datosTurno)
                 if(!this.validarCampos(this.datosTurno)){

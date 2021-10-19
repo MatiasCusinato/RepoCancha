@@ -32,7 +32,7 @@ const routes = [
   },
 
   {
-    path: '/INFOturnosDISPONIBLES',
+    path: '/INFOturnosDISPONIBLES/club/:club',
     name: 'INFOturnosDISPONIBLES',
     component: INFOturnosDISPONIBLES,
   },

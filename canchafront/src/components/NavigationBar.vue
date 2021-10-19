@@ -11,7 +11,7 @@
                                     <i class="bi bi-calendar3"> Turnos ADM </i>
                         </router-link>
 
-                        <router-link to="/INFOturnosDISPONIBLES" 
+                        <router-link to="/INFOturnosDISPONIBLES/club/1" 
                                 class="nav-item nav-link">
                                     <i class="bi bi-calendar-check-fill"> Turnos DISPONIBLES </i>
                         </router-link>

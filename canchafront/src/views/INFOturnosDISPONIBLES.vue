@@ -1,22 +1,14 @@
 <template>
     <div>
-        <h1>Nuestros clubes</h1>
-        <button v-for="(club, id) in clubes" :key="id" style="margin: 5px 5px"
-                class="btn btn-info" @click="traerCanchas(club.id)">
-            {{ club.nombre_club }}
-        </button>
-        <br>
-        <br>
-
         <div >
             <button @click="mostrarInfoClub=!mostrarInfoClub">
                 <i class="bi bi-info-circle-fill">Informacion del Club</i>
             </button>
 
             <div v-if="mostrarInfoClub && clubActual">
-                <span>Ubicacion {{clubes[clubActual-1].ubicacion}}</span>
+                <span>Ubicacion {{club.ubicacion}}</span>
                 <br>
-                <span>contacto {{clubes[clubActual-1].contacto}}</span>
+                <span>contacto {{club.contacto}}</span>
             </div>
         </div>
 
@@ -73,8 +65,8 @@ export default {
     data() {
         return {
             mostrarInfoClub: false,
-            clubes: [],
-            clubActual: 0,
+            club: [],
+            clubActual: this.$route.params.club,
 
             canchas: [],
             canchaActual:"",
@@ -88,20 +80,20 @@ export default {
 
     created(){
         this.events= [];
-        this.traerClubes();
+        this.traerClub();
+        this.traerCanchas();
     },
 
     methods: {
-        traerClubes(){
-            this.ObtenerDatos(`clubes`)
+        traerClub(){
+            this.ObtenerDatosPorId(`clubes/show`, this.clubActual)
                 .then(res => {
-                    this.clubes = res;
+                    this.club = res;
                 })
         },
 
-        traerCanchas(numClub){
-            this.clubActual= numClub;
-            this.ObtenerDatos(`canchas/${numClub}`)
+        traerCanchas(){
+            this.ObtenerDatos(`canchas/${this.clubActual}`)
                 .then (res => {
                     this.canchas = res.canchas.data
                     this.canchaActual= this.canchas[0].id
