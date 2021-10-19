@@ -52,6 +52,12 @@
                                             :value="Precio" readonly>
                                 </div>
 
+                                <div>
+                                    <span><i class="bi bi-tags"> Estado: </i></span>
+                                    <input type="text" class="form-control form-control-sm" 
+                                            :value="Estado" readonly>
+                                </div>
+
                                 <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
                                     <div class="btn-group mr-2" role="group" aria-label="First group"
                                         style="margin: -30px 50px 0px 10px">
@@ -212,12 +218,28 @@
 
                             </div>
 
-                            <div>
-                                <label for="" class="form-label campo">
-                                    <i class="bi bi-currency-dollar"> Precio: </i>
-                                </label>
-                                <input type="text" class="form-control form-control-sm inputChico" 
-                                        v-model="datosTurno.precio">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="" class="form-label campo">
+                                        <i class="bi bi-currency-dollar"> Precio: </i>
+                                    </label>
+                                    <input type="text" class="form-control form-control-sm inputChico" 
+                                            v-model="datosTurno.precio">
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <label for="" class="form-label campo"><i class="bi bi-tags"> Estado: </i></label>
+                                    <select name="estado" v-model="datosTurno.estado" 
+                                            class="form-select inputChico" aria-label=".form-select-sm example">
+                                        
+                                        <option v-for="(estado, $id) in estadosTurno" 
+                                            :key="$id"
+                                            :value="estado">
+                                                {{estado}}
+                                        </option>
+                                    </select>
+                                </div>
+                                
                             </div>
                             <div>
                                 <button class="btn btn-primary divBoton" @click="Aceptar()">
@@ -283,6 +305,10 @@ export default {
             let precio = this.eventoActual.objTurnos.precio;
             return precio + " "
         },
+        Estado(){
+            let estado = this.eventoActual.objTurnos.estado;
+            return estado + " "
+        },
     },
 
     created() {
@@ -311,6 +337,7 @@ export default {
                 fecha_Hasta: moment().add(1, 'hours').format('YYYY-MM-DDTHH:mm'),
                 grupo: 1,
                 precio: "",
+                estado: "",
                 diasFijo:[],
             },
 
@@ -325,6 +352,8 @@ export default {
                 {diaES: "Sabado", diaEN: "Sat"}, 
                 {diaES: "Domingo", diaEN: "Sun"}
             ],
+
+            estadosTurno: ["Reservado", "Cobrado", "Adeudado"],
 
             clientes: [],
             canchas: [],
@@ -506,6 +535,7 @@ export default {
                 this.datosTurno.fecha_Hasta = this.transformarFecha(fechaHasta, 'abm')
                 this.datosTurno.grupo = this.eventoActual.objTurnos.grupo
                 this.datosTurno.precio = this.eventoActual.objTurnos.precio
+                this.datosTurno.estado = this.eventoActual.objTurnos.estado
             }
         },
     
@@ -547,8 +577,10 @@ export default {
                     }
             }
 
+            //Valido si la Fecha1 es mayor a la Fecha2, o si la Fecha2 es anterior a la Fecha1 y por ultimo, si son iguales
             if(moment(this.datosTurno.fecha_Desde).format('x') > moment(this.datosTurno.fecha_Hasta).format('x') ||
-                    moment(this.datosTurno.fecha_Hasta).format('x') < moment(this.datosTurno.fecha_Desde).format('x')){
+                    moment(this.datosTurno.fecha_Hasta).format('x') < moment(this.datosTurno.fecha_Desde).format('x') ||
+                        moment(this.datosTurno.fecha_Hasta).format('x') == moment(this.datosTurno.fecha_Desde).format('x')){
                         this.alertaFormulario= "Fechas invalidas o incorrectas"
             }
 

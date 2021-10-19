@@ -31,7 +31,8 @@ class TurnoController extends Controller
                                         'turnos.cancha_id', 'canchas.deporte',
                                         'turnos.club_configuracion_id',
                                         'turnos.tipo_turno', 'turnos.fecha_Desde',
-                                        'turnos.fecha_Hasta', 'turnos.precio',)
+                                        'turnos.fecha_Hasta', 'turnos.precio',
+                                        'turnos.estado',)
                             ->get();
 
         return $turnos->toJson(JSON_PRETTY_PRINT);
@@ -196,7 +197,8 @@ class TurnoController extends Controller
                                         'turnos.cancha_id', 'canchas.deporte',
                                         'turnos.club_configuracion_id',
                                         'turnos.fecha_Desde', 'turnos.fecha_Hasta', 
-                                        'turnos.tipo_turno', 'turnos.precio',)
+                                        'turnos.tipo_turno', 'turnos.precio',
+                                        'turnos.estado',)
                                 ->get();
         
         return response()->json($turno, 200);

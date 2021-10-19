@@ -5,6 +5,20 @@
                 class="btn btn-info" @click="traerCanchas(club.id)">
             {{ club.nombre_club }}
         </button>
+        <br>
+        <br>
+
+        <div >
+            <button @click="mostrarInfoClub=!mostrarInfoClub">
+                <i class="bi bi-info-circle-fill">Informacion del Club</i>
+            </button>
+
+            <div v-if="mostrarInfoClub && clubActual">
+                <span>Ubicacion {{clubes[clubActual-1].ubicacion}}</span>
+                <br>
+                <span>contacto {{clubes[clubActual-1].contacto}}</span>
+            </div>
+        </div>
 
         <div v-if="clubActual">
             <label for="" class="form-label campo"><i class="bi bi-person"> Cancha: </i></label>
@@ -58,6 +72,7 @@ export default {
 
     data() {
         return {
+            mostrarInfoClub: false,
             clubes: [],
             clubActual: 0,
 

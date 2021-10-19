@@ -150,6 +150,7 @@ export default {
                     "fecha_Desde":"0000-00-00 00:00:00",
                     "fecha_Hasta":"0000-00-00 00:00:00",
                     "precio":"0",
+                    "estado":"",
                     "diasFijos":[],
                 }
             }
