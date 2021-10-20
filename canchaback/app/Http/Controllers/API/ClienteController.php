@@ -25,6 +25,13 @@ class ClienteController extends Controller
                             ->orderBy('id', 'asc')
                             ->get();
 
+            if($clientes->isEmpty()){
+                return response()->json([
+                    "msj" => "Error",
+                    "razon" => "Este club no tiene clientes por ahora",
+                ], 400);
+            }   
+
             $registros = count($clientes);
         }
 

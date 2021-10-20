@@ -2,7 +2,11 @@
     <div>
         <nav class="navbar navbar-expand-md navbar-dark bg-dark mb-4">
             <div class="container-fluid">
-                <router-link to="/" class="navbar-brand"><i class="bi bi-house">Inicio</i></router-link>
+                <li @click="refrescarPagina()">
+                    <router-link to="/INFOturnosDISPONIBLES/club/0" class="navbar-brand">
+                        <i class="bi bi-house"> Clubes</i>
+                    </router-link>
+                </li>
                 
                 <div class="collapse navbar-collapse" v-if="this.token">
                     <div class="navbar-nav">
@@ -11,10 +15,10 @@
                                     <i class="bi bi-calendar3"> Turnos ADM </i>
                         </router-link>
 
-                        <router-link to="/INFOturnosDISPONIBLES/club/1" 
+                        <!-- <router-link to="/INFOturnosDISPONIBLES/club/1" 
                                 class="nav-item nav-link">
                                     <i class="bi bi-calendar-check-fill"> Turnos DISPONIBLES </i>
-                        </router-link>
+                        </router-link> -->
 
                         <router-link to="/INFOclientes" 
                                 class="nav-item nav-link">
@@ -70,7 +74,6 @@ export default {
     data(){
         return {
             token: localStorage.getItem('laravelToken'),
-
         }
     },
 
@@ -89,7 +92,6 @@ export default {
                         console.log(res)
                         this.$store.commit("borrarToken");
 
-
                         setInterval(() => {
                             location.reload();
                         }, 100);
@@ -102,6 +104,10 @@ export default {
 
             
         },
+
+        refrescarPagina(){
+            location.reload();
+        }
         /* async logoutUser(){
             const url = 'http://localhost:8000/api/logout';
             let token= {

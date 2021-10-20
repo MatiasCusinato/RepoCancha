@@ -71,9 +71,11 @@ class AccesoUsuarioController extends Controller
                     'razon' => 'Password incorrecta'
                 ], 401);
             }
+            //dd($user->token_actual);
 
             if($user->token_actual == 'null'){
                 $user->token_actual = $user->createToken('laravelToken')->plainTextToken;
+                
                 $user->save();
                     return response()->json([
                         'msj' => 'Login exitoso',

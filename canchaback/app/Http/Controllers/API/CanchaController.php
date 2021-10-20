@@ -26,6 +26,13 @@ class CanchaController extends Controller
                             ->orderBy('id', 'asc')
                             ->get();
 
+            if($canchas->isEmpty()){
+                return response()->json([
+                    "msj" => "Error",
+                    "razon" => "Este club no tiene canchas por ahora",
+                ], 400);
+            }
+            
             $registros = count($canchas);
         }
 

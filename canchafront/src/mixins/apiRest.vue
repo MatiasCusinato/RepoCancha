@@ -20,7 +20,7 @@ export default {
 
         ObtenerDatosPorId(ruta, id) {
             let urlDestino = "http://127.0.0.1:8000/api/" + ruta + "/" + id
-            console.log(urlDestino)
+            //console.log(urlDestino)
 
             return fetch(urlDestino, {
                 method: 'GET',
