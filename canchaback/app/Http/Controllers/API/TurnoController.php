@@ -267,62 +267,33 @@ class TurnoController extends Controller
     //Funcion que valida si las fechas del turno a crear o editar, estan ocupadas o no
     public function validarTurno($fechaComienzo, $fechaFin, $club, $cancha, $turno_id=0)
     {
-
+        $fechaDesde= substr($fechaComienzo, -20, -9); //$fechaDesde= "2018-12-25"
+        $fechaHasta= substr($fechaFin, -20, -9);
+        //dd($anioDesde, $mesDesde, $diaDesde);
+        
+        $horaDesde= substr($fechaComienzo, -8); //$horaDesde= "10:00:00"
+        $horaHasta= substr($fechaFin, -8);
+    
         //dd($fechaComienzo, $fechaFin, $club, $cancha, intval($turno_id));
 
-        if($turno_id == 0){
-            $sqlDisponibilidadTurno= DB::table('turnos')
-                                    ->whereRaw("(fecha_Desde >= ? AND fecha_Hasta <= ? 
-                                                    AND club_configuracion_id = ? AND cancha_id = ?)", 
-                                        [
-                                            $fechaComienzo, 
-                                            $fechaFin,
-                                            $club,
-                                            $cancha,
-                                        ]
-                                    )
-                                    ->orWhereRaw("(fecha_Desde <= ? AND fecha_Hasta >= ? 
-                                                    AND club_configuracion_id = ? AND cancha_id = ?)", 
-                                        [
-                                            $fechaComienzo, 
-                                            $fechaFin,
-                                            $club,
-                                            $cancha,
-                                        ]
-                                    )
+        $sqlDisponibilidadTurno= DB::table('turnos')
+                                    ->where([
+                                        ['turnos.club_configuracion_id', '=', $club],
+                                        ['turnos.cancha_id', '=', $cancha],
+                                        ['turnos.fecha_Desde', '<', $fechaFin], 
+                                        ['turnos.fecha_Hasta', '>', $fechaComienzo],  
+                                        ['turnos.id', '!=', $turno_id],  
+                                    ])
                                     ->get();
-        }else {
-            $sqlDisponibilidadTurno= DB::table('turnos')
-                                    ->whereRaw("(fecha_Desde >= ? AND fecha_Desde <= ? 
-                                                    AND club_configuracion_id = ? AND cancha_id = ? AND id <> ?)", 
-                                        [
-                                            $fechaComienzo, 
-                                            $fechaFin,
-                                            $club,
-                                            $cancha,
-                                            $turno_id,
-                                        ]
-                                    )
-                                    ->orWhereRaw("(fecha_Hasta <= ? AND fecha_Hasta >= ? 
-                                                    AND club_configuracion_id = ? AND cancha_id = ? AND id <> ?)", 
-                                        [
-                                            $fechaComienzo, 
-                                            $fechaFin,
-                                            $club,
-                                            $cancha,
-                                            $turno_id,
-                                        ]
-                                    )
-                                    ->get();
-        }
-        //dd($sqlDisponibilidadTurno);
-                                    
-        if(count($sqlDisponibilidadTurno) >= 1){
-            //Ya hay un turno reservado, retorno false, NO PUEDE reservar
-            return false;
-        } else {
+        //dd($sqlDisponibilidadTurno);    
+
+
+        if($sqlDisponibilidadTurno->isEmpty()){
             //No hay turnos a esa hora, retorno true, PUEDE reservar
             return true;
+        } else {
+            //Ya hay un turno reservado, retorno false, NO PUEDE reservar
+            return false;
         }
     }
 

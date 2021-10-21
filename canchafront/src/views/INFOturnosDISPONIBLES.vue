@@ -1,11 +1,16 @@
 <template>
     <div>
         <div v-if="club.length > 1">
+            <div class="alert alert-primary divAlerta" role="alert">
+                ¡Clickea uno de nuestros clubes para observar sus turnos y sus canchas!
+            </div>
             
             <h1> Lista de todos los clubes: </h1>
             <ul class="list-group">
-                <li class="list-group-item"  @click="refrescarPagina()">
-                    <router-link class="nav-link"
+                <li class="list-group"  @click="refrescarPagina()">
+                    <router-link class="nav-link list-group-item 
+                                            list-group-item-action 
+                                            list-group-item-secondary"
                                
                                 :to="'/INFOturnosDISPONIBLES/club/'+c.id" 
                                 v-for="(c, id) in club" :key="id">
@@ -188,6 +193,14 @@ export default {
 </script>
 
 <style scoped>
+.divAlerta{
+    min-width: 200px;
+    min-height: 90px;
+    margin: 20px -50px;
+    text-align: center;
+    font-size: 20px;
+}
+
 .divInfo{
     min-width: 200px;
     min-height: 90px;
@@ -201,4 +214,8 @@ export default {
 .icono{
     font-size: 30px; 
 }
+
+/* li{
+    min-width: 10px;
+} */
 </style>

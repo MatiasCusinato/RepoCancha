@@ -12,7 +12,7 @@
                     <div class="navbar-nav">
                         <router-link to="/INFOturnosADMIN" 
                                 class="nav-item nav-link">
-                                    <i class="bi bi-calendar3"> Turnos ADM </i>
+                                    <i class="bi bi-calendar3"> Mis Turnos </i>
                         </router-link>
 
                         <!-- <router-link to="/INFOturnosDISPONIBLES/club/1" 
@@ -22,12 +22,12 @@
 
                         <router-link to="/INFOclientes" 
                                 class="nav-item nav-link">
-                                    <i class="bi bi-people-fill"> Clientes </i>
+                                    <i class="bi bi-people-fill"> Mis Clientes </i>
                         </router-link>
                         
                         <router-link to="/INFOcanchas" 
                                 class="nav-item nav-link">
-                                    <i class="bi bi-flag-fill"> Canchas </i>
+                                    <i class="bi bi-flag-fill"> Mis Canchas </i>
                         </router-link>
                     </div>
                 </div>
