@@ -27,7 +27,7 @@
                 <thead>
                     <tr class="bg-primary text-light">
                         <th scope="col">ID</th>
-                        <th scope="col">Club</th>
+                        <!-- <th scope="col">Club</th> -->
                         <th scope="col">Deporte</th>
                         <th scope="col">Acciones</th>
                     </tr>
@@ -35,7 +35,7 @@
                 <tbody>
                     <tr v-for="(canchas, index) in datos" :key="index">
                         <th scope="row">{{canchas.id}}</th>
-                        <td> {{canchas.club_configuracion_id}} </td>
+                        <!-- <td> {{canchas.club_configuracion_id}} </td> -->
                         <td> {{canchas.deporte}} </td>
 
                         <td>

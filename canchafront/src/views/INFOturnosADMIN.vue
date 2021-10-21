@@ -28,14 +28,14 @@
         </div>
 
         <div>
-            <vue-cal class="calendarioVue vuecal--green-theme" 
+            <vue-cal class="calendarioVue vuecal--green-theme " 
                 :time-from="9 * 60" :time-to="24.5 * 60" 
-                :time-step="30" active-view="week" 
+                :time-step="30" active-view="month" 
                 
                 :events="events" selected-date="2018-11-19"
                 :editable-events="{ 
                                     title: false, drag: false, 
-                                    resize: false, delete: false, 
+                                    resize: true, delete: false, 
                                     create: false
                                 }"
                 locale="es"
@@ -90,7 +90,7 @@ export default {
                     start: '2018-11-21',
                     end: '2018-11-21',
                     title: 'Need to go shopping',
-                    class: 'leisure'
+                    class: 'sport'
                 },
             ],
         }
@@ -135,6 +135,7 @@ export default {
         crearTurno(accion){
             this.abrirABMturnos = true
             this.accion= accion
+
             this.eventoActual= {
                 //"start":"00-0-00",
                 "objTurnos":{
@@ -147,8 +148,10 @@ export default {
                     "club_configuracion_id":null,
                     "tipo_turno":"",
                     "fecha_Desde":"0000-00-00 00:00:00",
-                    "fecha_Hasta":"0000-0-0 00:00:00",
-                    "precio":"0"
+                    "fecha_Hasta":"0000-00-00 00:00:00",
+                    "precio":"0",
+                    "estado":"",
+                    "diasFijos":[],
                 }
             }
         },
@@ -166,7 +169,6 @@ export default {
         traerTurnos(){
             this.events=[]
             let club= localStorage.getItem('club')
-            console.log()
 
             this.ObtenerDatos(`turnos/${club}/${this.canchaActual}`)
                 .then(res => {
@@ -195,8 +197,8 @@ export default {
                     start: this.datos[i].fecha_Desde,
                     end: this.datos[i].fecha_Hasta,
                     title: this.datos[i].tipo_turno,
-                    class: 'sport',
-                    objTurnos: this.datos[i]
+                    objTurnos: this.datos[i],
+                    class: 'sport'
                 })      
             }
         },
@@ -213,7 +215,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
 .btnTurno {
     position: fixed;
     float: left;
@@ -231,22 +233,24 @@ export default {
 }
 
 .calendarioVue{
-    height: 400px;
-    width: 1000px;
-    margin: 50px auto auto -300px;
+    height: 500px;
+    width: 1200px;
+    margin: 20px auto auto -450px;
 }
 
-.vuecal--month-view .vuecal__cell {height: 80px;}
+.vuecal__event {cursor: pointer;}
 
-.vuecal--month-view .vuecal__cell-content {
-  justify-content: flex-start;
-  height: 100%;
-  align-items: flex-end;
+.vuecal__event-title {
+  font-size: 14px;
+  font-weight: 700;
+  margin: 4px 0 8px;
 }
 
-.vuecal--month-view .vuecal__cell-date {padding: 4px;}
-.vuecal--month-view .vuecal__no-event {display: none;}
-
+.vuecal__event.sport {
+    background-color: rgba(255, 102, 102, 0.9);
+    border: 1px solid rgb(235, 82, 82);
+    color: #fff;
+}
 
 
 
@@ -329,6 +333,5 @@ table{
 	color: white;
 }
 
-.vuecal__event.leisure {background-color: rgba(253, 156, 66, 0.9);border: 1px solid rgb(233, 136, 46);color: #fff;}
-.vuecal__event.sport {background-color: rgba(255, 102, 102, 0.9);border: 1px solid rgb(235, 82, 82);color: #fff;}
+
 </style>
