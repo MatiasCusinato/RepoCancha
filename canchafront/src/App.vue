@@ -21,6 +21,10 @@ export default{
 
 
 <style>
+body{
+  background-color:whitesmoke;
+}
+
 .form-signin {
   width: 100%;
   max-width: 330px;
