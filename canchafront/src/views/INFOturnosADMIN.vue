@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div style="margin: -30px ">
         <h2> Turnos </h2>
         <div v-if="!abrirABMturnos">
             <div class="btncli">
@@ -10,9 +10,13 @@
             </div> 
 
             <div>
-                <label for="" class="form-label campo"><i class="bi bi-person"> Cancha: </i></label>
+                <label for="" class="form-label campo">
+                    <i class="bi bi-aspect-ratio"> Cancha: </i>
+                </label>
+
                 <select name="cliente_id" v-model="canchaActual" 
-                        class="form-select" aria-label=".form-select-sm example">
+                        @change="traerTurnos()"
+                        class="form-select inputChico" aria-label=".form-select-sm example">
 
                     <option v-for="(cancha, $id) in canchas" 
                         :key="$id"
@@ -20,19 +24,18 @@
                             {{cancha.id}}| {{cancha.deporte}}
                     </option>
                 </select>
-
-                <button @click="traerTurnos()">
-                    Traer turnos (cancha: {{canchaActual}})
-                </button>
             </div>
         </div>
 
         <div>
-            <vue-cal class="calendarioVue vuecal--green-theme " 
+            <vue-cal class="calendarioVue vuecal--green-theme" 
                 :time-from="9 * 60" :time-to="24.5 * 60" 
                 :time-step="30" active-view="month" 
                 
-                :events="events" selected-date="2018-11-19"
+                :events="events" 
+
+                :selected-date="fechaDeHoy"
+                
                 :editable-events="{ 
                                     title: false, drag: false, 
                                     resize: true, delete: false, 
@@ -45,7 +48,6 @@
                 :cell-click-hold="false"
                 :drag-to-create-event="false"
                 :on-event-create="onEventCreate"
-
                 v-if="!abrirABMturnos"
             />
         </div>
@@ -64,6 +66,7 @@ import 'vue-cal/dist/vuecal.css'
 import 'vue-cal/dist/i18n/es.js'
 import apiRest from '../mixins/apiRest.vue'
 import ABMturnos from "../components/ABMturnos.vue"
+import * as moment from "moment/moment";
 
 export default {
     components:{
@@ -77,6 +80,8 @@ export default {
         return {
             selectedEvent: null,
             showEventCreationDialog: false,
+
+            fechaDeHoy: moment().format("YYYY-MM-DD"),
 
             datos: [],
             canchas:[],
@@ -325,7 +330,9 @@ table{
 }
 
 .campo{
-	color: white;
+    margin: 5px 5px;
+	color: rgb(39, 37, 37);
+    font-size: 20px;
 }
 
 .titulo{
@@ -333,5 +340,8 @@ table{
 	color: white;
 }
 
+.inputChico{
+    width: 250px;
+}
 
 </style>

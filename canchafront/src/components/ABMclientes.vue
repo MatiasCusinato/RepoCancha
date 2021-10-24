@@ -9,32 +9,60 @@
                         <p>{{accion}} Clientes</p>
                         </div>
                         <div class="contenido">
-                            <div class="mb-3">
-                                <label for="" class="form-label campo"><i class="bi bi-person"> Nombre: </i></label>
-                                <input type="text" class="form-control form-control-sm" v-model="datosClientes.nombre">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="" class="form-label campo">
+                                        <i class="bi bi-person"> Nombre: </i>
+                                    </label>
+
+                                    <input type="text" class="form-control form-control-sm" v-model="datosClientes.nombre">
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <label for="" class="form-label campo" >
+                                        <i class="bi bi-person"> Apellido: </i>
+                                    </label>
+
+                                    <input type="text" class="form-control form-control-sm" v-model="datosClientes.apellido">
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="" class="form-label campo">
+                                        <i class="bi bi-telephone"> Telefono: </i>
+                                    </label>
+
+                                    <input type="text" v-model="datosClientes.telefono" 
+                                            class="form-control form-control-sm" placeholder="3446 ...">
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <label for="" class="form-label campo">
+                                        <i class="bi bi-calendar2-date"> Edad: </i>
+                                    </label>
+
+                                    <input type="number" v-model="datosClientes.edad" min="10" max="90"
+                                            class="form-control form-control-sm" >
+                                </div>
                             </div>
 
                             <div class="mb-3">
-                                <label for="" class="form-label campo" ><i class="bi bi-person"> Apellido: </i></label>
-                                <input type="text" class="form-control form-control-sm" v-model="datosClientes.apellido">
-                            </div>
+                                <label for="" class="form-label campo">
+                                    <i class="bi bi-envelope"> Email: </i>
+                                </label>
 
-                            <div class="mb-3">
-                                <label for="" class="form-label campo"><i class="bi bi-telephone"> Telefono: </i></label>
-                                <input type="text" class="form-control form-control-sm" v-model="datosClientes.telefono">
+                                <input type="text" v-model="datosClientes.email"
+                                        class="form-control form-control-sm"
+                                        placeholder="Gmail, hotmail, outlook, etc">
                             </div>
+                            <button class="btn btn-primary divBotones" @click="Aceptar()">
+                                <i class="bi bi-check2-circle"> Guardar </i>
+                            </button>
 
-                            <div class="mb-3">
-                                <label for="" class="form-label campo"><i class="bi bi-calendar2-date"> Edad: </i></label>
-                                <input type="text" class="form-control form-control-sm" v-model="datosClientes.edad">
-                            </div>
-
-                            <div class="mb-3">
-                                <label for="" class="form-label campo"><i class="bi bi-envelope"> Email: </i></label>
-                                <input type="text" class="form-control form-control-sm" v-model="datosClientes.email">
-                            </div>
-                            <button class="btn btn-primary divBotones" @click="Aceptar()"><i class="bi bi-check2-circle"> Guardar </i></button>
-                            <button class="btn btn-danger divBotones" @click="Cancelar()"><i class="bi bi-x-circle-fill"> Cancelar </i></button>
+                            <button class="btn btn-danger divBotones" @click="Cancelar()">
+                                <i class="bi bi-x-circle-fill"> Cancelar </i>
+                            </button>
                         </div>
                     </div>
                 </div>

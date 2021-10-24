@@ -5,6 +5,8 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Models\clubConfiguracion;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 
 class clubConfiguracionController extends Controller
 {
@@ -39,8 +41,26 @@ class clubConfiguracionController extends Controller
      */
     public function show($club_id)
     {
-        $club_configuracion = clubConfiguracion::find($club_id);
-        return $club_configuracion->toJson(JSON_PRETTY_PRINT);
+        //$club_configuracion = clubConfiguracion::find($club_id);
+        $club_configuracion = DB::table('club_configuracions')
+                                    ->when($club_id, function ($sql, $club_id) {
+                                        return $sql->where('id', '=', $club_id);
+                                    })
+                                    ->get();
+        
+        //dd($club_configuracion->isEmpty());
+        
+        if($club_id < 0 || $club_configuracion->isEmpty() || $club_configuracion == null){
+            return response()->json([
+                "msj" => "Error",
+                "razon" => "El club especificado no existe"
+            ], 400); 
+        } else {
+            return response()->json([
+                "msj" => "Peticion exitosa",
+                "club" => $club_configuracion,
+            ], 200); 
+        }
     }
 
     /**

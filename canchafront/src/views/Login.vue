@@ -63,7 +63,7 @@ export default {
                         setInterval(() => {
                             location.reload();
                         }, 200);
-                        this.$router.push("/");
+                        this.$router.push("/INFOturnosADMIN");
                     }
                 });
             } else {

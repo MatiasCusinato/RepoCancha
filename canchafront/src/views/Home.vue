@@ -1,15 +1,17 @@
 <template>
   <div class="home">
     <div>
-
+      <INFOturnosDISPONIBLES/>
     </div>
   </div>  
 </template>
 
 <script>
 // @ is an alias to /src
+import INFOturnosDISPONIBLES from "../views/INFOturnosDISPONIBLES.vue";
 export default {
   components: {
+    INFOturnosDISPONIBLES,
   },
   data() {
     return {
