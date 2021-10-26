@@ -5,8 +5,8 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    vToken: "",
-    vClub: "",
+    vClub:  localStorage.getItem('club') || "null",
+    vToken:  localStorage.getItem('laravelToken') || "null",
   },
 
   mutations: {

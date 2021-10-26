@@ -91,7 +91,7 @@ class AccesoUsuarioController extends Controller
 
     }
 
-    public function logout(Request $request){
+    public function logout(Request $request){ 
         $user = User::where('token_actual', $request->token_actual)->first();
         $user->token_actual = 'null';
         $user->save();

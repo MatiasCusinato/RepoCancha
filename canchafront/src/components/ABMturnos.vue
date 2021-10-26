@@ -1,116 +1,112 @@
 <template>
     <div>
-        
         <h1 class="bg-primary text-white text-center mb-3"> ABMTURNOS </h1>
-            <div v-if="!abrirFormTurnos && accionAux=='Consultar'">
-                <div class="contenedor">
-                    <div class="VentanaModalConsultar">
-                        <div class="cabecera tituloventana">
-                            <h5>Evento: {{ eventoActual.title }}</h5>
-                            <div class="container overflow-hidden gx-1">
-                                <!-- <h5 class="card-title"><i class="bi bi-calendar"> Fecha: {{ eventoActual.start && eventoActual.start.format('DD/MM/YYYY') }} </i></h5> -->
+
+        <div v-if="!abrirFormTurnos && accionAux=='Consultar'">
+            <div class="contenedor">
+                <div class="VentanaModalConsultar">
+                    <div class="cabecera tituloventana">
+                        <h5>Evento: {{ eventoActual.title }}</h5>
+                        <div class="container overflow-hidden gx-1">
+                            <!-- <h5 class="card-title"><i class="bi bi-calendar"> Fecha: {{ eventoActual.start && eventoActual.start.format('DD/MM/YYYY') }} </i></h5> -->
+                            <div class="row justify-content-md-center">
+                                <div class="col-md-6 mb-3">
+                                    <span><i class="bi bi-person campo"> Cliente: </i></span>
+                                    <input type="text" class="form-control form-control-sm inputChico" 
+                                            :value="NombreApellido" readonly>
+                                </div>
+                            
+                                <div class="col-md-6 mb-3">
+                                    <span><i class="bi bi-aspect-ratio campo"> Cancha: </i></span>
+                                    <input type="text" class="form-control form-control-sm inputChico" 
+                                            :value="Cancha" readonly>
+                                </div>
+                            </div>
+
+                            <hr class="hrBarra">
+
+                            <div class="row">
                                 <div class="row justify-content-md-center">
+                                    <span><i class="bi bi-calendar campo"> Fecha: </i></span>
+                                    <input type="text" class="form-control  form-control-sm inputChico" 
+                                            :value="FechaActual" readonly>
+                                </div>    
+
+                                <div class="row gy-2 justify-content-md-center">
                                     <div class="col-md-6 mb-3">
-                                        <span><i class="bi bi-person campo"> Cliente: </i></span>
+                                        <span><i class="bi bi-hourglass-top campo"> Comienzo: </i></span>
                                         <input type="text" class="form-control form-control-sm inputChico" 
-                                                :value="NombreApellido" readonly>
+                                                :value="Comienzo" readonly>
                                     </div>
+
+                                    <div class="col-md-6 mb-3">
+                                        <span><i class="bi bi-hourglass-bottom campo"> Fin: </i></span>
+                                        <input type="text" class="form-control form-control-sm inputChico" 
+                                                :value="Fin" readonly>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <hr class="hrBarra">
+
+                            <div class="row">                                  
+                                <div>
+                                    <span><i class="bi bi-flag campo"> Tipo de turno </i></span>
+                                    <input type="text" class="form-control form-control-sm" 
+                                            :value="TipoTurno" readonly>
+                                </div>
                                 
+                                <div class="row gy-2 justify-content-md-center">
                                     <div class="col-md-6 mb-3">
-                                        <span>
-                                            <i class="bi bi-aspect-ratio campo"> Cancha: </i>
-                                        </span>
+                                        <span><i class="bi bi-currency-dollar campo"> Precio: </i></span>
                                         <input type="text" class="form-control form-control-sm inputChico" 
-                                                :value="Cancha" readonly>
+                                                :value="Precio" readonly>
+                                    </div>
+
+                                    <div class="col-md-6 mb-3">
+                                        <span><i class="bi bi-tags campo"> Estado: </i></span>
+                                        <input type="text" class="form-control form-control-sm inputChico" 
+                                                :value="Estado" readonly>
                                     </div>
                                 </div>
+                            </div>
 
-                                <hr class="hrBarra">
-
-                                <div class="row">
-                                    <div class="row justify-content-md-center">
-                                        <span><i class="bi bi-calendar campo"> Fecha: </i></span>
-                                        <input type="text" class="form-control  form-control-sm inputChico" 
-                                                :value="FechaActual" readonly>
-                                    </div>    
-
-                                    <div class="row gy-2 justify-content-md-center">
-                                        <div class="col-md-6 mb-3">
-                                            <span><i class="bi bi-hourglass-top campo"> Comienzo: </i></span>
-                                            <input type="text" class="form-control form-control-sm inputChico" 
-                                                    :value="Comienzo" readonly>
-                                        </div>
-
-                                        <div class="col-md-6 mb-3">
-                                            <span><i class="bi bi-hourglass-bottom campo"> Fin: </i></span>
-                                            <input type="text" class="form-control form-control-sm inputChico" 
-                                                    :value="Fin" readonly>
-                                        </div>
+                            <div class="row">                                  
+                                <div class="row gy-1 justify-content-md-center">
+                                    <div class="col-md-6 mb-3">
+                                        <button class="btn btn-danger" style="margin: auto 10px" 
+                                                @click="BorrarTurno()">
+                                            <i class="bi bi-trash">
+                                                Borrar
+                                            </i>    
+                                        </button>
                                     </div>
-                                </div>
 
-                                <hr class="hrBarra">
-
-
-                                <div class="row">                                  
-                                    <div>
-                                        <span><i class="bi bi-flag campo"> Tipo de turno </i></span>
-                                        <input type="text" class="form-control form-control-sm" 
-                                                :value="TipoTurno" readonly>
-                                    </div>
-                                    
-                                    <div class="row gy-2 justify-content-md-center">
-                                        <div class="col-md-6 mb-3">
-                                            <span><i class="bi bi-currency-dollar campo"> Precio: </i></span>
-                                            <input type="text" class="form-control form-control-sm inputChico" 
-                                                    :value="Precio" readonly>
-                                        </div>
-
-                                        <div class="col-md-6 mb-3">
-                                            <span><i class="bi bi-tags campo"> Estado: </i></span>
-                                            <input type="text" class="form-control form-control-sm inputChico" 
-                                                    :value="Estado" readonly>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="row">                                  
-                                    <div class="row gy-1 justify-content-md-center">
-                                        <div class="col-md-6 mb-3">
-                                            <button class="btn btn-danger" style="margin: auto 10px" 
-                                                    @click="BorrarTurno()">
-                                                <i class="bi bi-trash">
-                                                    Borrar
-                                                </i>    
-                                            </button>
-                                        </div>
-
-                                        <div class="col-md-6 mb-3">
-                                            <button class="btn btn-success" 
-                                                    @click="desplegarABMturnos('Editar')">
-                                                <i class="bi bi-pencil-square">
-                                                    Editar
-                                                </i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="row justify-content-md-center">
-                                        <button class="btn btn-secondary col-md-6 mb-3" @click="Cancelar()">
-                                            <i class="bi-arrow-left-square">
-                                                Atras
+                                    <div class="col-md-6 mb-3">
+                                        <button class="btn btn-success" 
+                                                @click="desplegarABMturnos('Editar')">
+                                            <i class="bi bi-pencil-square">
+                                                Editar
                                             </i>
                                         </button>
                                     </div>
+                                </div>
+                                
+                                <div class="row justify-content-md-center">
+                                    <button class="btn btn-secondary col-md-6 mb-3" @click="Cancelar()">
+                                        <i class="bi-arrow-left-square">
+                                            Atras
+                                        </i>
+                                    </button>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>    
-        
-
-
+            </div>
+        </div>    
+    
+    
 
         <!-- MODAL CREAR/EDITAR -->
         <div v-if="abrirFormTurnos">
@@ -235,32 +231,6 @@
                                             </option>
                                         </select>
                                     </div>
-
-                                    <!-- <div class="col-md-6 mb-3">
-                                        <label for="" class="form-label campo">
-                                            <i class="bi bi-alarm"> Duracion del turno: </i> 
-                                        </label>
-                                        <select name="cancha_id" v-model="horasIntervalo" 
-                                            class="form-select inputChico" aria-label=".form-select-sm example">
-                                            <option value="1">
-                                                1 hora
-                                            </option>
-                                            <option value="1.5">
-                                                1 hora con 30 minutos
-                                            </option>
-                                            <option value="2">
-                                                2 hora
-                                            </option> 
-                                        </select>
-                                    </div> -->
-
-                                    <!-- <div class="col-md-6 mb-3">
-                                        <label for="" class="form-label campo">
-                                            <i class="bi bi-calendar2-day"> Fin: </i>
-                                        </label>
-                                        <input type="datetime-local" v-model="datosTurno.fecha_Hasta" 
-                                                class="form-control form-control-sm">
-                                    </div> -->
                                 </div>
 
                                 <div class="row" v-if="turnoFijo && accionAux=='Crear'">
@@ -397,6 +367,7 @@ export default {
     data() {
         return {
             moment: moment,
+
             datosTurno: {
                 cliente_id: 0,
                 cancha_id: 0,
@@ -580,8 +551,10 @@ export default {
                     })   
                 }
 
-                this.datosTurno.fecha_Desde= this.transformarFecha(this.fechaDesdeAux, 'abm')
-                this.datosTurno.fecha_Hasta= this.transformarFecha(this.fechaHastaAux, 'abm')
+                this.datosTurno.fecha_Desde= this.fechaDesdeAux
+                this.datosTurno.fecha_Hasta= this.fechaHastaAux
+                /* this.datosTurno.fecha_Desde= this.transformarFecha(this.fechaDesdeAux, 'abm')
+                this.datosTurno.fecha_Hasta= this.transformarFecha(this.fechaHastaAux, 'abm') */
             }
             
         },
@@ -595,9 +568,8 @@ export default {
                 let fechaDesde= this.eventoActual.objTurnos.fecha_Desde
                 let fechaHasta= this.eventoActual.objTurnos.fecha_Hasta
 
-                
-                console.log(moment(fechaDesde).format('YYYY-MM-DD'));
-                console.log(this.datosTurno.fecha_Desde);
+                //console.log(moment(fechaDesde).format('YYYY-MM-DD'));
+                //console.log(this.datosTurno.fecha_Desde);
 
                 this.datosTurno.cliente_id = this.eventoActual.objTurnos.cliente_id
                 this.datosTurno.cancha_id = this.eventoActual.objTurnos.cancha_id
@@ -607,6 +579,7 @@ export default {
                 this.datosTurno.fecha_Hasta = this.transformarFecha(fechaHasta, 'abm')
                 this.datosTurno.grupo = this.eventoActual.objTurnos.grupo
                 this.datosTurno.precio = this.eventoActual.objTurnos.precio
+                this.datosTurno.diasFijo[0] = moment(this.transformarFecha(fechaDesde, 'abm')).format('ddd');
                 this.datosTurno.estado = this.eventoActual.objTurnos.estado
             }
         },
@@ -621,7 +594,6 @@ export default {
         traerCanchas(){
             this.ObtenerDatos(`canchas/${this.datosTurno.club_configuracion_id}`)
                 .then (res => {
-                    console.log()
                     this.canchas = res.canchas.data
                 })
         },

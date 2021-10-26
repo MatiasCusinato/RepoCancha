@@ -1,6 +1,8 @@
 <template>
     <div>
         <div v-if="club.length > 1">
+            <h3>Club: {{this.$store.state.vClub}}</h3>
+            <h3>Token: {{this.$store.state.vToken}}</h3>
             <div class="alert alert-primary divAlerta" role="alert">
                 ¡Clickea uno de nuestros clubes para observar sus turnos y sus canchas!
             </div>
@@ -117,6 +119,7 @@ export default {
     created(){
         console.log(this.clubActual)
         this.events= [];
+        
         this.traerClub();
     },
 

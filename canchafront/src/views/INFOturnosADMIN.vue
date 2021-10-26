@@ -1,6 +1,6 @@
 <template>
     <div style="margin: -30px ">
-        <h2> Turnos </h2>
+        <h2>Turnos</h2>
         <div v-if="!abrirABMturnos">
             <div class="btncli">
                 <button class="btn btn-primary" @click="crearTurno('Crear')"  
@@ -102,6 +102,7 @@ export default {
     },
 
     created(){
+        console.log(this.$store.state)
         this.events= []
         this.traerCanchas();
         //this.traerTurnos();
