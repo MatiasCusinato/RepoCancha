@@ -25,6 +25,11 @@
                                 class="nav-item nav-link">
                                     <i class="bi bi-flag-fill"> Canchas </i>
                         </router-link>
+
+                        <router-link to="/Soporte" 
+                                class="nav-item nav-link">
+                                    <i class="bi bi-envelope"> Soporte </i>
+                        </router-link>
                     </div>
                 </div>
 

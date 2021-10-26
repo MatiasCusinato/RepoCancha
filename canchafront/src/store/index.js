@@ -7,7 +7,6 @@ export default new Vuex.Store({
   state: {
     vToken: "",
     vClub: "",
-    loggedIn: false,
   },
 
   mutations: {
@@ -29,18 +28,9 @@ export default new Vuex.Store({
       state.vToken= "";
       state.vClub= "";
     },
-
-    loggedIn(state) {
-      state.loggedIn = true
-    },
   },
 
   actions: {
-    mocklogin (context) {
-      setTimeout(function() {
-        context.commit('loggedIn')
-      }, 1000)
-    }
   },
   modules: {
   }
