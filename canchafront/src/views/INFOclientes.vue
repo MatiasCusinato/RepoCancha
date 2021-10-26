@@ -281,8 +281,8 @@ h1 {
 }
 .boton {
     position: relative;
-    left: 190px;
-    top: -55px;
+    left: 200px;
+    top: -54px;
 }
 .btncli {
     position: absolute;
