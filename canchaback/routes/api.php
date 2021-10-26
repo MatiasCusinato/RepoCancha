@@ -41,6 +41,7 @@ Route::post('logout',[AccesoUsuarioController::class, 'logout']);
 
 //Ruta Clubes
 Route::get('clubes', [clubConfiguracionController::class, 'index']);
+Route::post('clubes/ganacias', [clubConfiguracionController::class, 'gananciaClub']);
 Route::post('clubes/guardar', [clubConfiguracionController::class, 'store']);
 Route::get('clubes/show/{club_id}', [clubConfiguracionController::class, 'show']);
 Route::put('clubes/editar/{club_id}', [clubConfiguracionController::class, 'update']);
@@ -62,8 +63,8 @@ Route::middleware('validarUsuario')->group(function(){
 Route::get('clientes/{club_id}/{registros?}', [ClienteController::class, 'index']);
 Route::get('clientes/{club_id}/show/{cliente_id}', [ClienteController::class, 'show']);
 Route::get('clientes/{club_id}/nombre/{nombre}', [ClienteController::class, 'filtroNombre']); //Ruta filtro x nombre de Clientes 
+Route::post('clientes/guardar', [ClienteController::class, 'store']);
 Route::middleware('validarUsuario')->group(function(){
-    Route::post('clientes/guardar', [ClienteController::class, 'store']);
     Route::put('clientes/editar/{cliente_id}', [ClienteController::class, 'update']);
     Route::delete('clientes/eliminar/{club_id}/{cliente_id}', [ClienteController::class, 'destroy']);  
 });

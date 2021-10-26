@@ -96,4 +96,24 @@ class clubConfiguracionController extends Controller
             'Mensaje' => 'El club ha sido eliminado'
         ]);
     }
+
+    public function gananciaClub(Request $request){
+        $fechaDesde= $request->fecha_Desde;
+        $fechaHasta= $request->fecha_Hasta;
+        $club= $request->club_configuracion_id;
+
+        $sqlGanancia= DB::table('club_configuracions')
+                            ->join('turnos', 'club_configuracions.id', '=', 'turnos.club_configuracion_id')
+                            ->where([
+                                ['club_configuracions.id', '=', $club],
+                                ['turnos.estado', '=', 'Cobrado'],
+                                ['turnos.fecha_Desde', '<', $fechaHasta],
+                                ['turnos.fecha_Hasta', '>', $fechaDesde]
+                            ])
+                            ->select(DB::raw("(SELECT
+                                                COALESCE(
+                                                    SUM(turnos.precio), 0)) AS Ganancia "))
+                            ->get();
+        dd($sqlGanancia);
+    }
 }
