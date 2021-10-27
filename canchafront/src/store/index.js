@@ -11,11 +11,17 @@ export default new Vuex.Store({
 
   mutations: {
     guardarDatosUsuario(state, objDatos){
-      localStorage.setItem('laravelToken', objDatos.token);
-      localStorage.setItem('club', objDatos.numeroClub);
+      let tokenRaw= atob(objDatos.token.slice(1,-1));//descifro el token en base64 a un string
+      console.log(tokenRaw)
+      let objToken= JSON.parse(tokenRaw); //lo transformo en un objeto javascript
+      console.log(objToken)
+      
+      localStorage.setItem('laravelToken', objDatos.token.slice(1,-1));
+      localStorage.setItem('club', objToken.club);
 
-      state.vToken= objDatos.token;
-      state.vClub= objDatos.numeroClub;
+      state.vToken= objDatos.token.slice(1,-1);
+      state.vClub= objToken.club;
+
       console.log(state.vToken)
       console.log(state.vClub)
     },

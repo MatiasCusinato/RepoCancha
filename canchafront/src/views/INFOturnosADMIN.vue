@@ -1,5 +1,7 @@
 <template>
     <div style="margin: -30px ">
+        <h3>Club: {{this.$store.state.vClub}}</h3>
+        <h3>Token: {{this.$store.state.vToken}}</h3>
         <h2>Turnos</h2>
         <div v-if="!abrirABMturnos">
             <div class="btncli">
@@ -109,6 +111,7 @@ export default {
     },
 
     methods:{
+
         onEventCreate (event, deleteEventFunction) {
             this.selectedEvent = event
             this.abrirABMturnos = true
