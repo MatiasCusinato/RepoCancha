@@ -69,8 +69,7 @@ export default {
             .catch(err => console.log('Error fetch:', err))
         },
 
-
-        EliminarDatos(ruta, id) {
+        EliminarDatos(ruta, id, datosIngresar) {
             let urlDestino = "http://127.0.0.1:8000/api/" + ruta + "/" + id
 
             return fetch(urlDestino, {
@@ -78,6 +77,7 @@ export default {
                 headers: {
                     'Content-Type': 'application/json'
                 },
+                body: JSON.stringify(datosIngresar)
             })
             .catch(err => console.log('Error fetch:', err))
         },

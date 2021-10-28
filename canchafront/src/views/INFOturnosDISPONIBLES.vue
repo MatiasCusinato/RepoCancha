@@ -117,6 +117,7 @@ export default {
     created(){
         console.log(this.clubActual)
         this.events= [];
+        
         this.traerClub();
     },
 
