@@ -105,7 +105,6 @@ export default {
         console.log(this.$store.state)
         this.events= []
         this.traerCanchas();
-        //this.traerTurnos();
     },
 
     methods:{

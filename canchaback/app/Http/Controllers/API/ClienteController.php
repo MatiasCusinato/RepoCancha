@@ -73,8 +73,12 @@ class ClienteController extends Controller
     {
         //Valido que el email sea UNICO en la tabla clientes
         $val = Validator::make($request->all(), [
-            'email' => 'required|unique:clientes',
-            'club_configuracion_id' => 'required',
+            'email' => 'required|unique:clientes|max:50',
+            'club_configuracion_id' => ['required', 'exists:club_configuracions,id'],
+            'nombre' => ['required', 'max:30'],
+            'apellido' => ['required', 'max:30'],
+            'telefono' => ['required', 'max:30'],
+            'edad' => ['required'],
         ]); 
 
         //Si el email ya existe(falló el validador), se agrega un registro en
@@ -89,12 +93,6 @@ class ClienteController extends Controller
                                                 ])
                                                 ->select('cliente_club_configuracion.*')
                                                 ->get();
-            //dd($sqlValidacionClienteClub);
-
-            //dd(count($sqlValidacionClienteClub));
-            //dd($cliente->id);
-            //dd($request->club_configuracion_id);
-
 
             //Verifico si ya esta registrado ese cliente y ese club
             if(count($sqlValidacionClienteClub) > 0){
@@ -181,17 +179,18 @@ class ClienteController extends Controller
     public function update(Request $request, Cliente $cliente, $club_id, $cliente_id)
     {
         $val = Validator::make($request->all(), [
-            "nombre" => 'required',
-            "apellido" => 'required',
-            "telefono" => 'required',
-            "edad" => 'required',
-            "email" => 'required',
+            'email' => 'required|max:50',
+            'club_configuracion_id' => ['required', 'exists:club_configuracions,id'],
+            'nombre' => ['required', 'max:30'],
+            'apellido' => ['required', 'max:30'],
+            'telefono' => ['required', 'max:30'],
+            'edad' => ['required'],
         ]); 
 
         if($val->fails()){
             return response()->json([
                     'msj' => 'Error', 
-                    'razon' => 'Faltan datos o alguno de ellos esta mal ingresado.'
+                    'razon' => 'Falta uno de los datos, o algun campo sobrepasa los caracteres maximos(50 email, 30 los demas campos).'
             ], 400);
         }else { 
             try {
@@ -231,7 +230,7 @@ class ClienteController extends Controller
                     ->where('club_configuracions.id', '=', $club_id)
                     ->get();
 
-        if(count($club) < 1){
+        if($club->isEmpty()){
             return response()->json([
                 'msj' => 'Error',
                 'razon' => 'El club especificado no existe'
@@ -241,12 +240,31 @@ class ClienteController extends Controller
         try {
             DB::beginTransaction();
             
-            DB::table('cliente_club_configuracion')
+            $vinculacionClienteClub= DB::table('cliente_club_configuracion')
+                                            ->where([
+                                                ['cliente_id', '=', $cliente_id],
+                                                ['club_configuracion_id', '=', $club_id],
+                                            ])
+                                            ->get();
+            dd($vinculacionClienteClub);
+
+            if($vinculacionClienteClub->isEmpty()){
+                DB::table('clientes')
+                    ->join('cliente_club_configuracion', 'clientes.id', '=','cliente_club_configuracion.cliente_id')
                     ->where([
                         ['cliente_id', '=', $cliente_id],
                         ['club_configuracion_id', '=', $club_id],
                     ])
                     ->delete();
+            } else{
+                DB::table('cliente_club_configuracion')
+                    ->where([
+                        ['cliente_id', '=', $cliente_id],
+                        ['club_configuracion_id', '=', $club_id],
+                    ])
+                    ->delete();
+            }
+            
 
             DB::commit(); 
         }

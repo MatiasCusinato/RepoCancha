@@ -4,7 +4,7 @@
 
         <div class="divFiltros">
             <h4>Filtros:</h4>
-            <input type="text" placeholder="Filtro por nombre" v-model="filtroNombre">
+            <input type="text" placeholder="Filtro por nombre" v-model="filtroNombre" maxlength="20">
             <br>
             <br>
             <button type="button" class="boton btn btn-secondary btn-sm" @click="traerFiltro()">
