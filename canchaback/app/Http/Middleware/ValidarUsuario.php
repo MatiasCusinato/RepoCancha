@@ -21,6 +21,9 @@ class ValidarUsuario
         $token= $request->token;
         $url= $request->fullUrl();
         $metodo= $request->getMethod();
+        //decodifico el token a un objeto JSON
+        $tokenUser= base64_decode($token); 
+        $jsonUser= json_decode($tokenUser);
         //dd($request, $metodo, $url, $token, $club);
         
         if($token != "null" && $club != "null"){
@@ -28,7 +31,8 @@ class ValidarUsuario
             $user = DB::table('users')
                             ->where([
                                 ['token_actual', '=', $token],
-                                ['club_configuracion_id','=', $club],
+                                ['club_configuracion_id','=', $jsonUser->club],
+                                ['email','=', $jsonUser->email],
                             ])->first();
         }
 

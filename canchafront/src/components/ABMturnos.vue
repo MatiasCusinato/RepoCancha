@@ -209,26 +209,25 @@
 
                                     <div class="col-md-6 mb-3" v-if="datosTurno.grupo > 1">
                                         <label for="" class="form-label campo">
-                                            <i class="bi bi-calendar2-day"> Fin: </i> 
+                                            <i class="bi bi-calendar2-day"> Fin por intervalos: </i> 
                                         </label>
                                         <select name="cancha_id" v-model="datosTurno.fecha_Hasta" 
                                                 class="form-select inputChico" aria-label=".form-select-sm example">
-                                            
-                                            <option :value="this.moment(datosTurno.fecha_Desde).add(3, 'weeks').format('YYYY-MM-DDTHH:mm')">
+                                            <option :value="this.moment(datosTurno.fecha_Desde).add({weeks:3,hours:1}).format('YYYY-MM-DDTHH:mm')">
                                                     3 semanas
                                             </option>
 
-                                            <option :value="this.moment(datosTurno.fecha_Desde).add(4, 'weeks').format('YYYY-MM-DDTHH:mm')">
+                                            <option :value="this.moment(datosTurno.fecha_Desde).add({weeks:4,hours:1}).format('YYYY-MM-DDTHH:mm')">
                                                     4 semanas
                                             </option>
 
-                                            <option :value="this.moment(datosTurno.fecha_Desde).add(1, 'months').format('YYYY-MM-DDTHH:mm')">
+                                            <option :value="this.moment(datosTurno.fecha_Desde).add({months:1,hours:1}).format('YYYY-MM-DDTHH:mm')">
                                                     1 mes
                                             </option>
 
-                                            <option :value="this.moment(datosTurno.fecha_Desde).add(2, 'months').format('YYYY-MM-DDTHH:mm')">
+                                            <option :value="this.moment(datosTurno.fecha_Desde).add({months:2,hours:1}).format('YYYY-MM-DDTHH:mm')">
                                                     2 mes
-                                            </option>
+                                            </option> 
                                         </select>
                                     </div>
                                 </div>
@@ -371,7 +370,7 @@ export default {
             datosTurno: {
                 cliente_id: 0,
                 cancha_id: 0,
-                club_configuracion_id: localStorage.getItem('club'),
+                club_configuracion_id: this.$store.state.vClub,
                 tipo_turno: "",
                 fecha_Desde: moment().format('YYYY-MM-DDTHH:mm'),
                 fecha_Hasta: moment().add(1, 'hours').format('YYYY-MM-DDTHH:mm'),
@@ -379,9 +378,10 @@ export default {
                 precio: "",
                 estado: "",
                 diasFijo:[],
+                token: this.$store.state.vToken,
             },
 
-            //horasIntervalo: "",
+            arrIntervalos: [],
             turnoFijo: false,
             diasFijo: [
                 {diaES: "Lunes", diaEN: "Mon"}, 
@@ -491,7 +491,7 @@ export default {
                 console.log(this.datosTurno)
                 if(!this.validarCampos(this.datosTurno)){
                     if(this.accionAux=='Crear'){
-                        this.InsertarDatos ('turnos/guardar', this.datosTurno)
+                        this.InsertarDatos('turnos/guardar', this.datosTurno)
                                 .then(res => {
                                     console.log(res)
                                     if(res.msj=="Error"){
@@ -502,7 +502,7 @@ export default {
                                             confirmButtonText: 'Ok'
                                         })
 
-                                        this.$emit('SalirDeABMturnos', true)
+                                        //this.$emit('SalirDeABMturnos', true)
                                     } else {
                                         this.$swal({
                                             title: 'Turno creado!',
@@ -545,7 +545,7 @@ export default {
                  } else {
                     this.$swal({
                         title: '¡Error en el formulario!',
-                        text: 'Errores: '+ this.alertaFormulario,
+                        text: 'Errores:'+ this.alertaFormulario,
                         icon: 'warning',
                         confirmButtonText: 'Ok'
                     })   
@@ -581,18 +581,19 @@ export default {
                 this.datosTurno.precio = this.eventoActual.objTurnos.precio
                 this.datosTurno.diasFijo[0] = moment(this.transformarFecha(fechaDesde, 'abm')).format('ddd');
                 this.datosTurno.estado = this.eventoActual.objTurnos.estado
+                this.datosTurno.token = this.$store.state.vToken
             }
         },
     
         traerClientes(){
-            this.ObtenerDatos(`clientes/${this.datosTurno.club_configuracion_id}`)
+            this.ObtenerDatos(`clientes/${this.$store.state.vClub}`)
                 .then (res => {
                     this.clientes = res.clientes.data
                 })
         },
 
         traerCanchas(){
-            this.ObtenerDatos(`canchas/${this.datosTurno.club_configuracion_id}`)
+            this.ObtenerDatos(`canchas/${this.$store.state.vClub}`)
                 .then (res => {
                     this.canchas = res.canchas.data
                 })

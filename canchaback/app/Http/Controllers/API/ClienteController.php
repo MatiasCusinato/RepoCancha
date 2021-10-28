@@ -165,7 +165,7 @@ class ClienteController extends Controller
                             ->join('clientes', 'cliente_club_configuracion.cliente_id', '=', 'clientes.id')
                             ->where('cliente_club_configuracion.club_configuracion_id', '=', $club_id)
                             ->where('clientes.id', '=', $cliente_id)
-                            ->select('clientes.*')
+                            ->select('clientes.*', 'cliente_club_configuracion.club_configuracion_id')
                             ->get();
 
         return response()->json($cliente[0], 200);
@@ -178,7 +178,7 @@ class ClienteController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Cliente $cliente, $cliente_id)
+    public function update(Request $request, Cliente $cliente, $club_id, $cliente_id)
     {
         $val = Validator::make($request->all(), [
             "nombre" => 'required',
@@ -224,7 +224,7 @@ class ClienteController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($club_id, $cliente_id, Cliente $cliente)
+    public function destroy($club_id, $cliente_id, Cliente $cliente, Request $request)
     {   
         $club = DB::table('club_configuracions')
                     ->select('club_configuracions.id')
@@ -266,7 +266,7 @@ class ClienteController extends Controller
          
     }
 
-    public function filtroNombre($club_id, $nombre){
+    public function filtroNombre($club_id, $nombre, Request $request){
         $clientes = DB::table('cliente_club_configuracion')
                             ->join('clientes', 'cliente_club_configuracion.cliente_id', '=', 'clientes.id')
                             ->where([

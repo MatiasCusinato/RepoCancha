@@ -78,9 +78,9 @@ class TurnoController extends Controller
                  
                 $fechaDesdeInt = strtotime($request->fecha_Desde); //Convierte el $request->fecha_Desde a formato timestamp --> 1543104000
                 $fechaHastaInt = strtotime($request->fecha_Hasta); 
-        
-                $fechaDeHoy = Carbon::createFromFormat('Y-m-d H:i:s', now(), 'UTC')
-                            ->setTimezone('America/Buenos_Aires')->timestamp; //Variable q contiene el dia de hoy en formato timestamp
+
+                $fechaDeHoy= Carbon::parse(now())->format('Y-m-d 00:00:00');
+                $fechaDeHoy = strtotime($fechaDeHoy); //Variable q contiene el dia de hoy en formato timestamp
 
                 //Compruebo que la fechaDesde no sean anterior a la fecha de HOY, 
                 //y tambien que la fechaDesde no sea posterior a la fechaHasta  y viceversa          
@@ -92,9 +92,9 @@ class TurnoController extends Controller
                 } 
 
                 $respuestaTurnoOcupado= response()->json([
-                                            "msj" => "Error",
-                                            "razon" => "No se pudo realizar el turno debido a que ya esta reservado por otro turno en la misma hora o fecha"
-                                        ], 400);
+                    "msj" => "Error",
+                    "razon" => "No se pudo realizar el turno debido a que ya esta reservado por otro turno en la misma hora o fecha"
+                ], 400);
 
 
                 //Distingo si la fechaDesde y la FechaHasta son iguales(turno normal). Si son distintas (Turno fijo). 

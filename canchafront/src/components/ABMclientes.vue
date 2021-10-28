@@ -122,7 +122,8 @@ export default {
                 edad: "",
                 telefono: "",
                 email: "",
-                club_configuracion_id: localStorage.getItem('club'),
+                club_configuracion_id: this.$store.state.vClub,
+                token: this.$store.state.vToken,
             },
 
             alertaFormulario: [],
@@ -132,9 +133,10 @@ export default {
     created() {
         console.log("evento created")
         if (this.accion != 'Crear') {
-            this.ObtenerDatos(`clientes/${this.datosClientes.club_configuracion_id}/show/${this.id}`)
+            this.ObtenerDatos(`clientes/${this.$store.state.vClub}/show/${this.id}`)
                 .then (res => {
                     this.datosClientes = res
+                    this.datosClientes['token']= this.$store.state.vToken;
                 })
 
         }
@@ -147,7 +149,7 @@ export default {
                 if (this.accion == 'Crear') {
                     console.log(JSON.stringify(this.datosClientes))
 
-                    this.InsertarDatos ('clientes/guardar', this.datosClientes)
+                    this.InsertarDatos('clientes/guardar', this.datosClientes)
                         .then(res => {
                             if(res.msj=="Error"){
                                 this.$swal({
@@ -157,7 +159,7 @@ export default {
                                     confirmButtonText: 'Ok'
                                 })
 
-                                this.$emit('SalirDeABMclientes', true)
+                                /* this.$emit('SalirDeABMclientes', true) */
                             } else {
                                 this.$swal({
                                     title: '¡Cliente creado!',
@@ -165,14 +167,14 @@ export default {
                                     confirmButtonText: 'Ok'
                                 })
 
-                                this.$emit('SalirDeABMclientes', true)  
+                                /* this.$emit('SalirDeABMclientes', true) */  
                             }
                         })
                 }
 
                 if (this.accion == 'Editar') {
                     console.log(JSON.stringify(this.datosClientes))
-                    this.EditarDatos(`clientes/editar`, this.id, this.datosClientes)
+                    this.EditarDatos(`clientes/editar/${this.$store.state.vClub}`, this.id, this.datosClientes)
                         .then(res => {
                             //this.datosClientes = res
                             if(res.msj=='Error'){
@@ -196,8 +198,8 @@ export default {
                 }
                 
                 if (this.accion == 'Borrar') {
-                    let club = localStorage.getItem('club')
-                    this.EliminarDatos(`clientes/eliminar/${club}`, this.id)
+                    //let club = localStorage.getItem('club')
+                    this.EliminarDatos(`clientes/eliminar/${this.$store.state.vClub}`, this.id, this.datosClientes)
                         .then(res => {
                             //this.datosClientes = res
                             if (res.msj == 'Error') {

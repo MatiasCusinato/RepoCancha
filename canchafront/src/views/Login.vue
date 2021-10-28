@@ -58,10 +58,10 @@ export default {
                             numeroClub,
                         });
                         
-                         setInterval(() => {
+                        setInterval(() => {
                             location.reload();
                         }, 200);
-                        this.$router.push("/INFOturnosADMIN"); 
+                        this.$router.push("/INFOturnosADMIN");
                     }
                 });
             } else {

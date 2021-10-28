@@ -54,7 +54,7 @@ Route::get('canchas/{club_id}/show/{cancha_id}', [CanchaController::class, 'show
 Route::get('canchas/{club_id}/deporte/{deporte}', [CanchaController::class, 'filtroDeporte']); //Ruta filtro x deportes de Canchas
 Route::middleware('validarUsuario')->group(function(){
     Route::post('canchas/guardar', [CanchaController::class, 'store']);
-    Route::put('canchas/editar/{cancha_id}', [CanchaController::class, 'update']);
+    Route::put('canchas/editar/{club_id}/{cancha_id}', [CanchaController::class, 'update']);
     Route::delete('canchas/eliminar/{club_id}/{cancha_id}', [CanchaController::class, 'destroy']);
 }); 
 
@@ -63,9 +63,9 @@ Route::middleware('validarUsuario')->group(function(){
 Route::get('clientes/{club_id}/{registros?}', [ClienteController::class, 'index']);
 Route::get('clientes/{club_id}/show/{cliente_id}', [ClienteController::class, 'show']);
 Route::get('clientes/{club_id}/nombre/{nombre}', [ClienteController::class, 'filtroNombre']); //Ruta filtro x nombre de Clientes 
-Route::post('clientes/guardar', [ClienteController::class, 'store']);
 Route::middleware('validarUsuario')->group(function(){
-    Route::put('clientes/editar/{cliente_id}', [ClienteController::class, 'update']);
+    Route::post('clientes/guardar', [ClienteController::class, 'store']);
+    Route::put('clientes/editar/{club_id}/{cliente_id}', [ClienteController::class, 'update']);
     Route::delete('clientes/eliminar/{club_id}/{cliente_id}', [ClienteController::class, 'destroy']);  
 });
 

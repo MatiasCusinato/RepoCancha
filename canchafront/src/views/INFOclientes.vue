@@ -1,9 +1,6 @@
 <template>
     <div>
         <h1 class="bg-primary text-white text-center mb-3"> Clientes </h1>
-        <!-- <div>
-            <span>{{this.paginacion}}</span>
-        </div> -->
 
         <div class="divFiltros">
             <h4>Filtros:</h4>
@@ -135,16 +132,11 @@ export default {
         this.traerDatos(1)
     },
 
-    mounted() {
-        console.log("evento mounted")
-        //this.traerDatos()
-    },
-
     methods: {
         traerDatos(pagina) {
             console.log("Obteniendo CLIENTES desde la API ...");
-            let club= localStorage.getItem('club')
-            this.ObtenerDatos(`clientes/${club}/3/?page=${pagina}`)
+            //let club= localStorage.getItem('club')
+            this.ObtenerDatos(`clientes/${this.$store.state.vClub}/3/?page=${pagina}`)
                 .then(res => {
                     this.datos = res.clientes.data;
                     this.paginacion= res.paginacion
@@ -162,6 +154,7 @@ export default {
             if (ver == true) {
                 this.traerDatos();
             }
+
             this.accion=''
         },
 
@@ -173,9 +166,8 @@ export default {
         },
 
         traerFiltro(){
-            let club= localStorage.getItem('club')
             if(this.filtroNombre){
-                this.ObtenerDatos(`clientes/${club}/nombre/${this.filtroNombre}`)
+                this.ObtenerDatos(`clientes/${this.$store.state.vClub}/nombre/${this.filtroNombre}`)
                     .then(res => {
                         if(res.clientes.length!=0){
                             this.datos = res.clientes;

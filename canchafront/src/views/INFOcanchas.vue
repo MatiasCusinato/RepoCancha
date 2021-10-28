@@ -126,9 +126,8 @@ export default {
     methods: {
         traerDatos(pagina) {
             console.log("Obteniendo CANCHAS desde la API ...");
-            let club= localStorage.getItem('club')
 
-            this.ObtenerDatos(`canchas/${club}/4/?page=${pagina}`)
+            this.ObtenerDatos(`canchas/${this.$store.state.vClub}/4/?page=${pagina}`)
                 .then(res => {
                     this.datos = res.canchas.data;
                     this.paginacion = res.paginacion
@@ -157,9 +156,8 @@ export default {
         },
 
         FiltroCanchas(){
-            let club= localStorage.getItem('club')
             if(this.filtroDeporte){
-                this.ObtenerDatos(`canchas/${club}/deporte/${this.filtroDeporte}`)
+                this.ObtenerDatos(`canchas/${this.$store.state.vClub}/deporte/${this.filtroDeporte}`)
                     .then(res => {
                         if(res.canchas.length!=0){
                             this.datos = res.canchas;

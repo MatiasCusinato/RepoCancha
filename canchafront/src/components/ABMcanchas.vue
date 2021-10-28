@@ -65,9 +65,10 @@ export default {
     data() {
         return {
             datosCancha: {
-                id: 0,
+                //id: "0",
                 deporte: "",
-                club_configuracion_id: localStorage.getItem('club'),
+                club_configuracion_id: this.$store.state.vClub,
+                token: this.$store.state.vToken,
             }
         }
     },
@@ -75,10 +76,10 @@ export default {
     created() {
         console.log("evento created")
         if (this.accion != 'Crear') {
-            let club = localStorage.getItem('club')
-            this.ObtenerDatos(`canchas/${club}/show/${this.id}`)
+            this.ObtenerDatos(`canchas/${this.$store.state.vClub}/show/${this.id}`)
                 .then (res => {
                     this.datosCancha = res
+                    this.datosCancha['token']= this.$store.state.vToken;
             })
         }
     },
@@ -87,8 +88,8 @@ export default {
         Aceptar() {
             if(!this.validarCampos(this.datosCancha)){
                 if (this.accion == 'Crear') {
-                    let club=localStorage.getItem('club')
-                    this.datosCancha.club_configuracion_id= club;
+                    /* let club=localStorage.getItem('club')
+                    this.datosCancha.club_configuracion_id= club; */
                     console.log(JSON.stringify(this.datosCancha))
 
                     this.InsertarDatos ('canchas/guardar', this.datosCancha)
@@ -114,7 +115,7 @@ export default {
 
                 if (this.accion == 'Editar') {
                     console.log(JSON.stringify(this.datosCancha))
-                    this.EditarDatos ('canchas/editar', this.id, this.datosCancha)
+                    this.EditarDatos (`canchas/editar/${this.$store.state.vClub}`, this.id, this.datosCancha)
                         .then(res => {
                             //this.datosCancha = res
 
@@ -139,10 +140,10 @@ export default {
                 }
 
                 if (this.accion == 'Borrar') {
-                    let club = localStorage.getItem('club')
-                    this.EliminarDatos(`canchas/eliminar/${club}`, this.id)
+                    this.EliminarDatos(`canchas/eliminar/${this.$store.state.vClub}`, this.id, this.datosCancha)
                         .then(res => {
                             //this.datosCancha = res
+                            console.log(res)
                             if (res.msj == 'Error') {
                                 this.$swal({
                                     title: `¡${res.msj}!`,

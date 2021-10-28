@@ -76,17 +76,16 @@ class AccesoUsuarioController extends Controller
             //dd($user->token_actual);
 
             if($user->token_actual == 'null'){
-                $fechaAhora= Carbon::createFromFormat('Y-m-d H:i:s', now(), 'UTC')->setTimezone('America/Buenos_Aires');
-                $fechaAhora= $fechaAhora->format('Y-m-d H:i:s');
+                //$fechaAhora= Carbon::createFromFormat('Y-m-d H:i:s', now(), 'UTC')->setTimezone('America/Buenos_Aires');
+                //$fechaAhora= $fechaAhora->format('Y-m-d H:i:s');
                 
                 $arrUser= array("email" => $user->email, 
-                                "club" => $user->club_configuracion_id, 
-                                "fechaInicio" => $fechaAhora);
+                                "club" => $user->club_configuracion_id); 
+                                //"fechaInicio" => $fechaAhora);
                 $jsonUser= json_encode($arrUser);
                 //$jsonUser= json_encode(utf8_decode($jsonUser));
                 $tokenUser= base64_encode($jsonUser);    
                 $user->token_actual = $tokenUser;
-
 
                 //$user->token_actual = $user->createToken('laravelToken')->plainTextToken;
                 
