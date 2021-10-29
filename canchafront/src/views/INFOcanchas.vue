@@ -12,9 +12,11 @@
 
 
         <br>
-        <button class="btn btn-success" @click="desplegarABMcancha('Crear')" style="font-size: 22px"> 
-            <i class="bi bi-aspect-ratio"> Agregar nueva Cancha </i> 
-        </button>
+        <div class="btncli">
+            <button class="btn btn-primary" @click="desplegarABMcancha('Crear')" style="font-size: 22px"> 
+                <i class="bi bi-aspect-ratio"> Agregar nueva Cancha </i> 
+            </button>
+        </div>
         <br>
         <ABMcanchas
             v-if="abrirABMcancha"
@@ -23,7 +25,7 @@
             @SalirDeABMcanchas = MostrarABMcanchas($event)
         />
         <br>  <!-- table table-dark table-striped mt-4 -->
-            <table class="light-blue darken-2">
+            <table class="light-blue darken-2 tablecli">
                 <thead>
                     <tr class="bg-primary text-light">
                         <th scope="col">ID</th>
@@ -53,7 +55,7 @@
 
             <br>
 
-            <nav aria-label="Page navigation example">
+            <nav class="navcli" v-show="!abrirABMcancha" aria-label="Page navigation example">
                 <ul class="pagination pagination-lg">
                     <li class="page-item" v-if="paginacion.current_page > 1">
                         <a class="page-link" href="#" 
@@ -128,7 +130,7 @@ export default {
             console.log("Obteniendo CANCHAS desde la API ...");
             let club= localStorage.getItem('club')
 
-            this.ObtenerDatos(`canchas/${club}/4/?page=${pagina}`)
+            this.ObtenerDatos(`canchas/${club}/3/?page=${pagina}`)
                 .then(res => {
                     this.datos = res.canchas.data;
                     this.paginacion = res.paginacion
@@ -251,7 +253,7 @@ h1 {
     margin: 15px -50px; 
     text-align: center;
     border-width: 2px;
-    font-size: 15px;
+    font-size: 20px;
 } 
 .divFiltros {
     /* border: 2px solid rgb(116, 113, 113);*/
@@ -265,17 +267,30 @@ h1 {
     padding: 20px 40px;
     background-color:rgb(243, 214, 159);
     position: relative;
-    left: 10px;
+    left: -450px;
+    top: 100px;
+}
+.btncli{
+    top: 200px;
+    position: relative;
+    left: -400px;
+    font-size: 20px;
+    width:120px;
+    height:30px;
+}
+.tablecli{
+    /* position: absolute; */
+    left: 700px;
+    top: 250px;
+}
+.navcli{
+    position: relative;
+    top: -20px;
+    left: -50px;
 }
 .boton {
     position: relative;
     left: 200px;
     top: -30px;
-}
-.btncli {
-    position: absolute;
-    border-radius: 10px;
-    display: flex;
-    flex-direction: column;
 }
 </style>

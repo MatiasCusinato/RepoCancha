@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h1 class="bg-primary text-white text-center mb-3"> Clientes </h1>
+        <h1 class="bg-success text-white text-center mb-3"> Clientes </h1>
         <!-- <div>
             <span>{{this.paginacion}}</span>
         </div> -->
@@ -33,9 +33,9 @@
         />
         
         <br>
-            <table class="light-blue darken-2">
+            <table class="table-success tablecli">
                 <thead>
-                    <tr class="bg-primary text-light">
+                    <tr class="bg-success">
                         <th scope="col">ID</th>
                         <th scope="col">Nombre</th>
                         <th scope="col">Apellido</th>
@@ -69,7 +69,7 @@
 
             <br>
 
-            <nav  v-show="!accion" aria-label="Page navigation example">
+            <nav class="navcli" v-show="!accion" aria-label="Page navigation example">
                 <ul class="pagination pagination-lg">
                     <li class="page-item" v-if="paginacion.current_page > 1">
                         <a class="page-link" href="#" 
@@ -263,8 +263,13 @@ h1 {
     margin: 15px -240px;
     text-align: center;
     border-width: 2px;
-    font-size: 15px;
+    font-size: 22px;
 }   
+.tablecli{
+    /* position: relative; */
+    left: 80px;
+    top: -150px;
+}
 .divFiltros {
     /* border: 2px solid rgb(116, 113, 113);*/
     border: 2px black solid;
@@ -277,8 +282,28 @@ h1 {
     padding: 20px 40px;
     background-color:rgb(243, 214, 159);
     position: relative;
-    left: 40px;
+    left: -500px;
+    top: 50px;
 }
+.navcli{
+    position: relative;
+    top: -10px;
+    left: 50px;
+}
+.btncli{
+    top: 450px;
+    position: relative;
+    left: 120px;
+    font-size: 20px;
+    width:150px;
+    height:50px;
+}
+/* .btnganancias{
+    font-size: 20px;
+    left: 50px;
+    width:120px;
+    height:30px;
+} */
 .boton {
     position: relative;
     left: 200px;

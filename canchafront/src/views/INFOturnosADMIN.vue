@@ -57,6 +57,13 @@
             :accion="accion"
             @SalirDeABMturnos = MostrarABMturnos($event)
         />
+
+        <div class="btnganacias">
+            <button class="btn btn-secondary" @click="desplegarGanancia('Consultar')"
+                    style="font-size: 22px"> 
+                <i class="bi bi-currency-dollar"> Ganancias </i> 
+            </button>
+        </div>
     </div>
 </template>
 
@@ -78,6 +85,7 @@ export default {
     
     data() {
         return {
+            abrirGanancia: false,
             selectedEvent: null,
             showEventCreationDialog: false,
 
@@ -215,6 +223,11 @@ export default {
                 this.traerTurnos();
             }
         },
+        desplegarGanancia(accion, id=0) {
+            this.accion = accion
+            this.id = id
+            this.abrirGanancia = !this.abrirGanancia;
+        },
         
     },
 }
@@ -279,6 +292,12 @@ p{
 
 .divBotones{
     margin: 10px 25px 0px
+}
+
+.btnganacias{
+    position: relative;
+    top: -620px;
+    left: -300px
 }
 
 .contenedor{

@@ -81,9 +81,9 @@ class TurnoController extends Controller
                 $fechaDesdeInt = strtotime($fechaDesde); //Convierte el $fechaDesde a timestamp --> 1543104000
                 $fechaHastaInt = strtotime($fechaHasta);
 
-                $fechaDeHoy = Carbon::createFromFormat('Y-m-d H:i:s', now(), 'UTC')
-                            ->setTimezone('America/Buenos_Aires')->timestamp;
-
+                /* $fechaDeHoy = Carbon::createFromFormat('Y-m-d', now()); */
+                $fechaDeHoy= Carbon::parse(now())->format('Y-m-d 00:00:00');
+                $fechaDeHoy = strtotime($fechaDeHoy);           
                 //comparo fechas (si la fechaDesde es anterior a Hoy 
                 //                     O si la fechaDesde es posterior a la FechaHasta)                
                 if(($fechaDesdeInt < $fechaDeHoy  && $request->estado =='Reservado') || $fechaDesdeInt > $fechaHastaInt){

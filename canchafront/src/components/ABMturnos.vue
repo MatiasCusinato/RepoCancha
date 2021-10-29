@@ -319,6 +319,46 @@
                 </div>
             </div>
         </div>
+
+        <!-- Modal Ganacia "consultar" -->
+        <h1 class="bg-primary text-white text-center mb-3"> Ganancias </h1>
+            <div v-if="!abrirGanancia && accionAux=='Consultar'">
+                <div class="contenedor">
+                    <div class="VentanaModalConsultar">
+                        <div class="cabecera tituloventana">
+                            <h5>Evento: Ganancia</h5>
+                            <div class="container overflow-hidden gx-1">
+                                    <div class="row">
+                                    <div class="row justify-content-md-center">
+                                        <span><i class="bi bi-calendar campo"> Fecha: </i></span>
+                                        <input type="text" class="form-control  form-control-sm inputChico" 
+                                                :value="FechaActual">
+                                    </div>    
+
+                                    <div class="row gy-2 justify-content-md-center">
+                                        <div class="col-md-6 mb-3">
+                                            <span><i class="bi bi-hourglass-top campo"> Comienzo: </i></span>
+                                            <input type="text" class="form-control form-control-sm inputChico" 
+                                                    :value="Comienzo">
+                                        </div>
+
+                                        <div class="col-md-6 mb-3">
+                                            <span><i class="bi bi-hourglass-bottom campo"> Fin: </i></span>
+                                            <input type="text" class="form-control form-control-sm inputChico" 
+                                                    :value="Fin">
+                                        </div>
+                                    </div>
+                                </div>
+                                    <div class="col-md-6 mb-3">
+                                            <button class="btn btn-primary">
+                                                    Enviar
+                                            </button>
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
     </div>
 </template>
 
@@ -435,6 +475,8 @@ export default {
             fechaHastaAux: "",
             
             abrirFormTurnos: false,
+
+            abrirGanancia: false,
         }
     },
 
@@ -571,7 +613,7 @@ export default {
                             
                             console.log(this.datosTurno)
                     } 
-                 } else {
+                } else {
                     this.$swal({
                         title: '¡Error en el formulario!',
                         text: 'Errores: '+ this.alertaFormulario,
@@ -584,6 +626,12 @@ export default {
                 this.datosTurno.fecha_Hasta= this.transformarFecha(this.fechaHastaAux, 'abm')
             }
             
+        },
+
+        desplegarGanancia(accion, id=0) {
+            this.accion = accion
+            this.id = id
+            this.abrirGanancia = !this.abrirGanancia;
         },
 
         desplegarABMturnos(accion) {
