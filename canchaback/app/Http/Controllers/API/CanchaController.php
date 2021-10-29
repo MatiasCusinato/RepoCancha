@@ -71,13 +71,14 @@ class CanchaController extends Controller
         
         $val = Validator::make($request->all(), [
             'club_configuracion_id' => ['required', 'exists:club_configuracions,id'],
-            'deporte' => 'required',
+            'deporte' => ['required', 'max:30'],
         ]); 
+
 
         if($val->fails()){
             return response()->json([
                     'msj' => 'Error', 
-                    'razon' => 'Faltan datos o alguno de ellos esta mal ingresado.'
+                    'razon' => 'Falta uno de los datos, o algun campo sobrepasa los caracteres maximos(30).'
             ], 400);
         }else { 
             try {
@@ -133,13 +134,13 @@ class CanchaController extends Controller
     {
         $val = Validator::make($request->all(), [
             'club_configuracion_id' => ['required', 'exists:club_configuracions,id'],
-            'deporte' => 'required',
+            'deporte' => ['required', 'max:30'],
         ]); 
-
+        
         if($val->fails()){
             return response()->json([
                     'msj' => 'Error', 
-                    'razon' => 'Faltan datos o alguno de ellos esta mal ingresado.'
+                    'razon' => 'Falta uno de los datos, o algun campo sobrepasa los caracteres maximos(30).'
             ], 400);
         }else { 
             try {

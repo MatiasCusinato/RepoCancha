@@ -273,10 +273,11 @@ class TurnoController extends Controller
             
         $fechaDesdeInt = strtotime($request->fecha_Desde); //Convierte el $request->fecha_Desde a formato timestamp --> 1543104000
         $fechaHastaInt = strtotime($request->fecha_Hasta); 
+        //dd($fechaDesde,$fechaHasta,$horaDesde,$horaHasta,$fechaDesdeInt,$fechaHastaInt);
 
-        $fechaDeHoy = Carbon::createFromFormat('Y-m-d H:i:s', now(), 'UTC')
-                    ->setTimezone('America/Buenos_Aires')->timestamp; //Variable q contiene el dia de hoy en formato timestamp
-
+        $fechaDeHoy= Carbon::parse(now())->format('Y-m-d 00:00:00');
+                $fechaDeHoy = strtotime($fechaDeHoy); //Variable q contiene el dia de hoy en formato timestamp
+                
         //Compruebo que la fechaDesde no sean anterior a la fecha de HOY, 
         //y tambien que la fechaDesde no sea posterior a la fechaHasta  y viceversa          
         if(($request->estado =='Reservado' && $fechaDesdeInt < $fechaDeHoy) || $fechaDesdeInt > $fechaHastaInt || $fechaHastaInt < $fechaDesdeInt){
@@ -287,7 +288,7 @@ class TurnoController extends Controller
         }
         
         $valTurno = $this->validarTurno($request->fecha_Desde, $request->fecha_Hasta, $request->club_configuracion_id, $request->cancha_id, $turno_id);
-        
+
         if(!$valTurno){
             return response()->json([
                 "msj" => "Error",
@@ -350,7 +351,7 @@ class TurnoController extends Controller
                                         ['turnos.id', '!=', $turno_id],  
                                     ])
                                     ->get();
-
+        //dd($sqlDisponibilidadTurno);
         //Si la sql esta vacia, retorno true o false
         if($sqlDisponibilidadTurno->isEmpty()){
             //No hay turnos a esa hora, retorno true, PUEDE reservar

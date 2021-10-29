@@ -15,7 +15,8 @@
                                         <i class="bi bi-person"> Nombre: </i>
                                     </label>
 
-                                    <input type="text" class="form-control form-control-sm" v-model="datosClientes.nombre">
+                                    <input type="text" class="form-control form-control-sm"
+                                            v-model="datosClientes.nombre" maxlength="30">
                                 </div>
 
                                 <div class="col-md-6 mb-3">
@@ -23,7 +24,8 @@
                                         <i class="bi bi-person"> Apellido: </i>
                                     </label>
 
-                                    <input type="text" class="form-control form-control-sm" v-model="datosClientes.apellido">
+                                    <input type="text" class="form-control form-control-sm"  
+                                            v-model="datosClientes.apellido" maxlength="30">
                                 </div>
                             </div>
 
@@ -34,7 +36,7 @@
                                     </label>
 
                                     <input type="text" v-model="datosClientes.telefono" 
-                                            class="form-control form-control-sm" placeholder="3446 ...">
+                                            class="form-control form-control-sm" placeholder="3446 ..." maxlength="25">
                                 </div>
 
                                 <div class="col-md-6 mb-3">
@@ -54,7 +56,7 @@
 
                                 <input type="text" v-model="datosClientes.email"
                                         class="form-control form-control-sm"
-                                        placeholder="Gmail, hotmail, outlook, etc">
+                                        placeholder="Gmail, hotmail, outlook, etc" maxlength="40">
                             </div>
                             <button class="btn btn-primary divBotones" @click="Aceptar()">
                                 <i class="bi bi-check2-circle"> Guardar </i>
@@ -158,17 +160,19 @@ export default {
                                     icon: 'error',
                                     confirmButtonText: 'Ok'
                                 })
-
-                                /* this.$emit('SalirDeABMclientes', true) */
                             } else {
                                 this.$swal({
                                     title: '¡Cliente creado!',
                                     icon: 'success',
                                     confirmButtonText: 'Ok'
+                                  
                                 })
-
-                                /* this.$emit('SalirDeABMclientes', true) */  
                             }
+
+                            /* setInterval(() => {
+                                this.$emit('SalirDeABMclientes', true)
+                                this.$swal.close()
+                            }, 2500); */
                         })
                 }
 
@@ -179,21 +183,24 @@ export default {
                             //this.datosClientes = res
                             if(res.msj=='Error'){
                                 this.$swal({
-                                        title: `${res.msj}`,
-                                        text: `${res.razon}`,
-                                        icon: 'error',
-                                        confirmButtonText: 'Ok'
-                                    })
+                                    title: `${res.msj}`,
+                                    text: `${res.razon}`,
+                                    icon: 'error',
+                                    confirmButtonText: 'Ok'
+                                })
                             } else {
                                 this.$swal({
-                                        title: `${res.msj}`,
-                                        text: `${res.razon}`,
-                                        icon: 'success',
-                                        confirmButtonText: 'Ok'
-                                    })
+                                    title: `${res.msj}`,
+                                    text: `${res.razon}`,
+                                    icon: 'success',
+                                    confirmButtonText: 'Ok'
+                                })
                             }
 
-                            this.$emit('SalirDeABMclientes', true)
+                            /* setInterval(() => {
+                                this.$emit('SalirDeABMclientes', true)
+                                this.$swal.close()
+                            }, 2500); */
                         })
                 }
                 
@@ -217,10 +224,19 @@ export default {
                                     confirmButtonText: 'Ok'
                                 })
                             }
+
+                            /* setInterval(() => {
+                                this.$emit('SalirDeABMclientes', true)
+                                this.$swal.close()
+                            }, 2500); */
                             
-                            this.$emit('SalirDeABMclientes', true)
                         })
                 }
+
+                setInterval(() => {
+                    this.$emit('SalirDeABMclientes', true)
+                    this.$swal.close()
+                }, 2500);
             } else {
                 this.$swal({
                     title: '¡Formulario incompleto!',

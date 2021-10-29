@@ -4,7 +4,8 @@
 
         <div class="divFiltros">
             <h4>Filtros:</h4>
-            <input type="text" placeholder="Filtro por deporte" v-model="filtroDeporte">
+            <input type="text" placeholder="Filtro por deporte" autofocus 
+                    v-model="filtroDeporte" maxlength="20">
             <button type="button" class="boton btn btn-secondary btn-sm" @click="FiltroCanchas()">
                 <i class="bi bi-search"></i>
             </button>

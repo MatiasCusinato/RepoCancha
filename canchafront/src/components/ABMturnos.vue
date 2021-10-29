@@ -166,6 +166,7 @@
                                     <i class="bi bi-flag"> Tipo de turno </i>
                                 </label>
                                 <input type="text" 
+                                        autofocus
                                         class="form-control form-control-sm" 
                                         v-model="datosTurno.tipo_turno"
                                         placeholder="Ej: Cumpleaños, entrenamiento, turno fijo de ...">
@@ -621,13 +622,6 @@ export default {
                             this.alertaFormulario.push(' '+key.charAt(0).toUpperCase()+ key.slice(1)+' (campo vacio)')
                     }
             }
-            
-            //Valido que el turno NORMAL (reservado) tenga como duracion 24 horas
-            if(this.datosTurno.estado == 'Reservado' && this.datosTurno.grupo == 1 
-                    && moment(this.datosTurno.fecha_Hasta).isAfter(moment(this.datosTurno.fecha_Desde), 'day')){
-                this.alertaFormulario = "El turno normal no debe superar las 24 horas"
-            }
-
 
             //Valido si la Fecha1 es mayor a la Fecha2, o si la Fecha2 es anterior a la Fecha1 y por ultimo, si son iguales
             if(moment(this.datosTurno.fecha_Desde).format('x') > moment(this.datosTurno.fecha_Hasta).format('x') ||
@@ -636,6 +630,26 @@ export default {
                             
                 this.alertaFormulario+= ". Fechas invalidas o incorrectas"
             }
+            
+            //Valido que el turno NORMAL (reservado) tenga como duracion 24 horas
+            if(this.datosTurno.estado == 'Reservado' && this.datosTurno.grupo == 1 
+                    && moment(this.datosTurno.fecha_Hasta).isAfter(moment(this.datosTurno.fecha_Desde), 'day')){
+                
+                this.alertaFormulario+= ". El turno normal debe cumplir como maximo 24 hrs"
+            }
+
+            let a = moment(this.datosTurno.fecha_Hasta);
+            let b = moment(this.datosTurno.fecha_Desde);
+            /* console.log(a.diff(b, 'days') )
+            console.log(a.diff(b, 'days') < 2) */
+
+            //Valido que el turno FIJO, tenga como minimo una diferencia de 2 dias entre sus fechas
+            if(this.datosTurno=='Reservado' && this.datosTurno.grupo >= 11 
+                && a.diff(b, 'days') < 2){
+                
+                this.alertaFormulario+= ". El turno fijo debe cumplir como min 48 hrs"
+            }
+
 
             if(this.alertaFormulario.length > 0){
                 return true

@@ -11,7 +11,7 @@
                         <div class="contenido">
                             <div class="mb-3">
                                 <label for="" class="form-label campo"><i class="bi bi-flag"> Deporte: </i></label>
-                                <input type="text" class="form-control form-control-sm" v-model="datosCancha.deporte">
+                                <input type="text" class="form-control form-control-sm" v-model="datosCancha.deporte" maxlength="30">
                             </div>
                             <button class="btn btn-primary divBotones" @click="Aceptar()"><i class="bi bi-check2-circle"> Guardar </i></button>
                             <button class="btn btn-danger divBotones" @click="Cancelar()"><i class="bi bi-x-circle-fill"> Cancelar </i></button>
@@ -109,7 +109,10 @@ export default {
                                 })
                             }
 
-                            this.$emit('SalirDeABMcanchas', true)
+                            setInterval(() => {
+                                this.$emit('SalirDeABMcanchas', true)
+                                this.$swal.close()
+                            }, 2500);
                         })
                 }
 
@@ -135,7 +138,10 @@ export default {
                                 })
                             }
 
-                            this.$emit('SalirDeABMcanchas', true)
+                            /* setInterval(() => {
+                                this.$emit('SalirDeABMcanchas', true)
+                                this.$swal.close()
+                            }, 2500); */
                         })
                 }
 
@@ -143,7 +149,6 @@ export default {
                     this.EliminarDatos(`canchas/eliminar/${this.$store.state.vClub}`, this.id, this.datosCancha)
                         .then(res => {
                             //this.datosCancha = res
-                            console.log(res)
                             if (res.msj == 'Error') {
                                 this.$swal({
                                     title: `¡${res.msj}!`,
@@ -160,9 +165,17 @@ export default {
                                 })
                             }
 
-                            this.$emit('SalirDeABMcanchas', true)
+                            /* setInterval(() => {
+                                this.$emit('SalirDeABMcanchas', true)
+                                this.$swal.close()
+                            }, 2500); */
                         })
                 }
+
+                setInterval(() => {
+                    this.$emit('SalirDeABMcanchas', true)
+                    this.$swal.close()
+                }, 2500);
             }else{
                 this.$swal({
                     title: '¡Formulario incompleto!',
@@ -171,8 +184,6 @@ export default {
                     confirmButtonText: 'Ok'
                 })
             }
-
-            
         },
 
         Cancelar() {
