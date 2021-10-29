@@ -15,7 +15,8 @@
                                         <i class="bi bi-person"> Nombre: </i>
                                     </label>
 
-                                    <input type="text" class="form-control form-control-sm" v-model="datosClientes.nombre" maxlength="30">
+                                    <input type="text" class="form-control form-control-sm"
+                                            v-model="datosClientes.nombre" maxlength="30">
                                 </div>
 
                                 <div class="col-md-6 mb-3">
@@ -23,7 +24,8 @@
                                         <i class="bi bi-person"> Apellido: </i>
                                     </label>
 
-                                    <input type="text" class="form-control form-control-sm" v-model="datosClientes.apellido" maxlength="30">
+                                    <input type="text" class="form-control form-control-sm"  
+                                            v-model="datosClientes.apellido" maxlength="30">
                                 </div>
                             </div>
 

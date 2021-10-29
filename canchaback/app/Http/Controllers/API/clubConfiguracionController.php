@@ -102,18 +102,33 @@ class clubConfiguracionController extends Controller
         $fechaHasta= $request->fecha_Hasta;
         $club= $request->club_configuracion_id;
 
+        $fechaDesdeInt = strtotime($request->fecha_Desde); //Convierte el $request->fecha_Desde a formato timestamp --> 1543104000
+        $fechaHastaInt = strtotime($request->fecha_Hasta);
+
+        if($fechaDesdeInt > $fechaHastaInt || $fechaHastaInt < $fechaDesdeInt){
+            return response()->json([
+                "msj" => 'Error',
+                "razon" => 'Puede que las fechas no sean correctas (Fecha 1 es posterior a Fecha2 o viceversa)'
+            ], 400);
+        } 
+
         $sqlGanancia= DB::table('club_configuracions')
                             ->join('turnos', 'club_configuracions.id', '=', 'turnos.club_configuracion_id')
                             ->where([
                                 ['club_configuracions.id', '=', $club],
                                 ['turnos.estado', '=', 'Cobrado'],
-                                ['turnos.fecha_Desde', '<', $fechaHasta],
-                                ['turnos.fecha_Hasta', '>', $fechaDesde]
+                                ['turnos.fecha_Desde', '<=', $fechaHasta],
+                                ['turnos.fecha_Hasta', '>=', $fechaDesde]
                             ])
-                            ->select(DB::raw("(SELECT
-                                                COALESCE(
-                                                    SUM(turnos.precio), 0)) AS Ganancia "))
+                            ->select(DB::raw("COUNT(turnos.id) AS cant_turnos, 
+                                               COALESCE( SUM(turnos.precio), 0) AS ganancia"))
                             ->get();
-        dd($sqlGanancia);
+                            //dd($sqlGanancia[0]);
+
+        return response()->json([
+            "msj" => "Informe de ganancia exitoso",
+            "data" => $sqlGanancia
+        ], 200);
+                            
     }
 }

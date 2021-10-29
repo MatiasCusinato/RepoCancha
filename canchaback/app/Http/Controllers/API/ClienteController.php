@@ -239,32 +239,48 @@ class ClienteController extends Controller
 
         try {
             DB::beginTransaction();
-            
-            $vinculacionClienteClub= DB::table('cliente_club_configuracion')
-                                            ->where([
-                                                ['cliente_id', '=', $cliente_id],
-                                                ['club_configuracion_id', '=', $club_id],
-                                            ])
-                                            ->get();
-            dd($vinculacionClienteClub);
 
-            if($vinculacionClienteClub->isEmpty()){
+            $existeCliente= DB::table('cliente_club_configuracion')
+                                ->where([
+                                    ['cliente_id', '=', $cliente_id],
+                                ])
+                                ->get();
+
+            if($existeCliente->isEmpty()){
                 DB::table('clientes')
-                    ->join('cliente_club_configuracion', 'clientes.id', '=','cliente_club_configuracion.cliente_id')
                     ->where([
-                        ['cliente_id', '=', $cliente_id],
-                        ['club_configuracion_id', '=', $club_id],
+                        ['id', '=', $cliente_id],
                     ])
                     ->delete();
-            } else{
-                DB::table('cliente_club_configuracion')
-                    ->where([
-                        ['cliente_id', '=', $cliente_id],
-                        ['club_configuracion_id', '=', $club_id],
-                    ])
-                    ->delete();
+
+                return response()->json([
+                    'msj' => 'Exitosa',
+                    'razon' => 'Cliente eliminado de la bd'
+                ], 200);
+            } else {
+                $vinculacionClienteClub= DB::table('cliente_club_configuracion')
+                                                ->where([
+                                                    ['cliente_id', '=', $cliente_id],
+                                                    ['club_configuracion_id', '=', $club_id],
+                                                ])
+                                                ->get();
+                                                
+                if($vinculacionClienteClub->isEmpty()){
+                    return response()->json([
+                        'msj' => 'Error',
+                        'razon' => 'El cliente no esta registrado o ya ha sido borrado'
+                    ], 200);
+                } else{
+                    DB::table('cliente_club_configuracion')
+                        ->where([
+                            ['cliente_id', '=', $cliente_id],
+                            ['club_configuracion_id', '=', $club_id],
+                        ])
+                        ->delete();
+                }
             }
-            
+
+                
 
             DB::commit(); 
         }
@@ -276,12 +292,8 @@ class ClienteController extends Controller
             return response()->json(["msj" => "Error!!, rollback"], 400);
         }
         
-        return response()->json([
-            'msj' => 'Exitosa',
-            'razon' => 'Cliente eliminado'
-        ], 200);
         
-         
+    
     }
 
     public function filtroNombre($club_id, $nombre, Request $request){

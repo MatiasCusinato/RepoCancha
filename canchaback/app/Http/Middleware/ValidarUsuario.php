@@ -21,9 +21,16 @@ class ValidarUsuario
         $token= $request->token;
         $url= $request->fullUrl();
         $metodo= $request->getMethod();
+        
         //decodifico el token a un objeto JSON
         $tokenUser= base64_decode($token); 
         $jsonUser= json_decode($tokenUser);
+        //dd($club, $jsonUser->club);
+
+        $respuestaAccesoDenegado= response()->json([
+            'msj' => "Error",
+            'razon' => 'Acceso denegado, unauthorized',
+        ], 413);
         //dd($request, $metodo, $url, $token, $club);
         
         if($token != "null" && $club != "null"){
@@ -34,14 +41,13 @@ class ValidarUsuario
                                 ['club_configuracion_id','=', $jsonUser->club],
                                 ['email','=', $jsonUser->email],
                             ])->first();
+        } else {
+            return $respuestaAccesoDenegado;
         }
 
         //Si no encuentro el usuario, retorno false
         if($user==null){
-            return response()->json([
-                                'msj' => "Error",
-                                'razon' => 'Acceso denegado, unauthorized',
-                            ], 413);
+            return $respuestaAccesoDenegado;
         } else {
             //si se encuentra, true.
             return $next($request);

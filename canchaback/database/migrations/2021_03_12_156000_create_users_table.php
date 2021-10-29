@@ -15,12 +15,12 @@ class CreateUsersTable extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('nombre');
-            $table->string('apellido');
+            $table->string('nombre',30);
+            $table->string('apellido',30);
             //$table->timestamp('email_verified_at')->nullable();
-            $table->string('email')->unique();            
+            $table->string('email',50)->unique();            
             $table->string("telefono", 30);
-            $table->string('password');
+            $table->string('password',20);
             
             $table->unsignedBigInteger("club_configuracion_id")->nullable();
             $table->foreign('club_configuracion_id')
