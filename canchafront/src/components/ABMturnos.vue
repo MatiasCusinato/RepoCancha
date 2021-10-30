@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h1 class="bg-primary text-white text-center mb-3"> ABMTURNOS </h1>
+        <!-- <h1 class="bg-primary text-white text-center mb-3"> ABMTURNOS </h1> -->
 
         <div v-if="!abrirFormTurnos && accionAux=='Consultar'">
             <div class="contenedor">
@@ -9,6 +9,7 @@
                         <h5>Evento: {{ eventoActual.title }}</h5>
                         <div class="container overflow-hidden gx-1">
                             <!-- <h5 class="card-title"><i class="bi bi-calendar"> Fecha: {{ eventoActual.start && eventoActual.start.format('DD/MM/YYYY') }} </i></h5> -->
+                            
                             <div class="row justify-content-md-center">
                                 <div class="col-md-6 mb-3">
                                     <span><i class="bi bi-person campo"> Cliente: </i></span>
@@ -71,7 +72,16 @@
                                 </div>
                             </div>
 
-                            <div class="row">                                  
+                            <hr class="hrBarra">
+
+                            <div class="row">   
+                                <div class="row justify-content-md-center" v-if="eventoActual.objTurnos.estado=='Reservado'">
+                                    <button @click="terminarTurno()" 
+                                        class="btn btn-warning col-md-6 mb-3" style="margin: auto auto 10px">
+                                        <i class="bi bi-check-square"> Terminar turno</i>  
+                                    </button>
+                                </div>
+
                                 <div class="row gy-1 justify-content-md-center">
                                     <div class="col-md-6 mb-3">
                                         <button class="btn btn-danger" style="margin: auto 10px" 
@@ -84,7 +94,7 @@
 
                                     <div class="col-md-6 mb-3">
                                         <button class="btn btn-success" 
-                                                @click="desplegarABMturnos('Editar')">
+                                                @click="desplegarABMturnos('Editar', true)">
                                             <i class="bi bi-pencil-square">
                                                 Editar
                                             </i>
@@ -114,7 +124,7 @@
                 <div class="contenedor">
                     <div :class="accionAux=='Editar' ? 'VentanaModalEditar' : 'VentanaModalCrear'">
                         <div class="cabecera tituloventana">
-                            <button class="cierre btn btn-primary" @click="accionAux=='Editar'? desplegarABMturnos('Consultar'): Cancelar()">
+                            <button class="cierre btn btn-primary" @click="accionAux=='Editar'? desplegarABMturnos('Consultar', true): Cancelar()">
                                 <font color="#ff0000">
                                     <i class="bi bi-x-circle-fill"></i>
                                 </font>
@@ -280,7 +290,7 @@
                                 </button>
                                 
                                 <button class="btn btn-danger divBoton" 
-                                        @click="accionAux=='Editar' ? desplegarABMturnos('Consultar') : Cancelar()">
+                                        @click="accionAux=='Editar' ? desplegarABMturnos('Consultar', true) : Cancelar()">
                                     <i class="bi bi-x-circle-fill"> Cancelar </i>
                                 </button>
                             </div>
@@ -356,7 +366,7 @@ export default {
             this.datosTurno.club_configuracion_id= localStorage.getItem('club');
             
             if(this.accionAux=='Crear'){
-                this.desplegarABMturnos('Crear')
+                this.desplegarABMturnos('Crear', true)
             }
         
             this.traerClientes()
@@ -411,6 +421,12 @@ export default {
     },
 
     methods: {
+        terminarTurno(){
+            this.desplegarABMturnos('Editar', false)
+            this.datosTurno.estado= 'Cobrado';
+            this.Aceptar()
+        },
+
         cambiarTurno(){
             this.turnoFijo=!this.turnoFijo
             if(this.turnoFijo){
@@ -560,9 +576,11 @@ export default {
             
         },
 
-        desplegarABMturnos(accion) {
+        desplegarABMturnos(accion, abm) {
             this.accionAux = accion
-            this.abrirFormTurnos = !this.abrirFormTurnos
+            if(abm){   
+                this.abrirFormTurnos = !this.abrirFormTurnos
+            }
 
             if(this.accionAux=='Editar'){
 
@@ -805,5 +823,8 @@ h5{
     min-width: 10%;
     min-height: 20px;
     background-color: rgb(3, 7, 218);
+}
+.btn{
+    font-size: 19px;
 }
 </style>

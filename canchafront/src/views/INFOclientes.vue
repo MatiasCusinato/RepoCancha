@@ -1,26 +1,24 @@
 <template>
-    <div>
+    <div class="container">
         <h1 class="bg-primary text-white text-center mb-3"> Clientes </h1>
+            <div class="divFiltros ">
+                <h4>Filtros:</h4>
+                <input type="text" autofocus placeholder="Filtro por nombre" v-model="filtroNombre" maxlength="20">
+                <br>
+                <br>
+                <button type="button" class="boton btn btn-secondary btn-sm" @click="traerFiltro()">
+                    <i class="bi bi-search"></i>
+                </button>
+            </div>
 
-        <div class="divFiltros">
-            <h4>Filtros:</h4>
-            <input type="text" autofocus placeholder="Filtro por nombre" v-model="filtroNombre" maxlength="20">
             <br>
-            <br>
-            <button type="button" class="boton btn btn-secondary btn-sm" @click="traerFiltro()">
-                <i class="bi bi-search"></i>
-            </button>
-        </div>
 
-        <br>
-
-        <div class="btncli">
-            <button class="btn btn-success" @click="desplegarABMcliente('Crear')" 
-                    style="font-size: 22px"> 
-                <i class="bi bi-person-plus-fill"> Agregar un nuevo Cliente </i> 
-            </button>
-        </div>
-
+            <div class="btncli">
+                <button class="btn btn-success" @click="desplegarABMcliente('Crear')" 
+                        style="font-size: 22px"> 
+                    <i class="bi bi-person-plus-fill"> Agregar un nuevo Cliente </i> 
+                </button>
+            </div>
         <br>
         <br>
 
