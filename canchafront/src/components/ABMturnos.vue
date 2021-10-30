@@ -759,16 +759,18 @@ export default {
                             
                 this.alertaFormulario+= ". Fechas invalidas o incorrectas"
             }
-            
-            //Valido que el turno NORMAL (reservado) tenga como duracion 24 horas
-            if(this.datosTurno.estado == 'Reservado' && this.datosTurno.grupo == 1 
-                    && moment(this.datosTurno.fecha_Hasta).isAfter(moment(this.datosTurno.fecha_Desde), 'day')){
-                
-                this.alertaFormulario+= ". El turno normal debe cumplir como maximo 24 hrs"
-            }
 
             let a = moment(this.datosTurno.fecha_Hasta);
             let b = moment(this.datosTurno.fecha_Desde);
+            console.log(a.diff(b, 'days', true) <= 1);
+
+            //Valido que el turno NORMAL (reservado) tenga como duracion 24 horas
+            if(this.datosTurno.estado == 'Reservado' && this.datosTurno.grupo == 1 
+                    && !(a.diff(b, 'days', true) <= 1)){
+                
+                this.alertaFormulario+= ". El turno normal debe cumplir como maximo  24 hrs"
+            }
+
             /* console.log(a.diff(b, 'days') )
             console.log(a.diff(b, 'days') < 2) */
 
