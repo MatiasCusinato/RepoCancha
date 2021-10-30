@@ -88,8 +88,6 @@ export default {
         Aceptar() {
             if(!this.validarCampos(this.datosCancha)){
                 if (this.accion == 'Crear') {
-                    /* let club=localStorage.getItem('club')
-                    this.datosCancha.club_configuracion_id= club; */
                     console.log(JSON.stringify(this.datosCancha))
 
                     this.InsertarDatos ('canchas/guardar', this.datosCancha)

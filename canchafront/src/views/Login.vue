@@ -1,13 +1,13 @@
 <template>
     <div>
         <form @submit.prevent="logearUsuario">
-            <h1 class="h3 mb-3 fw-normal">Por favor, ingrese</h1>
+            <h1 class="h3 mb-3 fw-normal">Por favor, ingrese.</h1>
 
             <input v-model="datosLoginUser.email" type="email"
                 class="form-control" placeholder="Email" />
 
             <input v-model="datosLoginUser.password" type="password"
-                class="form-control" placeholder="Password" />
+                class="form-control" placeholder="Contraseña" />
 
             <button class="w-100 btn btn-lg btn-primary" type="logearUsuario">
                 Iniciar sesión
@@ -18,7 +18,6 @@
 
 <script>
 import apiRest from "../mixins/apiRest.vue";
-//import axios from "axios";
 
 export default {
     name: "Login",
@@ -28,8 +27,8 @@ export default {
     data() {
         return {
             datosLoginUser: {
-                email: "usuario@gmail.com",
-                password: "usuario",
+                email: "",
+                password: "",
             },
 
             alertaLogueado: [],
@@ -61,6 +60,7 @@ export default {
                         setInterval(() => {
                             location.reload();
                         }, 200);
+                        
                         this.$router.push("/INFOturnosADMIN");
                     }
                 });
@@ -75,18 +75,18 @@ export default {
         },
 
         validarCampos(){
-                this.alertaLogueado= [];
-                for (let key in this.datosLoginUser) {
-                        if(this.datosLoginUser[key] == ""){
-                                this.alertaLogueado.push(' '+key.charAt(0).toUpperCase()+ key.slice(1))
-                        }
+            this.alertaLogueado= [];
+            for (let key in this.datosLoginUser) {
+                if(this.datosLoginUser[key] == ""){
+                        this.alertaLogueado.push(' '+key.charAt(0).toUpperCase()+ key.slice(1))
                 }
+            }
 
-                if(this.alertaLogueado.length > 0){
-                        return true
-                } else {
-                        return false
-                }
+            if(this.alertaLogueado.length > 0){
+                return true
+            } else {
+                return false
+            }
         },
 
         /* async logearUsuario(){

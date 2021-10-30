@@ -6,7 +6,7 @@
             <div class="contenedor">
                 <div class="VentanaModalConsultar">
                     <div class="cabecera tituloventana">
-                        <h5>Evento: {{ eventoActual.title }}</h5>
+                        <h5 class="h5ABMTurnos">Evento: {{ eventoActual.title }}</h5>
                         <div class="container overflow-hidden gx-1">
                             <!-- <h5 class="card-title"><i class="bi bi-calendar"> Fecha: {{ eventoActual.start && eventoActual.start.format('DD/MM/YYYY') }} </i></h5> -->
                             
@@ -299,6 +299,52 @@
                 </div>
             </div>
         </div>
+
+        <!-- Modal Ganacia "consultar" -->
+        <h1 class="bg-primary text-white text-center mb-3"> Ganancias </h1>
+            <div v-if="!abrirGanancia && accionAux=='ConsultarGanancia'">
+                <div class="contenedor">
+                    <div class="VentanaModalGanancia">
+                        <div class="cabecera tituloventanaganancia">
+                            <h5 class="h5ABMGanacia"> Ganancia </h5>
+                            <div class="alert alert-success" role="alert">
+                               <i class="bi bi-info-circle-fill"></i>
+                               Calcule la ganacia de los turnos cobrados colocando solo 2 fechas
+                            </div>
+                            <div class="container overflow-hidden gx-1">
+                                <div class="row gy-2 justify-content-md-center">
+                                    <div class="col-md-6 mb-3">
+                                        <span><i class="bi bi-hourglass-top campo"> Comienzo: </i></span>
+                                        <input type="date" class="form-control form-control-sm inputChico" 
+                                                v-model="objganancia.fecha_Desde">
+                                    </div>
+
+                                    <div class="col-md-6 mb-3">
+                                        <span><i class="bi bi-hourglass-bottom campo"> Fin: </i></span>
+                                        <input type="date" class="form-control form-control-sm inputChico" 
+                                                v-model="objganancia.fecha_Hasta">
+                                    </div>
+                                </div>
+
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                                <button class="btn btn-primary" @click="EnviarGanacia()">
+                                                        <i class="bi bi-check2-circle"> Enviar </i>
+                                                </button>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                                <button class="btn btn-danger" @click="Cancelar()">
+                                                        <i class="bi bi-x-circle-fill"> Atras </i>
+                                                </button>
+                                        </div>
+                                    </div>  
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
     </div>
 </template>
 
@@ -363,10 +409,12 @@ export default {
         console.log(JSON.stringify(this.eventoActual))
         
         if (this.accionAux != '') {
-            this.datosTurno.club_configuracion_id= localStorage.getItem('club');
-            
             if(this.accionAux=='Crear'){
                 this.desplegarABMturnos('Crear', true)
+            }
+            
+            if(this.accionAux=='Consultar'){
+                this.desplegarABMturnos('Consultar', false)
             }
         
             this.traerClientes()
@@ -417,6 +465,14 @@ export default {
             fechaHastaAux: "",
             
             abrirFormTurnos: false,
+
+            abrirGanancia: false,
+
+            objganancia: { 
+                club_configuracion_id: this.$store.state.vClub,
+                fecha_Desde: moment().format('YYYY-MM-DDTHH:mm'),
+                fecha_Hasta: moment().format('YYYY-MM-DDTHH:mm'),
+            },
         }
     },
 
@@ -559,7 +615,7 @@ export default {
                             
                             console.log(this.datosTurno)
                     } 
-                 } else {
+                } else {
                     this.$swal({
                         title: '¡Error en el formulario!',
                         text: 'Errores:'+ this.alertaFormulario,
@@ -575,6 +631,61 @@ export default {
             }
             
         },
+
+        EnviarGanacia() {
+            this.alertaFormulario= [];
+            let fechaDesde= this.objganancia.fecha_Desde
+            let fechaHasta= this.objganancia.fecha_Hasta
+            let a = moment(fechaHasta);
+            let b = moment(fechaDesde);
+            console.log(a.diff(b, 'days') )
+            console.log(a.diff(b, 'days') < 2)
+
+            //Valido si la Fecha1 es mayor a la Fecha2, o si la Fecha2 es anterior a la Fecha1 y por ultimo, si son iguales
+            if(moment(fechaDesde).format('x') > moment(fechaHasta).format('x') ||
+                    moment(fechaHasta).format('x') < moment(fechaDesde).format('x')){
+                this.alertaFormulario+="Puede que las fechas esten mal expresadas (Fecha1 es posterior a la Fecha2 o viceversa)";                
+            }
+
+            //Valido que las fechas no sean iguales y tengan como minimo una diferencia de 2 dias entre sus fechas
+            if(moment(fechaHasta).format('x') == moment(fechaDesde).format('x') || (a.diff(b, 'days') < 2 && a.diff(b, 'days') > 0) ){
+                this.alertaFormulario+=". Las fechas no deben ser iguales, deben tener por lo menos 48 horas entre ellas";                
+            }
+
+            if(this.alertaFormulario.length > 0){
+                this.$swal({
+                    title: 'Error',
+                    text: ''+this.alertaFormulario,
+                    icon: 'error',
+                    confirmButtonText: 'Ok'
+                })
+                return
+            }
+
+            this.InsertarDatos("clubes/ganacias", this.objganancia)
+                .then(res => {
+                    console.log(res)
+                    if(res.msj == "Error") {
+                        this.$swal({
+                            title: ''+res.msj,
+                            text: ''+res.razon,
+                            icon: 'error',
+                            confirmButtonText: 'Ok'
+                        }) 
+                    } else {
+                        this.$swal({
+                            title: ''+res.msj,
+                            text: 'Cant de Turnos cobrados: '+res.data.cant_turnos + ". Ganancia Total: $" + res.data.ganancia,
+                            icon: 'info',
+                            confirmButtonText: 'Ok'
+                        })
+                    }       
+                })
+                
+                
+        },
+        
+        
 
         desplegarABMturnos(accion, abm) {
             this.accionAux = accion
@@ -664,7 +775,6 @@ export default {
             //Valido que el turno FIJO, tenga como minimo una diferencia de 2 dias entre sus fechas
             if(this.datosTurno=='Reservado' && this.datosTurno.grupo >= 11 
                 && a.diff(b, 'days') < 2){
-                
                 this.alertaFormulario+= ". El turno fijo debe cumplir como min 48 hrs"
             }
 
@@ -710,7 +820,7 @@ p{
 .divBoton{
     margin: 10px 25px 0px;
     position: relative;
-    left: 120px;
+    left: 50px;
     top: 10px;
 }
 
@@ -771,6 +881,13 @@ p{
     width: 450px;
     margin: 25px auto;
 }
+.VentanaModalGanancia {
+    background-color: rgb(35, 155, 86 );
+    border-radius: 10px;
+    padding: 28px;
+    width: 450px;
+    margin: 25px auto;
+}
 
 table{
     background-color: whitesmoke;
@@ -785,6 +902,11 @@ table{
 .tituloventana{
     text-align:center;
     color:white;
+}
+
+.tituloventanaganancia{
+    text-align:center;
+    color:black;
 }
 
 .campo{
@@ -816,7 +938,7 @@ table{
     border-radius: 5px;
 }
 
-h5{
+.h5ABMTurnos{
     border-radius: 10px;
     border-style: ridge;
     border-color: rgb(134, 186, 255);
@@ -824,7 +946,17 @@ h5{
     min-height: 20px;
     background-color: rgb(3, 7, 218);
 }
-.btn{
+.h5ABMGanacia{
+    border-radius: 10px;
+    border-style: ridge;
+    border-color: rgb(134, 186, 255);
+    min-width: 10%;
+    min-height: 20px;
+    background-color: rgb(125, 155, 241);
+}
+
+.btn {
     font-size: 19px;
+    position: relative;
 }
 </style>

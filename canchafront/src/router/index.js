@@ -86,10 +86,10 @@ const router = new VueRouter({
 router.beforeEach((to, from, next) => {
   console.log("local",localStorage.getItem('laravelToken'))
   if (to.matched.some(record => record.meta.requiresAuth)) {
-    if  (localStorage.getItem('laravelToken') != null) {
+    if (localStorage.getItem('laravelToken') != null) {
       next()
     } else {
-      next("login")
+      next("/login")
     }
   } else {
     next();
