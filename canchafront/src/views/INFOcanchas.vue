@@ -5,14 +5,19 @@
         <div>
             <div class="divFiltros">
                 <h4>Filtros:</h4>
-                <input type="text" placeholder="Filtro por deporte" autofocus 
-                        v-model="filtroDeporte" maxlength="20">
-                <button type="button" class="boton btn btn-secondary btn-sm" @click="FiltroCanchas()">
-                    <i class="bi bi-search"></i>
-                </button>
+                <div class="row justify-content-evenly g-2">
+                    <input type="text" placeholder="Filtro por deporte" autofocus 
+                            v-model="filtroDeporte" maxlength="20" class="form-control">
+
+                    <button type="button" class="btn btn-secondary btn-sm col-4" 
+                            @click="FiltroCanchas()">
+                        <i class="bi bi-search"></i>
+                    </button>
+                </div>
             </div>
             <div class="btncli">
-                <button class="btn btn-primary" @click="desplegarABMcancha('Crear')" style="font-size: 22px"> 
+                <button class="btn btn-primary " @click="desplegarABMcancha('Crear')" 
+                        style="font-size: 22px"> 
                     <i class="bi bi-aspect-ratio"> Agregar nueva Cancha </i> 
                 </button>
             </div>
@@ -259,10 +264,9 @@ h1 {
     border: 2px black solid;
     border-radius: 10px;
     border-collapse: collapse;
-    min-height: 100px;
-    height: 105px;
-    width: 305px;
-    margin: 20px -40px;
+    min-height: 130px;
+    min-width: 100px;
+    margin: 20px 20px 20px -40px;
     padding: 20px 40px;
     background-color:rgb(243, 214, 159);
     position: relative;
@@ -271,7 +275,6 @@ h1 {
 .btncli{
     position: relative;
     left: -20px; 
-    
 }
 /* .tablecli{
     position: absolute;

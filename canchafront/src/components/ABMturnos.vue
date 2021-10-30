@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h1 class="bg-primary text-white text-center mb-3"> ABMTURNOS </h1>
+        <!-- <h1 class="bg-primary text-white text-center mb-3"> ABMTURNOS </h1> -->
 
         <div v-if="!abrirFormTurnos && accionAux=='Consultar'">
             <div class="contenedor">
@@ -9,6 +9,7 @@
                         <h5 class="h5ABMTurnos">Evento: {{ eventoActual.title }}</h5>
                         <div class="container overflow-hidden gx-1">
                             <!-- <h5 class="card-title"><i class="bi bi-calendar"> Fecha: {{ eventoActual.start && eventoActual.start.format('DD/MM/YYYY') }} </i></h5> -->
+                            
                             <div class="row justify-content-md-center">
                                 <div class="col-md-6 mb-3">
                                     <span><i class="bi bi-person campo"> Cliente: </i></span>
@@ -71,7 +72,16 @@
                                 </div>
                             </div>
 
-                            <div class="row">                                  
+                            <hr class="hrBarra">
+
+                            <div class="row">   
+                                <div class="row justify-content-md-center" v-if="eventoActual.objTurnos.estado=='Reservado'">
+                                    <button @click="terminarTurno()" 
+                                        class="btn btn-warning col-md-6 mb-3" style="margin: auto auto 10px">
+                                        <i class="bi bi-check-square"> Terminar turno</i>  
+                                    </button>
+                                </div>
+
                                 <div class="row gy-1 justify-content-md-center">
                                     <div class="col-md-6 mb-3">
                                         <button class="btn btn-danger" style="margin: auto 10px" 
@@ -84,7 +94,7 @@
 
                                     <div class="col-md-6 mb-3">
                                         <button class="btn btn-success" 
-                                                @click="desplegarABMturnos('Editar')">
+                                                @click="desplegarABMturnos('Editar', true)">
                                             <i class="bi bi-pencil-square">
                                                 Editar
                                             </i>
@@ -114,7 +124,7 @@
                 <div class="contenedor">
                     <div :class="accionAux=='Editar' ? 'VentanaModalEditar' : 'VentanaModalCrear'">
                         <div class="cabecera tituloventana">
-                            <button class="cierre btn btn-primary" @click="accionAux=='Editar'? desplegarABMturnos('Consultar'): Cancelar()">
+                            <button class="cierre btn btn-primary" @click="accionAux=='Editar'? desplegarABMturnos('Consultar', true): Cancelar()">
                                 <font color="#ff0000">
                                     <i class="bi bi-x-circle-fill"></i>
                                 </font>
@@ -280,7 +290,7 @@
                                 </button>
                                 
                                 <button class="btn btn-danger divBoton" 
-                                        @click="accionAux=='Editar' ? desplegarABMturnos('Consultar') : Cancelar()">
+                                        @click="accionAux=='Editar' ? desplegarABMturnos('Consultar', true) : Cancelar()">
                                     <i class="bi bi-x-circle-fill"> Cancelar </i>
                                 </button>
                             </div>
@@ -292,27 +302,30 @@
 
         <!-- Modal Ganacia "consultar" -->
         <h1 class="bg-primary text-white text-center mb-3"> Ganancias </h1>
-            <div v-if="!abrirGanancia && accionAux=='Consultar'">
+            <div v-if="!abrirGanancia && accionAux=='ConsultarGanancia'">
                 <div class="contenedor">
                     <div class="VentanaModalGanancia">
                         <div class="cabecera tituloventanaganancia">
                             <h5 class="h5ABMGanacia"> Ganancia </h5>
+                            <div class="alert alert-success" role="alert">
+                               <i class="bi bi-info-circle-fill"></i>
+                               Calcule la ganacia de los turnos cobrados colocando solo 2 fechas
+                            </div>
                             <div class="container overflow-hidden gx-1">
-                                    <div class="row">    
-                                    <div class="row gy-2 justify-content-md-center">
-                                        <div class="col-md-6 mb-3">
-                                            <span><i class="bi bi-hourglass-top campo"> Comienzo: </i></span>
-                                            <input type="date" class="form-control form-control-sm inputChico" 
-                                                    v-model="objganancia.fecha_Desde">
-                                        </div>
+                                <div class="row gy-2 justify-content-md-center">
+                                    <div class="col-md-6 mb-3">
+                                        <span><i class="bi bi-hourglass-top campo"> Comienzo: </i></span>
+                                        <input type="date" class="form-control form-control-sm inputChico" 
+                                                v-model="objganancia.fecha_Desde">
+                                    </div>
 
-                                        <div class="col-md-6 mb-3">
-                                            <span><i class="bi bi-hourglass-bottom campo"> Fin: </i></span>
-                                            <input type="date" class="form-control form-control-sm inputChico" 
-                                                    v-model="objganancia.fecha_Hasta">
-                                        </div>
+                                    <div class="col-md-6 mb-3">
+                                        <span><i class="bi bi-hourglass-bottom campo"> Fin: </i></span>
+                                        <input type="date" class="form-control form-control-sm inputChico" 
+                                                v-model="objganancia.fecha_Hasta">
                                     </div>
                                 </div>
+
                                 <div class="container">
                                     <div class="row">
                                         <div class="col-md-6 mb-3">
@@ -396,13 +409,12 @@ export default {
         console.log(JSON.stringify(this.eventoActual))
         
         if (this.accionAux != '') {
-            this.datosTurno.club_configuracion_id= localStorage.getItem('club');
-            
             if(this.accionAux=='Crear'){
-                this.desplegarABMturnos('Crear')
+                this.desplegarABMturnos('Crear', true)
             }
+            
             if(this.accionAux=='Consultar'){
-                this.desplegarABMturnos('Consultar')
+                this.desplegarABMturnos('Consultar', false)
             }
         
             this.traerClientes()
@@ -461,12 +473,16 @@ export default {
                 fecha_Desde: moment().format('YYYY-MM-DDTHH:mm'),
                 fecha_Hasta: moment().format('YYYY-MM-DDTHH:mm'),
             },
-
-            numGanancia: "",
         }
     },
 
     methods: {
+        terminarTurno(){
+            this.desplegarABMturnos('Editar', false)
+            this.datosTurno.estado= 'Cobrado';
+            this.Aceptar()
+        },
+
         cambiarTurno(){
             this.turnoFijo=!this.turnoFijo
             if(this.turnoFijo){
@@ -617,6 +633,35 @@ export default {
         },
 
         EnviarGanacia() {
+            this.alertaFormulario= [];
+            let fechaDesde= this.objganancia.fecha_Desde
+            let fechaHasta= this.objganancia.fecha_Hasta
+            let a = moment(fechaHasta);
+            let b = moment(fechaDesde);
+            console.log(a.diff(b, 'days') )
+            console.log(a.diff(b, 'days') < 2)
+
+            //Valido si la Fecha1 es mayor a la Fecha2, o si la Fecha2 es anterior a la Fecha1 y por ultimo, si son iguales
+            if(moment(fechaDesde).format('x') > moment(fechaHasta).format('x') ||
+                    moment(fechaHasta).format('x') < moment(fechaDesde).format('x')){
+                this.alertaFormulario+="Puede que las fechas esten mal expresadas (Fecha1 es posterior a la Fecha2 o viceversa)";                
+            }
+
+            //Valido que las fechas no sean iguales y tengan como minimo una diferencia de 2 dias entre sus fechas
+            if(moment(fechaHasta).format('x') == moment(fechaDesde).format('x') || (a.diff(b, 'days') < 2 && a.diff(b, 'days') > 0) ){
+                this.alertaFormulario+=". Las fechas no deben ser iguales, deben tener por lo menos 48 horas entre ellas";                
+            }
+
+            if(this.alertaFormulario.length > 0){
+                this.$swal({
+                    title: 'Error',
+                    text: ''+this.alertaFormulario,
+                    icon: 'error',
+                    confirmButtonText: 'Ok'
+                })
+                return
+            }
+
             this.InsertarDatos("clubes/ganacias", this.objganancia)
                 .then(res => {
                     console.log(res)
@@ -642,9 +687,11 @@ export default {
         
         
 
-        desplegarABMturnos(accion) {
+        desplegarABMturnos(accion, abm) {
             this.accionAux = accion
-            this.abrirFormTurnos = !this.abrirFormTurnos
+            if(abm){   
+                this.abrirFormTurnos = !this.abrirFormTurnos
+            }
 
             if(this.accionAux=='Editar'){
 
@@ -728,7 +775,6 @@ export default {
             //Valido que el turno FIJO, tenga como minimo una diferencia de 2 dias entre sus fechas
             if(this.datosTurno=='Reservado' && this.datosTurno.grupo >= 11 
                 && a.diff(b, 'days') < 2){
-                
                 this.alertaFormulario+= ". El turno fijo debe cumplir como min 48 hrs"
             }
 
@@ -910,7 +956,7 @@ table{
 }
 
 .btn {
-    font-size: 20px;
+    font-size: 19px;
     position: relative;
 }
 </style>

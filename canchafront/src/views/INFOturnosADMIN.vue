@@ -59,11 +59,10 @@
         />
         <div class="container">
             <div class="row justify-content-md-center">
-                <h3 class="calcular"> Calcular Ganacias: </h3>
                 <div class="btnganacias">
-                    <button class="btn btn-secondary" @click="desplegarGanancia('Consultar')"
+                    <button class="btn btn-secondary" @click="desplegarGanancia('ConsultarGanancia', false)"
                             style="font-size: 22px"> 
-                        <i class="bi bi-currency-dollar"> Ganancias </i> 
+                        <i class="bi bi-currency-dollar"> Mi ganancia </i> 
                     </button>
                 </div>
             </div>
@@ -175,8 +174,7 @@ export default {
         },
 
         traerCanchas(){
-            let club= localStorage.getItem('club')
-            this.ObtenerDatos(`canchas/${club}`)
+            this.ObtenerDatos(`canchas/${this.$store.state.vClub}`)
                 .then (res => {
                     this.canchas = res.canchas.data
                     this.canchaActual= this.canchas[0].id
@@ -186,9 +184,8 @@ export default {
 
         traerTurnos(){
             this.events=[]
-            let club= localStorage.getItem('club')
 
-            this.ObtenerDatos(`turnos/${club}/${this.canchaActual}`)
+            this.ObtenerDatos(`turnos/${this.$store.state.vClub}/${this.canchaActual}`)
                 .then(res => {
                     console.log(res)
                     if(res.length==0){

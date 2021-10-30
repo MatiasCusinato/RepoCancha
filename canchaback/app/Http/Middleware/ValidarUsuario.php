@@ -17,39 +17,29 @@ class ValidarUsuario
      */
     public function handle(Request $request, Closure $next)
     {
-        $club= $request->club_id;
-        $token= $request->token;
-        $url= $request->fullUrl();
-        $metodo= $request->getMethod();
+        //$clubUrl= $request->club_id; //Club de la URL(parametro)
+        $clubRequest= $request->club_configuracion_id; //Club del objeto request (objeto que viene de Vue)
         
-        //decodifico el token a un objeto JSON
-        $tokenUser= base64_decode($token); 
-        $jsonUser= json_decode($tokenUser);
-        //dd($club, $jsonUser->club);
+        $token= $request->token; //Token del local storage
+        $tokenUser= base64_decode($token); //decodifico el token a un objeto JSON
+        $jsonToken= json_decode($tokenUser);
+        $url= $request->fullUrl(); //url a la que se quiere acceder
+        $metodo= $request->getMethod(); //metodo de la peticion
 
         $respuestaAccesoDenegado= response()->json([
             'msj' => "Error",
-            'razon' => 'Acceso denegado, unauthorized',
+            'razon' => 'Acceso denegado, no puedes realizar esta accion',
         ], 413);
-        //dd($request, $metodo, $url, $token, $club);
-        
-        if($token != "null" && $club != "null"){
-            //Busco al usuario mediante el club y su token, si lo encuentro, lo guardo
-            $user = DB::table('users')
-                            ->where([
-                                ['token_actual', '=', $token],
-                                ['club_configuracion_id','=', $jsonUser->club],
-                                ['email','=', $jsonUser->email],
-                            ])->first();
-        } else {
-            return $respuestaAccesoDenegado;
-        }
 
-        //Si no encuentro el usuario, retorno false
-        if($user==null){
+        //busco al usuario que tiene ese token y lo valido, 
+        //      ademas de validar su club y sobre que club quiere realizar tal accion..
+        $existeUsuario= DB::table('users')
+                            ->where('token_actual', '=', $token)
+                            ->get();
+
+        if($existeUsuario->isEmpty() || ($jsonToken->club != $clubRequest)){
             return $respuestaAccesoDenegado;
-        } else {
-            //si se encuentra, true.
+        }else{
             return $next($request);
         }
     }

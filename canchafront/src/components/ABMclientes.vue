@@ -205,7 +205,6 @@ export default {
                 }
                 
                 if (this.accion == 'Borrar') {
-                    //let club = localStorage.getItem('club')
                     this.EliminarDatos(`clientes/eliminar/${this.$store.state.vClub}`, this.id, this.datosClientes)
                         .then(res => {
                             //this.datosClientes = res

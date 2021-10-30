@@ -7,26 +7,25 @@
         <div>
             <div class="divFiltros">
                 <h4>Filtros:</h4>
-                <input type="text" autofocus placeholder="Filtro por nombre" v-model="filtroNombre" maxlength="20">
-                <br>
-                <br>
-                <button type="button" class="boton btn btn-secondary btn-sm" @click="traerFiltro()">
-                    <i class="bi bi-search"></i>
-                </button>
-            </div>
-            <div class="btncli">
-                <button class="btn btn-success" @click="desplegarABMcliente('Crear')" 
-                        style="font-size: 22px"> 
-                    <i class="bi bi-person-plus-fill"> Agregar un nuevo Cliente </i> 
-                </button>
+                <div class="row justify-content-md-center">
+                    <div class="row justify-content-evenly g-2">
+                        <input type="text" autofocus placeholder="Filtro por nombre" 
+                            v-model="filtroNombre" maxlength="20" class="form-control">
+
+                        <button type="button" class="btn btn-secondary btn-sm col-4" @click="traerFiltro()">
+                            <i class="bi bi-search"></i>
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <br>
-
-        
-
-        <br>
+        <div>
+            <button class="btn btn-success" @click="desplegarABMcliente('Crear')" 
+                    style="font-size: 22px"> 
+                <i class="bi bi-person-plus-fill"> Agregar un nuevo Cliente </i> 
+            </button>
+        </div>
         <br>
 
         <ABMclientes v-if="abrirABMcliente"
@@ -140,7 +139,6 @@ export default {
     methods: {
         traerDatos(pagina) {
             console.log("Obteniendo CLIENTES desde la API ...");
-            //let club= localStorage.getItem('club')
             this.ObtenerDatos(`clientes/${this.$store.state.vClub}/3/?page=${pagina}`)
                 .then(res => {
                     this.datos = res.clientes.data;
@@ -265,28 +263,17 @@ h1 {
     margin-right: auto;
 }   
 .divFiltros {
-    /* border: 2px solid rgb(116, 113, 113);*/
     border: 2px black solid;
     border-radius: 10px;
     border-collapse: collapse;
-    min-height: 100px;
-    height: 110px;
-    width: 285px;
-    margin: 20px -40px;
+    min-height: 130px;
+    min-width: 100px;
+    margin: 20px 0px 20px -30px;
     padding: 20px 40px;
     background-color:rgb(243, 214, 159);
     position: relative;
-    left: 40px;
-    top: 15px;
+    left: 10px;
 }
-.btncli{
-    top: 40px;
-    position: relative;
-    /* left: 120px;
-    font-size: 20px;
-    width:150px;
-    height:50px; */
-} 
 /* .btnganancias{
     font-size: 20px;
     left: 50px;
