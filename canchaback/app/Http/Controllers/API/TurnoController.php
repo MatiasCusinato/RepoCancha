@@ -103,7 +103,7 @@ class TurnoController extends Controller
 
 
                 //Distingo si la fechaDesde y la FechaHasta son iguales(turno normal). Si son distintas (Turno fijo). 
-                if($fechaDesde == $fechaHasta){
+                if($fechaDesde == $fechaHasta || $request->grupo == 1){
                     // PARTE DE TURNO NORMAL
 
                     $valTurno = $this->validarTurno($request->fecha_Desde, $request->fecha_Hasta, 
@@ -199,7 +199,7 @@ class TurnoController extends Controller
                 return response()->json(["Mensaje" => "Error (ROLLBACK DE LA BD)!!"]);
             }
 
-            if($fechaDesde == $fechaHasta){
+            if($fechaDesde == $fechaHasta || $request->grupo == 1){
                 return response()->json([
                     'msj' => 'Creacion de turno exitosa', 
                     'razon' => 'El turno NORMAL ha sido creado exitosamente'
