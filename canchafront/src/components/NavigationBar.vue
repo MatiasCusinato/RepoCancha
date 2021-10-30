@@ -94,7 +94,7 @@ export default {
                 
                 this.InsertarDatos("logout", token)
                     .then(res => {
-                        //console.log(res)
+                        console.log(res)
                         this.$store.commit("borrarToken");
 
                         setInterval(() => {

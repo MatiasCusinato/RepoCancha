@@ -25,8 +25,10 @@ class DatabaseSeeder extends Seeder
         \App\Models\Cliente::factory(20)->create();
         \App\Models\Turno::factory(20)->create();
 
-        $this->call(ClienteSeeder::class);
+        $this->call(ClubConfiguracionSeeder::class);
         $this->call(CanchaSeeder::class);
+        $this->call(ClienteSeeder::class);
         $this->call(TurnoSeeder::class);
+        $this->call(UserSeeder::class);
     }
 }
