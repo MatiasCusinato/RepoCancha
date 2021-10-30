@@ -73,9 +73,10 @@ class TurnoController extends Controller
                 $fechaDesde= Carbon::parse($request->fecha_Desde)->format('Y-m-d'); //$fechaDesde= "2018-10-22"
                 $fechaHasta= Carbon::parse($request->fecha_Hasta)->format('Y-m-d');
             
-                $horaDesde= Carbon::parse($request->fecha_Desde)->format('H:m:s'); //$horaDesde= "10:00:00"
+                $horaDesde= Carbon::parse($request->fecha_Desde)->format('H:m:s');//$horaDesde= "10:00:00"
+                
                 $horaHasta= Carbon::parse($request->fecha_Hasta)->format('H:m:s');
-                 
+                
                 $fechaDesdeInt = strtotime($request->fecha_Desde); //Convierte el $request->fecha_Desde a formato timestamp --> 1543104000
                 $fechaHastaInt = strtotime($request->fecha_Hasta); 
 

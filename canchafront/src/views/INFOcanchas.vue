@@ -2,20 +2,21 @@
     <div>
         <h1 class="bg-primary text-white text-center mb-3"> Canchas </h1>
 
-        <div class="divFiltros">
-            <h4>Filtros:</h4>
-            <input type="text" placeholder="Filtro por deporte" autofocus 
-                    v-model="filtroDeporte" maxlength="20">
-            <button type="button" class="boton btn btn-secondary btn-sm" @click="FiltroCanchas()">
-                <i class="bi bi-search"></i>
-            </button>
+        <div>
+            <div class="divFiltros">
+                <h4>Filtros:</h4>
+                <input type="text" placeholder="Filtro por deporte" autofocus 
+                        v-model="filtroDeporte" maxlength="20">
+                <button type="button" class="boton btn btn-secondary btn-sm" @click="FiltroCanchas()">
+                    <i class="bi bi-search"></i>
+                </button>
+            </div>
+            <div class="btncli">
+                <button class="btn btn-primary" @click="desplegarABMcancha('Crear')" style="font-size: 22px"> 
+                    <i class="bi bi-aspect-ratio"> Agregar nueva Cancha </i> 
+                </button>
+            </div>
         </div>
-
-
-        <br>
-        <button class="btn btn-success" @click="desplegarABMcancha('Crear')" style="font-size: 22px"> 
-            <i class="bi bi-aspect-ratio"> Agregar nueva Cancha </i> 
-        </button>
         <br>
         <ABMcanchas
             v-if="abrirABMcancha"
@@ -24,37 +25,38 @@
             @SalirDeABMcanchas = MostrarABMcanchas($event)
         />
         <br>  <!-- table table-dark table-striped mt-4 -->
-            <table class="light-blue darken-2">
-                <thead>
-                    <tr class="bg-primary text-light">
-                        <th scope="col">ID</th>
-                        <!-- <th scope="col">Club</th> -->
-                        <th scope="col">Deporte</th>
-                        <th scope="col">Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="(canchas, index) in datos" :key="index">
-                        <th scope="row">{{canchas.id}}</th>
-                        <!-- <td> {{canchas.club_configuracion_id}} </td> -->
-                        <td> {{canchas.deporte}} </td>
+        
+                <table class="light-blue darken-2 tablecli">
+                    <thead>
+                        <tr class="bg-primary text-light">
+                            <th scope="col">ID</th>
+                            <!-- <th scope="col">Club</th> -->
+                            <th scope="col">Deporte</th>
+                            <th scope="col">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="(canchas, index) in datos" :key="index">
+                            <th scope="row">{{canchas.id}}</th>
+                            <!-- <td> {{canchas.club_configuracion_id}} </td> -->
+                            <td> {{canchas.deporte}} </td>
 
-                        <td>
-                            <button class="btn btn-info" @click="desplegarABMcancha('Editar', canchas.id)">
-                                <i class="bi bi-brush"></i>
-                            </button>
+                            <td>
+                                <button class="btn btn-info" @click="desplegarABMcancha('Editar', canchas.id)">
+                                    <i class="bi bi-brush"></i>
+                                </button>
 
-                            <button class="btn btn-danger" @click="desplegarABMcancha('Borrar', canchas.id)">
-                                <i class="bi bi-trash-fill"></i>
-                            </button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table> 
+                                <button class="btn btn-danger" @click="desplegarABMcancha('Borrar', canchas.id)">
+                                    <i class="bi bi-trash-fill"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
 
             <br>
 
-            <nav aria-label="Page navigation example">
+            <nav class="navcli" v-show="!abrirABMcancha" aria-label="Page navigation example">
                 <ul class="pagination pagination-lg">
                     <li class="page-item" v-if="paginacion.current_page > 1">
                         <a class="page-link" href="#" 
@@ -127,7 +129,6 @@ export default {
     methods: {
         traerDatos(pagina) {
             console.log("Obteniendo CANCHAS desde la API ...");
-
             this.ObtenerDatos(`canchas/${this.$store.state.vClub}/4/?page=${pagina}`)
                 .then(res => {
                     this.datos = res.canchas.data;
@@ -250,8 +251,9 @@ h1 {
     margin: 15px -50px; 
     text-align: center;
     border-width: 2px;
-    font-size: 15px;
+    font-size: 22px;
 } 
+
 .divFiltros {
     /* border: 2px solid rgb(116, 113, 113);*/
     border: 2px black solid;
@@ -266,15 +268,24 @@ h1 {
     position: relative;
     left: 10px;
 }
+.btncli{
+    position: relative;
+    left: -20px; 
+    
+}
+/* .tablecli{
+    position: absolute;
+    left: 700px;
+    top: 250px;
+}
+.navcli{
+    position: relative;
+    top: -20px;
+    left: -50px;
+} */
 .boton {
     position: relative;
     left: 200px;
     top: -30px;
-}
-.btncli {
-    position: absolute;
-    border-radius: 10px;
-    display: flex;
-    flex-direction: column;
 }
 </style>

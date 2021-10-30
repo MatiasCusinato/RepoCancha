@@ -127,7 +127,7 @@ class clubConfiguracionController extends Controller
 
         return response()->json([
             "msj" => "Informe de ganancia exitoso",
-            "data" => $sqlGanancia
+            "data" => $sqlGanancia[0]
         ], 200);
                             
     }

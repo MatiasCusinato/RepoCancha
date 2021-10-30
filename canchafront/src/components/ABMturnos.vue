@@ -6,7 +6,7 @@
             <div class="contenedor">
                 <div class="VentanaModalConsultar">
                     <div class="cabecera tituloventana">
-                        <h5>Evento: {{ eventoActual.title }}</h5>
+                        <h5 class="h5ABMTurnos">Evento: {{ eventoActual.title }}</h5>
                         <div class="container overflow-hidden gx-1">
                             <!-- <h5 class="card-title"><i class="bi bi-calendar"> Fecha: {{ eventoActual.start && eventoActual.start.format('DD/MM/YYYY') }} </i></h5> -->
                             <div class="row justify-content-md-center">
@@ -289,6 +289,49 @@
                 </div>
             </div>
         </div>
+
+        <!-- Modal Ganacia "consultar" -->
+        <h1 class="bg-primary text-white text-center mb-3"> Ganancias </h1>
+            <div v-if="!abrirGanancia && accionAux=='Consultar'">
+                <div class="contenedor">
+                    <div class="VentanaModalGanancia">
+                        <div class="cabecera tituloventanaganancia">
+                            <h5 class="h5ABMGanacia"> Ganancia </h5>
+                            <div class="container overflow-hidden gx-1">
+                                    <div class="row">    
+                                    <div class="row gy-2 justify-content-md-center">
+                                        <div class="col-md-6 mb-3">
+                                            <span><i class="bi bi-hourglass-top campo"> Comienzo: </i></span>
+                                            <input type="date" class="form-control form-control-sm inputChico" 
+                                                    v-model="objganancia.fecha_Desde">
+                                        </div>
+
+                                        <div class="col-md-6 mb-3">
+                                            <span><i class="bi bi-hourglass-bottom campo"> Fin: </i></span>
+                                            <input type="date" class="form-control form-control-sm inputChico" 
+                                                    v-model="objganancia.fecha_Hasta">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                                <button class="btn btn-primary" @click="EnviarGanacia()">
+                                                        <i class="bi bi-check2-circle"> Enviar </i>
+                                                </button>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                                <button class="btn btn-danger" @click="Cancelar()">
+                                                        <i class="bi bi-x-circle-fill"> Atras </i>
+                                                </button>
+                                        </div>
+                                    </div>  
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
     </div>
 </template>
 
@@ -358,6 +401,9 @@ export default {
             if(this.accionAux=='Crear'){
                 this.desplegarABMturnos('Crear')
             }
+            if(this.accionAux=='Consultar'){
+                this.desplegarABMturnos('Consultar')
+            }
         
             this.traerClientes()
             this.traerCanchas()
@@ -407,6 +453,16 @@ export default {
             fechaHastaAux: "",
             
             abrirFormTurnos: false,
+
+            abrirGanancia: false,
+
+            objganancia: { 
+                club_configuracion_id: this.$store.state.vClub,
+                fecha_Desde: moment().format('YYYY-MM-DDTHH:mm'),
+                fecha_Hasta: moment().format('YYYY-MM-DDTHH:mm'),
+            },
+
+            numGanancia: "",
         }
     },
 
@@ -543,7 +599,7 @@ export default {
                             
                             console.log(this.datosTurno)
                     } 
-                 } else {
+                } else {
                     this.$swal({
                         title: '¡Error en el formulario!',
                         text: 'Errores:'+ this.alertaFormulario,
@@ -559,6 +615,32 @@ export default {
             }
             
         },
+
+        EnviarGanacia() {
+            this.InsertarDatos("clubes/ganacias", this.objganancia)
+                .then(res => {
+                    console.log(res)
+                    if(res.msj == "Error") {
+                        this.$swal({
+                            title: ''+res.msj,
+                            text: ''+res.razon,
+                            icon: 'error',
+                            confirmButtonText: 'Ok'
+                        }) 
+                    } else {
+                        this.$swal({
+                            title: ''+res.msj,
+                            text: 'Cant de Turnos cobrados: '+res.data.cant_turnos + ". Ganancia Total: $" + res.data.ganancia,
+                            icon: 'info',
+                            confirmButtonText: 'Ok'
+                        })
+                    }       
+                })
+                
+                
+        },
+        
+        
 
         desplegarABMturnos(accion) {
             this.accionAux = accion
@@ -692,7 +774,7 @@ p{
 .divBoton{
     margin: 10px 25px 0px;
     position: relative;
-    left: 120px;
+    left: 50px;
     top: 10px;
 }
 
@@ -753,6 +835,13 @@ p{
     width: 450px;
     margin: 25px auto;
 }
+.VentanaModalGanancia {
+    background-color: rgb(35, 155, 86 );
+    border-radius: 10px;
+    padding: 28px;
+    width: 450px;
+    margin: 25px auto;
+}
 
 table{
     background-color: whitesmoke;
@@ -767,6 +856,11 @@ table{
 .tituloventana{
     text-align:center;
     color:white;
+}
+
+.tituloventanaganancia{
+    text-align:center;
+    color:black;
 }
 
 .campo{
@@ -798,12 +892,25 @@ table{
     border-radius: 5px;
 }
 
-h5{
+.h5ABMTurnos{
     border-radius: 10px;
     border-style: ridge;
     border-color: rgb(134, 186, 255);
     min-width: 10%;
     min-height: 20px;
     background-color: rgb(3, 7, 218);
+}
+.h5ABMGanacia{
+    border-radius: 10px;
+    border-style: ridge;
+    border-color: rgb(134, 186, 255);
+    min-width: 10%;
+    min-height: 20px;
+    background-color: rgb(125, 155, 241);
+}
+
+.btn {
+    font-size: 20px;
+    position: relative;
 }
 </style>

@@ -1,25 +1,30 @@
 <template>
     <div>
-        <h1 class="bg-primary text-white text-center mb-3"> Clientes </h1>
-
-        <div class="divFiltros">
-            <h4>Filtros:</h4>
-            <input type="text" autofocus placeholder="Filtro por nombre" v-model="filtroNombre" maxlength="20">
-            <br>
-            <br>
-            <button type="button" class="boton btn btn-secondary btn-sm" @click="traerFiltro()">
-                <i class="bi bi-search"></i>
-            </button>
+        <h1 class="bg-success text-white text-center mb-3"> Clientes </h1>
+        <!-- <div>
+            <span>{{this.paginacion}}</span>
+        </div> -->
+        <div>
+            <div class="divFiltros">
+                <h4>Filtros:</h4>
+                <input type="text" autofocus placeholder="Filtro por nombre" v-model="filtroNombre" maxlength="20">
+                <br>
+                <br>
+                <button type="button" class="boton btn btn-secondary btn-sm" @click="traerFiltro()">
+                    <i class="bi bi-search"></i>
+                </button>
+            </div>
+            <div class="btncli">
+                <button class="btn btn-success" @click="desplegarABMcliente('Crear')" 
+                        style="font-size: 22px"> 
+                    <i class="bi bi-person-plus-fill"> Agregar un nuevo Cliente </i> 
+                </button>
+            </div>
         </div>
 
         <br>
 
-        <div class="btncli">
-            <button class="btn btn-success" @click="desplegarABMcliente('Crear')" 
-                    style="font-size: 22px"> 
-                <i class="bi bi-person-plus-fill"> Agregar un nuevo Cliente </i> 
-            </button>
-        </div>
+        
 
         <br>
         <br>
@@ -30,9 +35,9 @@
         />
         
         <br>
-            <table class="light-blue darken-2">
+            <table class="table-success tablecli">
                 <thead>
-                    <tr class="bg-primary text-light">
+                    <tr class="bg-success">
                         <th scope="col">ID</th>
                         <th scope="col">Nombre</th>
                         <th scope="col">Apellido</th>
@@ -66,7 +71,7 @@
 
             <br>
 
-            <nav  v-show="!accion" aria-label="Page navigation example">
+            <nav class="navcli" v-show="!accion" aria-label="Page navigation example">
                 <ul class="pagination pagination-lg">
                     <li class="page-item" v-if="paginacion.current_page > 1">
                         <a class="page-link" href="#" 
@@ -255,7 +260,9 @@ h1 {
     margin: 15px -240px;
     text-align: center;
     border-width: 2px;
-    font-size: 15px;
+    font-size: 22px;
+    margin-left: -300px;
+    margin-right: auto;
 }   
 .divFiltros {
     /* border: 2px solid rgb(116, 113, 113);*/
@@ -270,16 +277,25 @@ h1 {
     background-color:rgb(243, 214, 159);
     position: relative;
     left: 40px;
+    top: 15px;
 }
+.btncli{
+    top: 40px;
+    position: relative;
+    /* left: 120px;
+    font-size: 20px;
+    width:150px;
+    height:50px; */
+} 
+/* .btnganancias{
+    font-size: 20px;
+    left: 50px;
+    width:120px;
+    height:30px;
+} */
 .boton {
     position: relative;
     left: 200px;
     top: -54px;
-}
-.btncli {
-    position: absolute;
-    border-radius: 10px;
-    display: flex;
-    flex-direction: column;
 }
 </style>
