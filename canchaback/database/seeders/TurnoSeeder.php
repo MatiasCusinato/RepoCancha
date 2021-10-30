@@ -96,5 +96,40 @@ class TurnoSeeder extends Seeder
             'estado' => 'Cobrado',
         ]);
 
+        DB::table('turnos')->insert([
+            'cliente_id' => '17',
+            'cancha_id' => '28',
+            'club_configuracion_id' => '4',
+            'tipo_turno' => 'cumpleaños',
+            'fecha_Desde' => '2021-11-12 10:00:00',
+            'fecha_Hasta' => '2021-11-12 11:00:00',
+            'grupo' => 1,
+            'precio' => '500',
+            'estado' => 'Reservado',
+        ]);
+
+        DB::table('turnos')->insert([
+            'cliente_id' => '16',
+            'cancha_id' => '27',
+            'club_configuracion_id' => '4',
+            'tipo_turno' => 'entrenamiento',
+            'fecha_Desde' => '2021-11-15 13:00:00',
+            'fecha_Hasta' => '2021-11-15 14:00:00',
+            'grupo' => 1,
+            'precio' => '500',
+            'estado' => 'Reservado',
+        ]);
+        DB::table('turnos')->insert([
+            'cliente_id' => '15',
+            'cancha_id' => '26',
+            'club_configuracion_id' => '4',
+            'tipo_turno' => 'entrenamiento',
+            'fecha_Desde' => '2021-11-17 10:00:00',
+            'fecha_Hasta' => '2021-11-17 12:00:00',
+            'grupo' => 1,
+            'precio' => '500',
+            'estado' => 'Reservado',
+        ]);
+
     }
 }
