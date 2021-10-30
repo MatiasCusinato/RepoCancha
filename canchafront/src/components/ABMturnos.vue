@@ -6,7 +6,8 @@
             <div class="contenedor">
                 <div class="VentanaModalConsultar">
                     <div class="cabecera tituloventana">
-                        <h5 class="h5ABMTurnos">Evento: {{ eventoActual.title }}</h5>
+                        <h5 class="h5ABMTurnos">Evento: <br>
+                        {{ eventoActual.title }}</h5>
                         <div class="container overflow-hidden gx-1">
                             <!-- <h5 class="card-title"><i class="bi bi-calendar"> Fecha: {{ eventoActual.start && eventoActual.start.format('DD/MM/YYYY') }} </i></h5> -->
                             
@@ -406,7 +407,7 @@ export default {
     },
 
     created() {
-        console.log(JSON.stringify(this.eventoActual))
+        //console.log(JSON.stringify(this.eventoActual))
         
         if (this.accionAux != '') {
             if(this.accionAux=='Crear'){
@@ -499,7 +500,8 @@ export default {
                 showDenyButton: true,
                 confirmButtonText: 'Borrar solo el turno',
                 denyButtonText: 'Borrar todo los turnos fijos',
-                cancelButtonText: 'Cancelar',
+                confirmButtonColor: '#FF321A',
+                denyButtonColor: '#AB00BB',
             }).then((result) => {
                 let grupo= ""+this.eventoActual.objTurnos.grupo;
                 let turno_id= ""+ this.eventoActual.objTurnos.id;
@@ -512,7 +514,8 @@ export default {
                         title: '¡Error!',
                         text: 'No se pueden eliminar todos los turnos normales (grupo 1)',
                         icon: 'error',
-                        confirmButtonText: 'Ok'
+                        confirmButtonText: 'Ok',
+                        timer: 2500
                     })
 
                     return
@@ -522,13 +525,14 @@ export default {
 
                 this.EliminarDatos(`turnos/eliminar`, grupo_turno_id, this.datosTurno)
                         .then(res => {
-                            console.log(res)
+                            //console.log(res)
                             if(res.msj=="Error"){
                                 this.$swal({
                                     title: '¡Error!',
                                     text: ''+res.razon,
                                     icon: 'error',
-                                    confirmButtonText: 'Ok'
+                                    confirmButtonText: 'Ok',
+                                    timer: 2500 
                                 })
 
                                 this.$emit('SalirDeABMturnos', true)
@@ -536,7 +540,8 @@ export default {
                                 this.$swal({
                                     title: 'Turno/s borrado!',
                                     icon: 'success',
-                                    confirmButtonText: 'Ok'
+                                    confirmButtonText: 'Ok',
+                                    timer: 2500
                                 })
 
                                 this.$emit('SalirDeABMturnos', true)  
@@ -561,18 +566,19 @@ export default {
                     this.datosTurno.diasFijo[0]= moment(this.datosTurno.fecha_Desde).format("ddd");
                 }
 
-                console.log(this.datosTurno)
+                //console.log(this.datosTurno)
                 if(!this.validarCampos(this.datosTurno)){
                     if(this.accionAux=='Crear'){
                         this.InsertarDatos('turnos/guardar', this.datosTurno)
                                 .then(res => {
-                                    console.log(res)
+                                    //console.log(res)
                                     if(res.msj=="Error"){
                                         this.$swal({
                                             title: '¡Error!',
                                             text: ''+res.razon,
                                             icon: 'error',
-                                            confirmButtonText: 'Ok'
+                                            confirmButtonText: 'Ok',
+                                            timer: 2500
                                         })
 
                                         //this.$emit('SalirDeABMturnos', true)
@@ -581,7 +587,8 @@ export default {
                                             title: 'Turno creado!',
                                             text: ''+res.razon,
                                             icon: 'success',
-                                            confirmButtonText: 'Ok'
+                                            confirmButtonText: 'Ok',
+                                            timer: 2500
                                         })
 
                                         this.$emit('SalirDeABMturnos', true)  
@@ -592,7 +599,7 @@ export default {
                         if(this.accionAux=='Editar'){  
                             this.EditarDatos(`turnos/editar`, this.eventoActual.objTurnos.id, this.datosTurno)
                                 .then(res => {
-                                    console.log(res)
+                                    //console.log(res)
                                     if(res.msj=="Error"){
                                         this.$swal({
                                             title: '¡Error!',
@@ -613,14 +620,15 @@ export default {
                                     }
                                 })
                             
-                            console.log(this.datosTurno)
+                            //console.log(this.datosTurno)
                     } 
                 } else {
                     this.$swal({
                         title: '¡Error en el formulario!',
                         text: 'Errores:'+ this.alertaFormulario,
                         icon: 'warning',
-                        confirmButtonText: 'Ok'
+                        confirmButtonText: 'Ok',
+                        timer: 2500
                     })   
                 }
 
@@ -638,8 +646,8 @@ export default {
             let fechaHasta= this.objganancia.fecha_Hasta
             let a = moment(fechaHasta);
             let b = moment(fechaDesde);
-            console.log(a.diff(b, 'days') )
-            console.log(a.diff(b, 'days') < 2)
+            //console.log(a.diff(b, 'days') )
+            //console.log(a.diff(b, 'days') < 2)
 
             //Valido si la Fecha1 es mayor a la Fecha2, o si la Fecha2 es anterior a la Fecha1 y por ultimo, si son iguales
             if(moment(fechaDesde).format('x') > moment(fechaHasta).format('x') ||
@@ -657,27 +665,30 @@ export default {
                     title: 'Error',
                     text: ''+this.alertaFormulario,
                     icon: 'error',
-                    confirmButtonText: 'Ok'
+                    confirmButtonText: 'Ok',
+                    timer: 5000
                 })
                 return
             }
 
             this.InsertarDatos("clubes/ganacias", this.objganancia)
                 .then(res => {
-                    console.log(res)
+                    //console.log(res)
                     if(res.msj == "Error") {
                         this.$swal({
                             title: ''+res.msj,
                             text: ''+res.razon,
                             icon: 'error',
-                            confirmButtonText: 'Ok'
+                            confirmButtonText: 'Ok',
+                            timer: 2500
                         }) 
                     } else {
                         this.$swal({
                             title: ''+res.msj,
                             text: 'Cant de Turnos cobrados: '+res.data.cant_turnos + ". Ganancia Total: $" + res.data.ganancia,
                             icon: 'info',
-                            confirmButtonText: 'Ok'
+                            confirmButtonText: 'Ok',
+                            timer: 10000
                         })
                     }       
                 })
@@ -762,7 +773,7 @@ export default {
 
             let a = moment(this.datosTurno.fecha_Hasta);
             let b = moment(this.datosTurno.fecha_Desde);
-            console.log(a.diff(b, 'days', true) <= 1);
+            //console.log(a.diff(b, 'days', true) <= 1);
 
             //Valido que el turno NORMAL (reservado) tenga como duracion 24 horas
             if(this.datosTurno.estado == 'Reservado' && this.datosTurno.grupo == 1 

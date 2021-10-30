@@ -21,45 +21,41 @@
                     <i class="bi bi-aspect-ratio"> Agregar nueva Cancha </i> 
                 </button>
             </div>
-        </div>
-        <br>
+        </div><br>
+
         <ABMcanchas
             v-if="abrirABMcancha"
             :accion=accion
             :id=id
             @SalirDeABMcanchas = MostrarABMcanchas($event)
-        />
-        <br>  <!-- table table-dark table-striped mt-4 -->
+        /><br>
         
-                <table class="light-blue darken-2 tablecli">
-                    <thead>
-                        <tr class="bg-primary text-light">
-                            <th scope="col">ID</th>
-                            <!-- <th scope="col">Club</th> -->
-                            <th scope="col">Deporte</th>
-                            <th scope="col">Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr v-for="(canchas, index) in datos" :key="index">
-                            <th scope="row">{{canchas.id}}</th>
-                            <!-- <td> {{canchas.club_configuracion_id}} </td> -->
-                            <td> {{canchas.deporte}} </td>
+        <div v-if="datos.length>0">
+            <table class="light-blue darken-2 tablecli">
+                <thead>
+                    <tr class="bg-primary text-light">
+                        <th scope="col">ID</th>
+                        <th scope="col">Deporte</th>
+                        <th scope="col">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="(canchas, index) in datos" :key="index">
+                        <th scope="row">{{canchas.id}}</th>
+                        <td> {{canchas.deporte}} </td>
 
-                            <td>
-                                <button class="btn btn-info" @click="desplegarABMcancha('Editar', canchas.id)">
-                                    <i class="bi bi-brush"></i>
-                                </button>
+                        <td>
+                            <button class="btn btn-info" @click="desplegarABMcancha('Editar', canchas.id)">
+                                <i class="bi bi-brush"></i>
+                            </button>
 
-                                <button class="btn btn-danger" @click="desplegarABMcancha('Borrar', canchas.id)">
-                                    <i class="bi bi-trash-fill"></i>
-                                </button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-
-            <br>
+                            <button class="btn btn-danger" @click="desplegarABMcancha('Borrar', canchas.id)">
+                                <i class="bi bi-trash-fill"></i>
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table><br>
 
             <nav class="navcli" v-show="!abrirABMcancha" aria-label="Page navigation example">
                 <ul class="pagination pagination-lg">
@@ -83,6 +79,7 @@
                     </li>
                 </ul>
             </nav>
+        </div>
     </div>
 </template>
 
@@ -124,11 +121,6 @@ export default {
 
     created() {
         this.traerDatos(1)
-    },
-
-    mounted() {
-        console.log("evento mounted")
-        //this.traerDatos()
     },
 
     methods: {
@@ -173,7 +165,8 @@ export default {
                                 title: '¡Error!',
                                 text: `No existe algun deporte con el nombre de "${this.filtroDeporte}"`,
                                 icon: 'error',
-                                confirmButtonText: 'Ok'
+                                confirmButtonText: 'Ok',
+                                timer: 2500
                             })
 
                             this.filtroDeporte= ""
@@ -185,7 +178,8 @@ export default {
                     title: '¡Error!',
                     text: 'Rellene el campo de filtro, porfavor',
                     icon: 'warning',
-                    confirmButtonText: 'Ok'
+                    confirmButtonText: 'Ok',
+                    timer: 2500
                 })
             }
 

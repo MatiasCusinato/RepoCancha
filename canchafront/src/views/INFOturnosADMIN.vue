@@ -113,7 +113,7 @@ export default {
     },
 
     created(){
-        console.log(this.$store.state)
+        //console.log(this.$store.state)
         this.events= []
         this.traerCanchas();
     },
@@ -176,6 +176,15 @@ export default {
         traerCanchas(){
             this.ObtenerDatos(`canchas/${this.$store.state.vClub}`)
                 .then (res => {
+                    if(res.msj=='Error'){
+                        this.$swal({
+                            title: ''+res.msj,
+                            text: ''+res.razon,
+                            icon: 'error',
+                            confirmButtonText: 'Ok',
+                            timer: 2500
+                        })
+                    }
                     this.canchas = res.canchas.data
                     this.canchaActual= this.canchas[0].id
                     this.traerTurnos(this.canchaActual);
@@ -187,13 +196,14 @@ export default {
 
             this.ObtenerDatos(`turnos/${this.$store.state.vClub}/${this.canchaActual}`)
                 .then(res => {
-                    console.log(res)
+                    //console.log(res)
                     if(res.length==0){
                         this.$swal({
                             title: '¡Error!',
                             text: 'Esta cancha no contiene turnos',
                             icon: 'error',
-                            confirmButtonText: 'Ok'
+                            confirmButtonText: 'Ok',
+                            timer: 2500
                         })
                     } else {
                         this.datos = res;

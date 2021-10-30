@@ -133,7 +133,6 @@ export default {
     },
 
     created() {
-        console.log("evento created")
         if (this.accion != 'Crear') {
             this.ObtenerDatos(`clientes/${this.$store.state.vClub}/show/${this.id}`)
                 .then (res => {
@@ -149,7 +148,7 @@ export default {
             if(!this.validarCampos(this.datosClientes)){
                 
                 if (this.accion == 'Crear') {
-                    console.log(JSON.stringify(this.datosClientes))
+                    //console.log(JSON.stringify(this.datosClientes))
 
                     this.InsertarDatos('clientes/guardar', this.datosClientes)
                         .then(res => {
@@ -158,26 +157,22 @@ export default {
                                     title: '¡Error!',
                                     text: ''+res.razon,
                                     icon: 'error',
-                                    confirmButtonText: 'Ok'
+                                    confirmButtonText: 'Ok',
+                                    timer: 2500
                                 })
                             } else {
                                 this.$swal({
                                     title: '¡Cliente creado!',
                                     icon: 'success',
-                                    confirmButtonText: 'Ok'
-                                  
+                                    confirmButtonText: 'Ok',
+                                    timer: 2500                           
                                 })
                             }
-
-                            /* setInterval(() => {
-                                this.$emit('SalirDeABMclientes', true)
-                                this.$swal.close()
-                            }, 2500); */
                         })
                 }
 
                 if (this.accion == 'Editar') {
-                    console.log(JSON.stringify(this.datosClientes))
+                    //console.log(JSON.stringify(this.datosClientes))
                     this.EditarDatos(`clientes/editar/${this.$store.state.vClub}`, this.id, this.datosClientes)
                         .then(res => {
                             //this.datosClientes = res
@@ -186,21 +181,18 @@ export default {
                                     title: `${res.msj}`,
                                     text: `${res.razon}`,
                                     icon: 'error',
-                                    confirmButtonText: 'Ok'
+                                    confirmButtonText: 'Ok',
+                                    timer: 2500
                                 })
                             } else {
                                 this.$swal({
                                     title: `${res.msj}`,
                                     text: `${res.razon}`,
                                     icon: 'success',
-                                    confirmButtonText: 'Ok'
+                                    confirmButtonText: 'Ok',
+                                    timer: 2500
                                 })
                             }
-
-                            /* setInterval(() => {
-                                this.$emit('SalirDeABMclientes', true)
-                                this.$swal.close()
-                            }, 2500); */
                         })
                 }
                 
@@ -213,35 +205,29 @@ export default {
                                     title: `¡${res.msj}!`,
                                     text: `Razon : ${res.razon}`,
                                     icon: 'error',
-                                    confirmButtonText: 'Ok'
+                                    confirmButtonText: 'Ok',
+                                    timer: 2500
                                 })
                             } else {
                                 this.$swal({
                                     title: `¡Eliminacion exitosa!`,
                                     text: `El cliente ha sido eliminado`,
                                     icon: 'success',
-                                    confirmButtonText: 'Ok'
+                                    confirmButtonText: 'Ok',
+                                    timer: 2500
                                 })
                             }
-
-                            /* setInterval(() => {
-                                this.$emit('SalirDeABMclientes', true)
-                                this.$swal.close()
-                            }, 2500); */
-                            
                         })
                 }
 
-                setInterval(() => {
-                    this.$emit('SalirDeABMclientes', true)
-                    this.$swal.close()
-                }, 2500);
+                this.$emit('SalirDeABMclientes', true)
             } else {
                 this.$swal({
                     title: '¡Formulario incompleto!',
                     text: 'Los siguientes campos estan vacios: '+ this.alertaFormulario,
                     icon: 'warning',
-                    confirmButtonText: 'Ok'
+                    confirmButtonText: 'Ok',
+                    timer: 2500
                 })
             }
             
