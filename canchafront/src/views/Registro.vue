@@ -42,12 +42,12 @@ name: 'Registro',
         data() {
                 return {
                         datosRegistroUser: {
-                                nombre: "usuario",
-                                apellido: "falso",
-                                email: "usuario@gmail.com",
-                                telefono: "12313212",
-                                password: "usuario",
-                                club_configuracion_id: "2",
+                                nombre: "",
+                                apellido: "",
+                                email: "",
+                                telefono: "",
+                                password: "",
+                                club_configuracion_id: "",
                         },
                         
                         alertaRegistrado: [],
@@ -59,14 +59,15 @@ name: 'Registro',
                         if(!this.validarCampos()){
                                 this.InsertarDatos("registro", this.datosRegistroUser)
                                         .then((res) => {
-                                                console.log(res)
+                                                //console.log(res)
 
                                                 if (res.msj == "Error") {
                                                         this.$swal({
                                                                 title: 'Error!',
                                                                 text: ''+res.razon,
                                                                 icon: 'error',
-                                                                confirmButtonText: 'Ok'
+                                                                confirmButtonText: 'Ok',
+                                                                timer: 2500
                                                         })
                                                 } else {
                                                         this.$router.push("/login");
@@ -79,7 +80,8 @@ name: 'Registro',
                                         title: '¡Error!',
                                         text: 'Los siguientes campos estan vacios: '+ this.alertaRegistrado,
                                         icon: 'warning',
-                                        confirmButtonText: 'Ok'
+                                        confirmButtonText: 'Ok',
+                                        timer: 2500
                                 })
                         }    
 
@@ -99,19 +101,6 @@ name: 'Registro',
                                 return false
                         }
                 },
-
-                /* async registrarUsuario(){
-                                const url = 'http://localhost:8000/api/registro';
-                                axios.post(url, this.datosRegistroUser, {
-                                        withCredentials: true,
-                                        headers: {
-                                                Accept: 'application/json',
-                                                'Content-Type': 'application/json',
-                                        },
-                                }).then(res =>{
-                                        this.$router.push('/login')
-                                });
-                        },  */
         },
 };
 </script>

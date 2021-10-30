@@ -115,7 +115,7 @@ export default {
     },
 
     created(){
-        console.log(this.clubActual)
+        //console.log(this.clubActual)
         this.events= [];
         
         this.traerClub();
@@ -127,10 +127,11 @@ export default {
                 .then(res => {
                     if(res.msj=="Error" || res.club===[]){
                         this.$swal({
-                            title: 'Error, no se pudo mostrar la vista',
+                            title: 'Error, no se pudo mostrar la vista. Redireccionando...',
                             text: `${res.razon}`,
                             icon: 'error',
-                            confirmButtonText: 'Ok'
+                            confirmButtonText: 'Ok',
+                            timer: 2500
                         })
                         
                         setInterval(() => {
@@ -139,7 +140,7 @@ export default {
 
                         this.$router.push('/INFOturnosDISPONIBLES/club/0') 
                     } else {
-                        console.log(res.club)
+                        //console.log(res.club)
                         this.club = res.club;
                         
                         if(this.clubActual!='0'){
@@ -158,7 +159,8 @@ export default {
                             title: ''+res.msj,
                             text: ''+res.razon,
                             icon: 'error',
-                            confirmButtonText: 'Ok'
+                            confirmButtonText: 'Ok',
+                            timer: 2500
                         })
                     }
                     this.canchas = res.canchas.data
@@ -173,13 +175,14 @@ export default {
 
             this.ObtenerDatos(`turnos/${this.clubActual}/${this.canchaActual}`)
                 .then(res => {
-                    console.log(res)
+                    //console.log(res)
                     if(res.length==0){
                         this.$swal({
                             title: '¡Error!',
                             text: 'Esta cancha no contiene turnos',
                             icon: 'error',
-                            confirmButtonText: 'Ok'
+                            confirmButtonText: 'Ok',
+                            timer: 2500
                         })
                     } else {
                         this.turnos = res;

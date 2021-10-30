@@ -31,9 +31,9 @@
         <ABMclientes v-if="abrirABMcliente"
             :accion=accion :id=id
             @SalirDeABMclientes = MostrarABMclientes($event)
-        />
-        
-        <br>
+        /><br>
+
+        <div v-if="datos.length>0">
             <table class="table-success tablecli">
                 <thead>
                     <tr class="bg-success">
@@ -92,6 +92,7 @@
                     </li>
                 </ul>
             </nav>   
+        </div>
     </div>
 </template>
 
@@ -179,7 +180,8 @@ export default {
                                 title: '¡Error!',
                                 text: `No existe algun cliente con el nombre de "${this.filtroNombre}"`,
                                 icon: 'error',
-                                confirmButtonText: 'Ok'
+                                confirmButtonText: 'Ok',
+                                timer: 2500
                             })
 
                             this.filtroNombre= ""
@@ -188,11 +190,12 @@ export default {
                     })
             }else{
                 this.$swal({
-                        title: '¡Error!',
-                        text: 'Rellene el campo de filtro, porfavor',
-                        icon: 'warning',
-                        confirmButtonText: 'Ok'
-                    })
+                    title: '¡Error!',
+                    text: 'Rellene el campo de filtro, porfavor',
+                    icon: 'warning',
+                    confirmButtonText: 'Ok',
+                    timer: 2500
+                })
             }
         },
     },

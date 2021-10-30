@@ -5,15 +5,20 @@
                 <div class="contenedor" v-if="accion=='Crear' || accion=='Editar'">
                     <div :class="this.accion=='Crear' ? 'VentanaModalCrear' : 'VentanaModalEditar'">
                         <div class="cabecera tituloventana">
-                        <button class="cierre btn btn-danger" @click="Cancelar()"><font color="#ff0000"><i class="bi bi-x-circle-fill"></i></font></button>
+                        <button class="cierre btn btn-danger" @click="Cancelar()">
+                            <font color="#ff0000"><i class="bi bi-x-circle-fill"></i></font>
+                        </button>
                         <p>{{accion}} Canchas</p>
                         </div>
                         <div class="contenido">
                             <div class="mb-3">
                                 <label for="" class="form-label campo"><i class="bi bi-flag"> Deporte: </i></label>
-                                <input type="text" class="form-control form-control-sm" v-model="datosCancha.deporte" maxlength="30">
+                                <input type="text" class="form-control form-control-sm" 
+                                        v-model="datosCancha.deporte" maxlength="30" 
+                                        placeholder="Nombre o deporte de la cancha">
                             </div>
                             <button class="btn btn-primary divBotones" @click="Aceptar()"><i class="bi bi-check2-circle"> Guardar </i></button>
+                            
                             <button class="btn btn-danger divBotones" @click="Cancelar()"><i class="bi bi-x-circle-fill"> Cancelar </i></button>
                         </div>
                     </div>
@@ -74,7 +79,6 @@ export default {
     },
 
     created() {
-        console.log("evento created")
         if (this.accion != 'Crear') {
             this.ObtenerDatos(`canchas/${this.$store.state.vClub}/show/${this.id}`)
                 .then (res => {
@@ -88,7 +92,7 @@ export default {
         Aceptar() {
             if(!this.validarCampos(this.datosCancha)){
                 if (this.accion == 'Crear') {
-                    console.log(JSON.stringify(this.datosCancha))
+                    //console.log(JSON.stringify(this.datosCancha))
 
                     this.InsertarDatos ('canchas/guardar', this.datosCancha)
                         .then(res => {
@@ -97,25 +101,22 @@ export default {
                                     title: `¡${res.msj}!`,
                                     text: `Razon : ${res.razon}`,
                                     icon: 'warning',
-                                    confirmButtonText: 'Ok'
+                                    confirmButtonText: 'Ok',
+                                    timer: 2500 
                                 })
                             } else {
                                 this.$swal({
                                     title: `¡${res.msj}!`,
                                     icon: 'success',
-                                    confirmButtonText: 'Ok'
+                                    confirmButtonText: 'Ok',
+                                    timer: 2500
                                 })
                             }
-
-                            setInterval(() => {
-                                this.$emit('SalirDeABMcanchas', true)
-                                this.$swal.close()
-                            }, 2500);
                         })
                 }
 
                 if (this.accion == 'Editar') {
-                    console.log(JSON.stringify(this.datosCancha))
+                    //console.log(JSON.stringify(this.datosCancha))
                     this.EditarDatos (`canchas/editar/${this.$store.state.vClub}`, this.id, this.datosCancha)
                         .then(res => {
                             //this.datosCancha = res
@@ -125,21 +126,18 @@ export default {
                                     title: `¡${res.msj}!`,
                                     text: `Razon : ${res.razon}`,
                                     icon: 'error',
-                                    confirmButtonText: 'Ok'
+                                    confirmButtonText: 'Ok',
+                                    timer: 2500
                                 })
                             } else {
                                 this.$swal({
                                     title: `¡${res.msj}!`,
                                     text: `${res.razon}`,
                                     icon: 'success',
-                                    confirmButtonText: 'Ok'
+                                    confirmButtonText: 'Ok',
+                                    timer: 2500
                                 })
                             }
-
-                            /* setInterval(() => {
-                                this.$emit('SalirDeABMcanchas', true)
-                                this.$swal.close()
-                            }, 2500); */
                         })
                 }
 
@@ -152,34 +150,30 @@ export default {
                                     title: `¡${res.msj}!`,
                                     text: `Razon : ${res.razon}`,
                                     icon: 'error',
-                                    confirmButtonText: 'Ok'
+                                    confirmButtonText: 'Ok',
+                                    timer: 2500
                                 })
                             } else {
                                 this.$swal({
                                     title: `¡Eliminacion exitosa!`,
                                     text: `La cancha ha sido eliminada`,
                                     icon: 'success',
-                                    confirmButtonText: 'Ok'
+                                    confirmButtonText: 'Ok',
+                                    timer: 2500
                                 })
                             }
-
-                            /* setInterval(() => {
-                                this.$emit('SalirDeABMcanchas', true)
-                                this.$swal.close()
-                            }, 2500); */
                         })
                 }
 
-                setInterval(() => {
-                    this.$emit('SalirDeABMcanchas', true)
-                    this.$swal.close()
-                }, 2500);
+                this.$emit('SalirDeABMcanchas', true)
+
             }else{
                 this.$swal({
                     title: '¡Formulario incompleto!',
                     text: 'Los siguientes campos estan vacios: '+ this.alertaFormulario,
                     icon: 'warning',
-                    confirmButtonText: 'Ok'
+                    confirmButtonText: 'Ok',
+                    timer: 2500
                 })
             }
         },
@@ -189,18 +183,18 @@ export default {
         },
 
         validarCampos(objFormulario){
-                this.alertaFormulario= [];
-                for (let key in objFormulario) {
-                        if(objFormulario[key] == ""){
-                                this.alertaFormulario.push(' '+key.charAt(0).toUpperCase()+ key.slice(1))
-                        }
-                }
+            this.alertaFormulario= [];
+            for (let key in objFormulario) {
+                    if(objFormulario[key] == ""){
+                            this.alertaFormulario.push(' '+key.charAt(0).toUpperCase()+ key.slice(1))
+                    }
+            }
 
-                if(this.alertaFormulario.length > 0){
-                    return true
-                } else {
-                    return false
-                }
+            if(this.alertaFormulario.length > 0){
+                return true
+            } else {
+                return false
+            }
         },
     }
 }

@@ -39,14 +39,15 @@ export default {
         logearUsuario() {
             if(!this.validarCampos()){
                 this.InsertarDatos("login", this.datosLoginUser).then((res) => {
-                    console.log(res)
+                    //console.log(res)
     
                     if (res.msj == "Error") {
                         this.$swal({
                             title: 'Error!',
                             text: ''+res.razon,
                             icon: 'warning',
-                            confirmButtonText: 'Ok'
+                            confirmButtonText: 'Ok',
+                            timer: 2500
                         })
                     } else {
                         let token = JSON.stringify(res.user.token_actual);
@@ -69,7 +70,8 @@ export default {
                     title: '¡Error!',
                     text: 'Los siguientes campos estan vacios: '+ this.alertaLogueado,
                     icon: 'warning',
-                    confirmButtonText: 'Ok'
+                    confirmButtonText: 'Ok',
+                    timer: 2500
                 })
             }
         },
