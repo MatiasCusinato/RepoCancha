@@ -17,9 +17,9 @@
                 <img class="imagen1" height="180" width="180" src="@/assets/mati.png"/>
             </div>
             <div>    
-                <p class="contactos2"><a href="mailto:nehuencuenca@gmail.com"> Nombre: Nehuen Cuenca - 
+                <p class="contactos2"><a href="mailto:nehuen.cuenca@gmail.com"> Nombre: Nehuen Cuenca - 
                 <br>
-                Contactar por Correo: nehuencuenca@gmail.com 
+                Contactar por Correo: nehuen.cuenca@gmail.com 
                 <br>
                 <i class="bi bi-whatsapp"> 3446-637047 </i>
                 <br>

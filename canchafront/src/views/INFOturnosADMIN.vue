@@ -1,6 +1,6 @@
 <template>
     <div style="margin: -30px ">
-        <h2> Turnos </h2>
+        <h2>Turnos</h2>
         <div v-if="!abrirABMturnos">
             <div class="btncli">
                 <button class="btn btn-primary" @click="crearTurno('Crear')"  
@@ -57,12 +57,16 @@
             :accion="accion"
             @SalirDeABMturnos = MostrarABMturnos($event)
         />
-
-        <div class="btnganacias">
-            <button class="btn btn-secondary" @click="desplegarGanancia('Consultar')"
-                    style="font-size: 22px"> 
-                <i class="bi bi-currency-dollar"> Ganancias </i> 
-            </button>
+        <div class="container">
+            <div class="row justify-content-md-center">
+                <h3 class="calcular"> Calcular Ganacias: </h3>
+                <div class="btnganacias">
+                    <button class="btn btn-secondary" @click="desplegarGanancia('Consultar')"
+                            style="font-size: 22px"> 
+                        <i class="bi bi-currency-dollar"> Ganancias </i> 
+                    </button>
+                </div>
+            </div>
         </div>
     </div>
 </template>
@@ -110,12 +114,13 @@ export default {
     },
 
     created(){
+        console.log(this.$store.state)
         this.events= []
         this.traerCanchas();
-        //this.traerTurnos();
     },
 
     methods:{
+
         onEventCreate (event, deleteEventFunction) {
             this.selectedEvent = event
             this.abrirABMturnos = true
@@ -223,10 +228,28 @@ export default {
                 this.traerTurnos();
             }
         },
-        desplegarGanancia(accion, id=0) {
+        desplegarGanancia(accion) {
+            this.abrirABMturnos = true
             this.accion = accion
-            this.id = id
-            this.abrirGanancia = !this.abrirGanancia;
+            this.eventoActual= {
+                //"start":"00-0-00",
+                "objTurnos":{
+                    "grupo":0,
+                    "cliente_id":null,
+                    "nombre":"",
+                    "apellido":"",
+                    "cancha_id":null,
+                    "deporte":"",
+                    "club_configuracion_id":null,
+                    "tipo_turno":"",
+                    "fecha_Desde":"0000-00-00 00:00:00",
+                    "fecha_Hasta":"0000-00-00 00:00:00",
+                    "precio":"0",
+                    "estado":"",
+                    "diasFijos":[],
+                }
+            }
+            /* this.abrirGanancia = !this.abrirGanancia; */
         },
         
     },
@@ -297,7 +320,7 @@ p{
 .btnganacias{
     position: relative;
     top: -620px;
-    left: -300px
+    left: -370px
 }
 
 .contenedor{
@@ -310,19 +333,19 @@ p{
 }
 
 .VentanaModalCrear {
-  background-color: rgb(85, 84, 167);
-  border-radius: 10px;
-  padding: 28px;
-  width: 400px;
-  margin: 25px auto;
+    background-color: rgb(85, 84, 167);
+    border-radius: 10px;
+    padding: 28px;
+    width: 400px;
+    margin: 25px auto;
 }
 
 .VentanaModalEditar {
-  background-color: rgb(84, 167, 128);
-  border-radius: 10px;
-  padding: 28px;
-  width: 400px;
-  margin: 25px auto;
+    background-color: rgb(84, 167, 128);
+    border-radius: 10px;
+    padding: 28px;
+    width: 400px;
+    margin: 25px auto;
 }
 
 table{
@@ -331,16 +354,16 @@ table{
 }
 
 .VentanaModalBorrar {
-  background-color: rgb(209, 113, 89);
-  border-radius: 10px;
-  padding: 25px;
-  width: 400px;
-  margin: 95px auto;
+    background-color: rgb(209, 113, 89);
+    border-radius: 10px;
+    padding: 25px;
+    width: 400px;
+    margin: 95px auto;
 }
 
 .cierre{
-  background: white;
-  float: right;
+    background: white;
+    float: right;
 }
 
 .tituloventana{
@@ -363,4 +386,10 @@ table{
     width: 250px;
 }
 
+.calcular{
+    position: relative;
+    top: -650px;
+    left: -400px;
+
+}
 </style>

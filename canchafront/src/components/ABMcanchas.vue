@@ -11,7 +11,7 @@
                         <div class="contenido">
                             <div class="mb-3">
                                 <label for="" class="form-label campo"><i class="bi bi-flag"> Deporte: </i></label>
-                                <input type="text" class="form-control form-control-sm" v-model="datosCancha.deporte">
+                                <input type="text" class="form-control form-control-sm" v-model="datosCancha.deporte" maxlength="30">
                             </div>
                             <button class="btn btn-primary divBotones" @click="Aceptar()"><i class="bi bi-check2-circle"> Guardar </i></button>
                             <button class="btn btn-danger divBotones" @click="Cancelar()"><i class="bi bi-x-circle-fill"> Cancelar </i></button>
@@ -65,9 +65,10 @@ export default {
     data() {
         return {
             datosCancha: {
-                id: 0,
+                //id: "0",
                 deporte: "",
-                club_configuracion_id: localStorage.getItem('club'),
+                club_configuracion_id: this.$store.state.vClub,
+                token: this.$store.state.vToken,
             }
         }
     },
@@ -75,10 +76,10 @@ export default {
     created() {
         console.log("evento created")
         if (this.accion != 'Crear') {
-            let club = localStorage.getItem('club')
-            this.ObtenerDatos(`canchas/${club}/show/${this.id}`)
+            this.ObtenerDatos(`canchas/${this.$store.state.vClub}/show/${this.id}`)
                 .then (res => {
                     this.datosCancha = res
+                    this.datosCancha['token']= this.$store.state.vToken;
             })
         }
     },
@@ -87,8 +88,8 @@ export default {
         Aceptar() {
             if(!this.validarCampos(this.datosCancha)){
                 if (this.accion == 'Crear') {
-                    let club=localStorage.getItem('club')
-                    this.datosCancha.club_configuracion_id= club;
+                    /* let club=localStorage.getItem('club')
+                    this.datosCancha.club_configuracion_id= club; */
                     console.log(JSON.stringify(this.datosCancha))
 
                     this.InsertarDatos ('canchas/guardar', this.datosCancha)
@@ -108,13 +109,16 @@ export default {
                                 })
                             }
 
-                            this.$emit('SalirDeABMcanchas', true)
+                            setInterval(() => {
+                                this.$emit('SalirDeABMcanchas', true)
+                                this.$swal.close()
+                            }, 2500);
                         })
                 }
 
                 if (this.accion == 'Editar') {
                     console.log(JSON.stringify(this.datosCancha))
-                    this.EditarDatos ('canchas/editar', this.id, this.datosCancha)
+                    this.EditarDatos (`canchas/editar/${this.$store.state.vClub}`, this.id, this.datosCancha)
                         .then(res => {
                             //this.datosCancha = res
 
@@ -134,13 +138,15 @@ export default {
                                 })
                             }
 
-                            this.$emit('SalirDeABMcanchas', true)
+                            /* setInterval(() => {
+                                this.$emit('SalirDeABMcanchas', true)
+                                this.$swal.close()
+                            }, 2500); */
                         })
                 }
 
                 if (this.accion == 'Borrar') {
-                    let club = localStorage.getItem('club')
-                    this.EliminarDatos(`canchas/eliminar/${club}`, this.id)
+                    this.EliminarDatos(`canchas/eliminar/${this.$store.state.vClub}`, this.id, this.datosCancha)
                         .then(res => {
                             //this.datosCancha = res
                             if (res.msj == 'Error') {
@@ -159,9 +165,17 @@ export default {
                                 })
                             }
 
-                            this.$emit('SalirDeABMcanchas', true)
+                            /* setInterval(() => {
+                                this.$emit('SalirDeABMcanchas', true)
+                                this.$swal.close()
+                            }, 2500); */
                         })
                 }
+
+                setInterval(() => {
+                    this.$emit('SalirDeABMcanchas', true)
+                    this.$swal.close()
+                }, 2500);
             }else{
                 this.$swal({
                     title: '¡Formulario incompleto!',
@@ -170,8 +184,6 @@ export default {
                     confirmButtonText: 'Ok'
                 })
             }
-
-            
         },
 
         Cancelar() {

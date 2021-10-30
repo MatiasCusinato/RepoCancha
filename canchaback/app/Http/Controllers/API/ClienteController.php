@@ -7,6 +7,7 @@ use App\Models\Cliente;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Crypt;
 
 class ClienteController extends Controller
 {
@@ -22,7 +23,7 @@ class ClienteController extends Controller
                             ->join('clientes', 'cliente_club_configuracion.cliente_id', '=', 'clientes.id')
                             ->where('cliente_club_configuracion.club_configuracion_id', '=', $club_id)
                             ->select('clientes.*')
-                            ->orderBy('id', 'asc')
+                            ->orderBy('clientes.id', 'asc')
                             ->get();
 
             if($clientes->isEmpty()){
@@ -72,8 +73,12 @@ class ClienteController extends Controller
     {
         //Valido que el email sea UNICO en la tabla clientes
         $val = Validator::make($request->all(), [
-            'email' => 'required|unique:clientes',
-            'club_configuracion_id' => 'required',
+            'email' => 'required|unique:clientes|max:50',
+            'club_configuracion_id' => ['required', 'exists:club_configuracions,id'],
+            'nombre' => ['required', 'max:30'],
+            'apellido' => ['required', 'max:30'],
+            'telefono' => ['required', 'max:30'],
+            'edad' => ['required'],
         ]); 
 
         //Si el email ya existe(falló el validador), se agrega un registro en
@@ -88,12 +93,6 @@ class ClienteController extends Controller
                                                 ])
                                                 ->select('cliente_club_configuracion.*')
                                                 ->get();
-            //dd($sqlValidacionClienteClub);
-
-            //dd(count($sqlValidacionClienteClub));
-            //dd($cliente->id);
-            //dd($request->club_configuracion_id);
-
 
             //Verifico si ya esta registrado ese cliente y ese club
             if(count($sqlValidacionClienteClub) > 0){
@@ -164,7 +163,7 @@ class ClienteController extends Controller
                             ->join('clientes', 'cliente_club_configuracion.cliente_id', '=', 'clientes.id')
                             ->where('cliente_club_configuracion.club_configuracion_id', '=', $club_id)
                             ->where('clientes.id', '=', $cliente_id)
-                            ->select('clientes.*')
+                            ->select('clientes.*', 'cliente_club_configuracion.club_configuracion_id')
                             ->get();
 
         return response()->json($cliente[0], 200);
@@ -177,20 +176,21 @@ class ClienteController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Cliente $cliente, $cliente_id)
+    public function update(Request $request, Cliente $cliente, $club_id, $cliente_id)
     {
         $val = Validator::make($request->all(), [
-            "nombre" => 'required',
-            "apellido" => 'required',
-            "telefono" => 'required',
-            "edad" => 'required',
-            "email" => 'required',
+            'email' => 'required|max:50',
+            'club_configuracion_id' => ['required', 'exists:club_configuracions,id'],
+            'nombre' => ['required', 'max:30'],
+            'apellido' => ['required', 'max:30'],
+            'telefono' => ['required', 'max:30'],
+            'edad' => ['required'],
         ]); 
 
         if($val->fails()){
             return response()->json([
                     'msj' => 'Error', 
-                    'razon' => 'Faltan datos o alguno de ellos esta mal ingresado.'
+                    'razon' => 'Falta uno de los datos, o algun campo sobrepasa los caracteres maximos(50 email, 30 los demas campos).'
             ], 400);
         }else { 
             try {
@@ -223,14 +223,14 @@ class ClienteController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($club_id, $cliente_id, Cliente $cliente)
+    public function destroy($club_id, $cliente_id, Cliente $cliente, Request $request)
     {   
         $club = DB::table('club_configuracions')
                     ->select('club_configuracions.id')
                     ->where('club_configuracions.id', '=', $club_id)
                     ->get();
 
-        if(count($club) < 1){
+        if($club->isEmpty()){
             return response()->json([
                 'msj' => 'Error',
                 'razon' => 'El club especificado no existe'
@@ -239,13 +239,48 @@ class ClienteController extends Controller
 
         try {
             DB::beginTransaction();
-            
-            DB::table('cliente_club_configuracion')
+
+            $existeCliente= DB::table('cliente_club_configuracion')
+                                ->where([
+                                    ['cliente_id', '=', $cliente_id],
+                                ])
+                                ->get();
+
+            if($existeCliente->isEmpty()){
+                DB::table('clientes')
                     ->where([
-                        ['cliente_id', '=', $cliente_id],
-                        ['club_configuracion_id', '=', $club_id],
+                        ['id', '=', $cliente_id],
                     ])
                     ->delete();
+
+                return response()->json([
+                    'msj' => 'Exitosa',
+                    'razon' => 'Cliente eliminado de la bd'
+                ], 200);
+            } else {
+                $vinculacionClienteClub= DB::table('cliente_club_configuracion')
+                                                ->where([
+                                                    ['cliente_id', '=', $cliente_id],
+                                                    ['club_configuracion_id', '=', $club_id],
+                                                ])
+                                                ->get();
+                                                
+                if($vinculacionClienteClub->isEmpty()){
+                    return response()->json([
+                        'msj' => 'Error',
+                        'razon' => 'El cliente no esta registrado o ya ha sido borrado'
+                    ], 200);
+                } else{
+                    DB::table('cliente_club_configuracion')
+                        ->where([
+                            ['cliente_id', '=', $cliente_id],
+                            ['club_configuracion_id', '=', $club_id],
+                        ])
+                        ->delete();
+                }
+            }
+
+                
 
             DB::commit(); 
         }
@@ -257,15 +292,11 @@ class ClienteController extends Controller
             return response()->json(["msj" => "Error!!, rollback"], 400);
         }
         
-        return response()->json([
-            'msj' => 'Exitosa',
-            'razon' => 'Cliente eliminado'
-        ], 200);
         
-         
+    
     }
 
-    public function filtroNombre($club_id, $nombre){
+    public function filtroNombre($club_id, $nombre, Request $request){
         $clientes = DB::table('cliente_club_configuracion')
                             ->join('clientes', 'cliente_club_configuracion.cliente_id', '=', 'clientes.id')
                             ->where([

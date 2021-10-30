@@ -4,25 +4,27 @@
         <!-- <div>
             <span>{{this.paginacion}}</span>
         </div> -->
-
-        <div class="divFiltros">
-            <h4>Filtros:</h4>
-            <input type="text" placeholder="Filtro por nombre" v-model="filtroNombre">
-            <br>
-            <br>
-            <button type="button" class="boton btn btn-secondary btn-sm" @click="traerFiltro()">
-                <i class="bi bi-search"></i>
-            </button>
+        <div>
+            <div class="divFiltros">
+                <h4>Filtros:</h4>
+                <input type="text" autofocus placeholder="Filtro por nombre" v-model="filtroNombre" maxlength="20">
+                <br>
+                <br>
+                <button type="button" class="boton btn btn-secondary btn-sm" @click="traerFiltro()">
+                    <i class="bi bi-search"></i>
+                </button>
+            </div>
+            <div class="btncli">
+                <button class="btn btn-success" @click="desplegarABMcliente('Crear')" 
+                        style="font-size: 22px"> 
+                    <i class="bi bi-person-plus-fill"> Agregar un nuevo Cliente </i> 
+                </button>
+            </div>
         </div>
 
         <br>
 
-        <div class="btncli">
-            <button class="btn btn-success" @click="desplegarABMcliente('Crear')" 
-                    style="font-size: 22px"> 
-                <i class="bi bi-person-plus-fill"> Agregar un nuevo Cliente </i> 
-            </button>
-        </div>
+        
 
         <br>
         <br>
@@ -135,16 +137,11 @@ export default {
         this.traerDatos(1)
     },
 
-    mounted() {
-        console.log("evento mounted")
-        //this.traerDatos()
-    },
-
     methods: {
         traerDatos(pagina) {
             console.log("Obteniendo CLIENTES desde la API ...");
-            let club= localStorage.getItem('club')
-            this.ObtenerDatos(`clientes/${club}/3/?page=${pagina}`)
+            //let club= localStorage.getItem('club')
+            this.ObtenerDatos(`clientes/${this.$store.state.vClub}/3/?page=${pagina}`)
                 .then(res => {
                     this.datos = res.clientes.data;
                     this.paginacion= res.paginacion
@@ -162,6 +159,7 @@ export default {
             if (ver == true) {
                 this.traerDatos();
             }
+
             this.accion=''
         },
 
@@ -173,9 +171,8 @@ export default {
         },
 
         traerFiltro(){
-            let club= localStorage.getItem('club')
             if(this.filtroNombre){
-                this.ObtenerDatos(`clientes/${club}/nombre/${this.filtroNombre}`)
+                this.ObtenerDatos(`clientes/${this.$store.state.vClub}/nombre/${this.filtroNombre}`)
                     .then(res => {
                         if(res.clientes.length!=0){
                             this.datos = res.clientes;
@@ -264,12 +261,9 @@ h1 {
     text-align: center;
     border-width: 2px;
     font-size: 22px;
+    margin-left: -300px;
+    margin-right: auto;
 }   
-.tablecli{
-    /* position: relative; */
-    left: 80px;
-    top: -150px;
-}
 .divFiltros {
     /* border: 2px solid rgb(116, 113, 113);*/
     border: 2px black solid;
@@ -282,22 +276,17 @@ h1 {
     padding: 20px 40px;
     background-color:rgb(243, 214, 159);
     position: relative;
-    left: -500px;
-    top: 50px;
-}
-.navcli{
-    position: relative;
-    top: -10px;
-    left: 50px;
+    left: 40px;
+    top: 15px;
 }
 .btncli{
-    top: 450px;
+    top: 40px;
     position: relative;
-    left: 120px;
+    /* left: 120px;
     font-size: 20px;
     width:150px;
-    height:50px;
-}
+    height:50px; */
+} 
 /* .btnganancias{
     font-size: 20px;
     left: 50px;
@@ -308,11 +297,5 @@ h1 {
     position: relative;
     left: 200px;
     top: -54px;
-}
-.btncli {
-    position: absolute;
-    border-radius: 10px;
-    display: flex;
-    flex-direction: column;
 }
 </style>

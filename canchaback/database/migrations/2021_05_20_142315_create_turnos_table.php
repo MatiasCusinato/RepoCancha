@@ -31,7 +31,7 @@ class CreateTurnosTable extends Migration
                     ->references('id')->on('club_configuracions')
                     ->onDelete('set null');
                     
-            $table->string('tipo_turno');
+            $table->string('tipo_turno',30);
             $table->dateTime("fecha_Desde");
             $table->dateTime("fecha_Hasta");
             $table->integer("grupo");

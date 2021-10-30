@@ -71,13 +71,14 @@ class CanchaController extends Controller
         
         $val = Validator::make($request->all(), [
             'club_configuracion_id' => ['required', 'exists:club_configuracions,id'],
-            'deporte' => 'required',
+            'deporte' => ['required', 'max:30'],
         ]); 
+
 
         if($val->fails()){
             return response()->json([
                     'msj' => 'Error', 
-                    'razon' => 'Faltan datos o alguno de ellos esta mal ingresado.'
+                    'razon' => 'Falta uno de los datos, o algun campo sobrepasa los caracteres maximos(30).'
             ], 400);
         }else { 
             try {
@@ -129,18 +130,17 @@ class CanchaController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Cancha $cancha, $cancha_id)
+    public function update($club_id, $cancha_id, Request $request, Cancha $cancha)
     {
-    
         $val = Validator::make($request->all(), [
             'club_configuracion_id' => ['required', 'exists:club_configuracions,id'],
-            'deporte' => 'required',
+            'deporte' => ['required', 'max:30'],
         ]); 
-
+        
         if($val->fails()){
             return response()->json([
                     'msj' => 'Error', 
-                    'razon' => 'Faltan datos o alguno de ellos esta mal ingresado.'
+                    'razon' => 'Falta uno de los datos, o algun campo sobrepasa los caracteres maximos(30).'
             ], 400);
         }else { 
             try {
@@ -172,15 +172,15 @@ class CanchaController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($club_id, $cancha_id ) 
+    public function destroy($club_id, $cancha_id) 
     {
         $cancha= DB::table('canchas')
                         ->where([
                             ['club_configuracion_id', '=', $club_id],
                             ['id', '=', $cancha_id]
-                        ])
-                        ->get();
-
+                            ])
+                            ->get();
+    
         if(count($cancha) < 1){
             return response()->json([
                 'msj' => 'Eliminacion fallida',

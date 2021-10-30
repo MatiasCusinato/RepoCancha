@@ -85,11 +85,11 @@ export default {
     methods:{
         logoutUser(){
             let token= {
-                token_actual: localStorage.getItem('laravelToken')
+                token_actual: this.$store.state.vToken
             }
 
             if(token.token_actual){
-                token.token_actual = token.token_actual.slice(1,-1)
+                //token.token_actual = token.token_actual.slice(1,-1)
                 console.log("token "+ JSON.stringify(token)+ " a borrar")
                 
                 this.InsertarDatos("logout", token)

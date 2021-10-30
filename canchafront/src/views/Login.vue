@@ -51,10 +51,8 @@ export default {
                         })
                     } else {
                         let token = JSON.stringify(res.user.token_actual);
-                        let numeroClub = JSON.stringify(
-                            res.user.club_configuracion_id
-                        );
-    
+                        let numeroClub = JSON.stringify(res.user.club_configuracion_id);
+                        
                         this.$store.commit("guardarDatosUsuario", {
                             token,
                             numeroClub,
