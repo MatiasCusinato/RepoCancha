@@ -119,15 +119,15 @@ class clubConfiguracionController extends Controller
                                 ['turnos.estado', '=', 'Cobrado'],
                                 ['turnos.fecha_Desde', '<=', $fechaHasta],
                                 ['turnos.fecha_Hasta', '>=', $fechaDesde]
-                            ])
-                            ->select(DB::raw("COUNT(turnos.id) AS cant_turnos, 
-                                               COALESCE( SUM(turnos.precio), 0) AS ganancia"))
+                            ])  
+                            ->select(DB::raw("turnos.id, turnos.precio, 
+                                                SUM( turnos.precio ) OVER( ORDER BY id ) as total"))
                             ->get();
                             //dd($sqlGanancia[0]);
 
         return response()->json([
             "msj" => "Informe de ganancia exitoso",
-            "data" => $sqlGanancia[0]
+            "data" => $sqlGanancia
         ], 200);
                             
     }

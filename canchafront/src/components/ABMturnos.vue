@@ -134,15 +134,6 @@
                         </div>
 
                         <div class="contenido">
-                            <div class="row" v-if="accionAux=='Crear'">
-                                <div class="col-md-6 mb-3">
-                                    <div class="form-check form-switch">
-                                        <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" @click="cambiarTurno()">
-                                        <label class="form-check-label campo" for="flexSwitchCheckDefault">Turno fijo</label>
-                                    </div>
-                                </div>
-                            </div>
-
                             <div class="row">
                                 <div class="col-md-6 mb-3">
                                     <label for="" class="form-label campo">
@@ -174,7 +165,7 @@
 
                             <div class="mb-3">
                                 <label for="" class="form-label campo">
-                                    <i class="bi bi-flag"> Tipo de turno </i>
+                                    <i class="bi bi-flag"> Titulo del turno </i>
                                 </label>
                                 <input type="text" 
                                         autofocus
@@ -182,9 +173,20 @@
                                         v-model="datosTurno.tipo_turno"
                                         placeholder="Ej: Cumpleaños, entrenamiento, turno fijo de ...">
                             </div>
+                            
+                            <div class="row gy-2 justify-content-md-center" v-if="accionAux=='Crear'">
+                                <div class="col-md-6 mb-3">
+                                    <div class="form-check form-switch">
+                                        <label class="form-check-label campo" for="flexSwitchCheckDefault">
+                                            Turno fijo
+                                            <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" @click="cambiarTurno()">
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
 
                             <div>
-                                <div v-if="accionAux=='Editar'" class="row">
+                                <div v-if="accionAux=='Editar' || accionAux=='Crear'" class="row">
                                     <div class="col-md-6 mb-3">
                                         <label for="" class="form-label campo">
                                             <i class="bi bi-calendar2-day"> Comienzo: </i>
@@ -203,22 +205,6 @@
                                 </div>
 
                                 <div v-if="accionAux=='Crear'" class="row">
-                                    <div class="col-md-6 mb-3">
-                                        <label for="" class="form-label campo">
-                                            <i class="bi bi-calendar2-day"> Comienzo: </i>
-                                        </label>
-                                        <input type="datetime-local" v-model="datosTurno.fecha_Desde" 
-                                                class="form-control form-control-sm">
-                                    </div>
-
-                                    <div class="col-md-6 mb-3">
-                                        <label for="" class="form-label campo">
-                                            <i class="bi bi-calendar2-day"> Fin: </i>
-                                        </label>
-                                        <input type="datetime-local" v-model="datosTurno.fecha_Hasta" 
-                                                class="form-control form-control-sm">
-                                    </div>
-
                                     <div class="col-md-6 mb-3" v-if="datosTurno.grupo > 1">
                                         <label for="" class="form-label campo">
                                             <i class="bi bi-calendar2-day"> Fin por intervalos: </i> 
@@ -356,7 +342,7 @@ import * as moment from "moment/moment";
 export default {
     mixins: [apiRest],
 
-    props: ['eventoActual', 'accion'],
+    props: ['eventoActual', 'accion', 'canchaActual'],
     
     computed: {
         AccionABM(){
@@ -429,7 +415,7 @@ export default {
 
             datosTurno: {
                 cliente_id: 0,
-                cancha_id: 0,
+                cancha_id: this.eventoActual.objTurnos.cancha_id,
                 club_configuracion_id: this.$store.state.vClub,
                 tipo_turno: "",
                 fecha_Desde: moment().format('YYYY-MM-DDTHH:mm'),
@@ -541,7 +527,9 @@ export default {
                                     title: 'Turno/s borrado!',
                                     icon: 'success',
                                     confirmButtonText: 'Ok',
-                                    timer: 2500
+                                    timer: 2500,
+                                    position: 'top-end',
+                                    backdrop: false,
                                 })
 
                                 this.$emit('SalirDeABMturnos', true)  
@@ -585,10 +573,11 @@ export default {
                                     } else {
                                         this.$swal({
                                             title: 'Turno creado!',
-                                            text: ''+res.razon,
                                             icon: 'success',
                                             confirmButtonText: 'Ok',
-                                            timer: 2500
+                                            timer: 2500,
+                                            position: 'top-end',
+                                            backdrop: false,    
                                         })
 
                                         this.$emit('SalirDeABMturnos', true)  
@@ -613,7 +602,9 @@ export default {
                                         this.$swal({
                                             title: 'Turno editado!',
                                             icon: 'success',
-                                            confirmButtonText: 'Ok'
+                                            confirmButtonText: 'Ok',
+                                            position: 'top-end',
+                                            backdrop: false,
                                         })
 
                                         this.$emit('SalirDeABMturnos', true)  

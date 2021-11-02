@@ -17,23 +17,26 @@ class TurnoController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($club_id, $cancha_id)
+    public function index($club_id, $cancha_id, $estado=null)
     {
         $turnos = DB::table('turnos')
                     ->join('clientes', 'turnos.cliente_id', '=', 'clientes.id')
                     ->join('canchas', 'turnos.cancha_id', '=', 'canchas.id')
-                        ->where([
-                            ['turnos.club_configuracion_id', '=', $club_id],
-                            ['turnos.cancha_id', '=', $cancha_id],
-                        ])
-                            ->select('turnos.id', 'turnos.grupo', 'turnos.cliente_id',
-                                        'clientes.nombre', 'clientes.apellido',
-                                        'turnos.cancha_id', 'canchas.deporte',
-                                        'turnos.club_configuracion_id',
-                                        'turnos.tipo_turno', 'turnos.fecha_Desde',
-                                        'turnos.fecha_Hasta', 'turnos.precio',
-                                        'turnos.estado',)
-                            ->get();
+                    ->where([
+                        ['turnos.club_configuracion_id', '=', $club_id],
+                        ['turnos.cancha_id', '=', $cancha_id],
+                    ])
+                    ->select('turnos.id', 'turnos.grupo', 'turnos.cliente_id',
+                                'clientes.nombre', 'clientes.apellido',
+                                'turnos.cancha_id', 'canchas.deporte',
+                                'turnos.club_configuracion_id',
+                                'turnos.tipo_turno', 'turnos.fecha_Desde',
+                                'turnos.fecha_Hasta', 'turnos.precio',
+                                'turnos.estado')
+                    ->when($estado, function ($sql, $estado) {
+                        return $sql->where('turnos.estado', $estado);
+                    })
+                    ->get();
 
         return $turnos->toJson(JSON_PRETTY_PRINT);
     }
@@ -74,9 +77,9 @@ class TurnoController extends Controller
                 $fechaDesde= Carbon::parse($request->fecha_Desde)->format('Y-m-d'); //$fechaDesde= "2018-10-22"
                 $fechaHasta= Carbon::parse($request->fecha_Hasta)->format('Y-m-d');
             
-                $horaDesde= Carbon::parse($request->fecha_Desde)->format('H:m:s');//$horaDesde= "10:00:00"
-                
-                $horaHasta= Carbon::parse($request->fecha_Hasta)->format('H:m:s');
+                $horaDesde= Carbon::parse($request->fecha_Desde)->format('H:i:s');//$horaDesde= "10:00:00"
+                $horaHasta= Carbon::parse($request->fecha_Hasta)->format('H:i:s');
+            
                 
                 $fechaDesdeInt = strtotime($request->fecha_Desde); //Convierte el $request->fecha_Desde a formato timestamp --> 1543104000
                 $fechaHastaInt = strtotime($request->fecha_Hasta); 
@@ -277,8 +280,8 @@ class TurnoController extends Controller
         $fechaDesde= Carbon::parse($request->fecha_Desde)->format('Y-m-d'); //$fechaDesde= "2018-10-22"
         $fechaHasta= Carbon::parse($request->fecha_Hasta)->format('Y-m-d');
     
-        $horaDesde= Carbon::parse($request->fecha_Desde)->format('H:m:s'); //$horaDesde= "10:00:00"
-        $horaHasta= Carbon::parse($request->fecha_Hasta)->format('H:m:s');
+        $horaDesde= Carbon::parse($request->fecha_Desde)->format('H:i:s'); //$horaDesde= "10:00:00"
+        $horaHasta= Carbon::parse($request->fecha_Hasta)->format('H:i:s');
             
         $fechaDesdeInt = strtotime($request->fecha_Desde); //Convierte el $request->fecha_Desde a formato timestamp --> 1543104000
         $fechaHastaInt = strtotime($request->fecha_Hasta); 

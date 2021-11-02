@@ -158,14 +158,18 @@ export default {
                                     text: ''+res.razon,
                                     icon: 'error',
                                     confirmButtonText: 'Ok',
-                                    timer: 2500
+                                    timer: 2500,
+                                    position: 'top-end',
+                                    backdrop:false,
                                 })
                             } else {
                                 this.$swal({
-                                    title: '¡Cliente creado!',
+                                    title: `${res.msj}`,
                                     icon: 'success',
                                     confirmButtonText: 'Ok',
-                                    timer: 2500                           
+                                    timer: 2500 ,
+                                    position: 'top-end',
+                                    backdrop:false,                          
                                 })
                             }
                         })
@@ -186,11 +190,12 @@ export default {
                                 })
                             } else {
                                 this.$swal({
-                                    title: `${res.msj}`,
-                                    text: `${res.razon}`,
+                                    title: `${res.razon}`,
                                     icon: 'success',
                                     confirmButtonText: 'Ok',
-                                    timer: 2500
+                                    timer: 2500,
+                                    position: 'top-end',
+                                    backdrop: false,
                                 })
                             }
                         })
@@ -210,11 +215,12 @@ export default {
                                 })
                             } else {
                                 this.$swal({
-                                    title: `¡Eliminacion exitosa!`,
-                                    text: `El cliente ha sido eliminado`,
+                                    title: `¡Cliente eliminado exitosamente!`,
                                     icon: 'success',
                                     confirmButtonText: 'Ok',
-                                    timer: 2500
+                                    timer: 2500,
+                                    position: 'top-end',
+                                    backdrop: false,
                                 })
                             }
                         })

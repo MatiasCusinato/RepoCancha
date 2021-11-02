@@ -55,6 +55,7 @@
         <ABMturnos v-if="abrirABMturnos"
             :eventoActual="eventoActual"
             :accion="accion"
+            :canchaActual="canchaActual"
             @SalirDeABMturnos = MostrarABMturnos($event)
         />
         <div class="container">
@@ -152,6 +153,7 @@ export default {
         crearTurno(accion){
             this.abrirABMturnos = true
             this.accion= accion
+            console.log(this.canchaActual)
 
             this.eventoActual= {
                 //"start":"00-0-00",
@@ -160,7 +162,7 @@ export default {
                     "cliente_id":null,
                     "nombre":"",
                     "apellido":"",
-                    "cancha_id":null,
+                    "cancha_id": ""+this.canchaActual,
                     "deporte":"",
                     "club_configuracion_id":null,
                     "tipo_turno":"",
@@ -177,17 +179,18 @@ export default {
             this.ObtenerDatos(`canchas/${this.$store.state.vClub}`)
                 .then (res => {
                     if(res.msj=='Error'){
-                        this.$swal({
+                        return this.$swal({
                             title: ''+res.msj,
                             text: ''+res.razon,
                             icon: 'error',
                             confirmButtonText: 'Ok',
                             timer: 2500
                         })
+                    }else {
+                        this.canchas = res.canchas.data
+                        this.canchaActual= this.canchas[0].id
+                        this.traerTurnos(this.canchaActual);
                     }
-                    this.canchas = res.canchas.data
-                    this.canchaActual= this.canchas[0].id
-                    this.traerTurnos(this.canchaActual);
                 })
         },
 
@@ -223,7 +226,7 @@ export default {
                     end: this.datos[i].fecha_Hasta,
                     title: this.datos[i].tipo_turno,
                     objTurnos: this.datos[i],
-                    class: 'sport'
+                    class: this.datos[i].estado
                 })      
             }
         },
@@ -294,13 +297,22 @@ export default {
   margin: 4px 0 8px;
 }
 
-.vuecal__event.sport {
-    background-color: rgba(255, 102, 102, 0.9);
-    border: 1px solid rgb(235, 82, 82);
+.vuecal__event.Reservado {
+    background-color: rgba(27, 155, 44, 0.9);
+    border: 1px solid rgb(4, 15, 5);
     color: #fff;
 }
 
-
+.vuecal__event.Cobrado {
+    background-color: rgba(138, 138, 138, 0.9);
+    border: 1px solid rgb(8, 2, 2);
+    color: #fff;
+}
+.vuecal__event.Adeudado {
+    background-color: rgba(216, 104, 0, 0.9);
+    border: 1px solid rgb(0, 0, 0);
+    color: #fff;
+}
 
 
 .formABM {

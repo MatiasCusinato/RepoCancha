@@ -40,7 +40,7 @@ class ClienteController extends Controller
                             ->join('clientes', 'cliente_club_configuracion.cliente_id', '=', 'clientes.id')
                             ->where('cliente_club_configuracion.club_configuracion_id', '=', $club_id)
                             ->select('clientes.*')
-                            ->orderBy('id', 'asc')
+                            ->orderBy('id', 'desc')
                             ->paginate($registros);
 
         return [

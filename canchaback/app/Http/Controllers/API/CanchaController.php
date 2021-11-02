@@ -23,7 +23,6 @@ class CanchaController extends Controller
                             ->join('club_configuracions', 'canchas.club_configuracion_id', '=', 'club_configuracions.id')
                             ->where('canchas.club_configuracion_id', '=', $club_id)
                             ->select('canchas.*')
-                            ->orderBy('id', 'asc')
                             ->get();
 
             if($canchas->isEmpty()){

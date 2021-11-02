@@ -36,7 +36,7 @@ class CreateTurnosTable extends Migration
             $table->dateTime("fecha_Hasta");
             $table->integer("grupo");
             $table->integer('precio');   
-            $table->enum('estado', ['Reservado', 'Cobrado', 'En deuda']);   
+            $table->enum('estado', ['Reservado', 'Cobrado', 'Adeudado']);   
 
             $table->timestamps();
         });

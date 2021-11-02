@@ -140,7 +140,7 @@ export default {
     methods: {
         traerDatos(pagina) {
             console.log("Obteniendo CLIENTES desde la API ...");
-            this.ObtenerDatos(`clientes/${this.$store.state.vClub}/3/?page=${pagina}`)
+            this.ObtenerDatos(`clientes/${this.$store.state.vClub}/8/?page=${pagina}`)
                 .then(res => {
                     this.datos = res.clientes.data;
                     this.paginacion= res.paginacion
