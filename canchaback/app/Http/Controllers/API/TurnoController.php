@@ -231,7 +231,7 @@ class TurnoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($club_id, $turno_id)
+    public function show($club_id, $cancha_id, $turno_id)
     {
         $turno = DB::table('turnos')
                     ->join('clientes', 'turnos.cliente_id', '=', 'clientes.id')
@@ -372,6 +372,39 @@ class TurnoController extends Controller
             //Ya hay un turno reservado, retorno false, NO PUEDE reservar
             return false;
         }
+    }
+
+
+    public function ultimosReservados($club_id, Request $request)
+    {
+        $fechaComienzo= $request->fecha_Desde;
+        $fechaFin= $request->fecha_Hasta;
+
+        $ultimosTurnos= DB::table('turnos')
+                                    ->join('clientes', 
+                                                'turnos.cliente_id', '=', 'clientes.id')
+                                    ->join('canchas', 
+                                                'turnos.cancha_id', '=', 'canchas.id')
+                                    ->where([
+                                        ['turnos.club_configuracion_id', '=', $club_id],
+                                        ['turnos.fecha_Desde', '<', $fechaFin], 
+                                        ['turnos.fecha_Hasta', '>', $fechaComienzo],  
+                                        ['turnos.estado', '=', 'Reservado'],  
+                                    ])
+                                    ->select('turnos.id', 'turnos.grupo', 'turnos.cliente_id',
+                                                'clientes.nombre', 'clientes.apellido',
+                                                'turnos.cancha_id', 'canchas.deporte',
+                                                'turnos.club_configuracion_id',
+                                                'turnos.tipo_turno', 'turnos.fecha_Desde',
+                                                'turnos.fecha_Hasta', 'turnos.precio',
+                                                'turnos.estado')
+                                    ->get();
+        //dd($ultimosTurnos);
+        return response()->json([
+            "msj" => "Ultimos turnos reservados",
+            "data" => $ultimosTurnos
+        ]);
+
     }
 
 }

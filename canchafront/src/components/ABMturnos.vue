@@ -7,10 +7,8 @@
                 <div class="VentanaModalConsultar">
                     <div class="cabecera tituloventana">
                         <h5 class="h5ABMTurnos">Evento: <br>
-                        {{ eventoActual.title }}</h5>
-                        <div class="container overflow-hidden gx-1">
-                            <!-- <h5 class="card-title"><i class="bi bi-calendar"> Fecha: {{ eventoActual.start && eventoActual.start.format('DD/MM/YYYY') }} </i></h5> -->
-                            
+                        {{ datosTurno.tipo_turno }}</h5>
+                        <div class="container overflow-hidden gx-1">                     
                             <div class="row justify-content-md-center">
                                 <div class="col-md-6 mb-3">
                                     <span><i class="bi bi-person campo"> Cliente: </i></span>
@@ -76,7 +74,7 @@
                             <hr class="hrBarra">
 
                             <div class="row">   
-                                <div class="row justify-content-md-center" v-if="eventoActual.objTurnos.estado=='Reservado'">
+                                <div class="row justify-content-md-center" v-if="datosTurno.estado=='Reservado'">
                                     <button @click="terminarTurno()" 
                                         class="btn btn-warning col-md-6 mb-3" style="margin: auto auto 10px">
                                         <i class="bi bi-check-square"> Terminar turno</i>  
@@ -287,51 +285,8 @@
             </div>
         </div>
 
-        <!-- Modal Ganacia "consultar" -->
-        <h1 class="bg-primary text-white text-center mb-3"> Ganancias </h1>
-            <div v-if="!abrirGanancia && accionAux=='ConsultarGanancia'">
-                <div class="contenedor">
-                    <div class="VentanaModalGanancia">
-                        <div class="cabecera tituloventanaganancia">
-                            <h5 class="h5ABMGanacia"> Ganancia </h5>
-                            <div class="alert alert-success" role="alert">
-                               <i class="bi bi-info-circle-fill"></i>
-                               Calcule la ganacia de los turnos cobrados colocando solo 2 fechas
-                            </div>
-                            <div class="container overflow-hidden gx-1">
-                                <div class="row gy-2 justify-content-md-center">
-                                    <div class="col-md-6 mb-3">
-                                        <span><i class="bi bi-hourglass-top campo"> Comienzo: </i></span>
-                                        <input type="date" class="form-control form-control-sm inputChico" 
-                                                v-model="objganancia.fecha_Desde">
-                                    </div>
-
-                                    <div class="col-md-6 mb-3">
-                                        <span><i class="bi bi-hourglass-bottom campo"> Fin: </i></span>
-                                        <input type="date" class="form-control form-control-sm inputChico" 
-                                                v-model="objganancia.fecha_Hasta">
-                                    </div>
-                                </div>
-
-                                <div class="container">
-                                    <div class="row">
-                                        <div class="col-md-6 mb-3">
-                                                <button class="btn btn-primary" @click="EnviarGanacia()">
-                                                        <i class="bi bi-check2-circle"> Enviar </i>
-                                                </button>
-                                        </div>
-                                        <div class="col-md-6 mb-3">
-                                                <button class="btn btn-danger" @click="Cancelar()">
-                                                        <i class="bi bi-x-circle-fill"> Atras </i>
-                                                </button>
-                                        </div>
-                                    </div>  
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        
+        
     </div>
 </template>
 
@@ -342,7 +297,7 @@ import * as moment from "moment/moment";
 export default {
     mixins: [apiRest],
 
-    props: ['eventoActual', 'accion', 'canchaActual'],
+    props: ['accion', 'turnoObjeto'],
     
     computed: {
         AccionABM(){
@@ -351,43 +306,43 @@ export default {
         },
 
         FechaActual() {
-            let fechaActual = this.eventoActual.start.format('DD/MM/YYYY');
+            let fechaActual = this.datosTurno.fecha_Desde.slice(0,10);
             return fechaActual + " "
-        },
+        }, 
 
         NombreApellido() {
-            let nombre = this.eventoActual.objTurnos.nombre;
-            let apellido = this.eventoActual.objTurnos.apellido;
+            let nombre = this.datosTurno.nombre;
+            let apellido = this.datosTurno.apellido;
             return nombre + " " + apellido 
         },
 
         Cancha() {
-            let cancha_id = this.eventoActual.objTurnos.cancha_id;
-            let deporte = this.eventoActual.objTurnos.deporte;
+            let cancha_id = this.datosTurno.cancha_id;
+            let deporte = this.datosTurno.deporte;
             return cancha_id+ "| "+ deporte
         },
 
         Comienzo() {
-            let comienzo = moment(this.eventoActual.objTurnos.fecha_Desde).format("HH:mm");
+            let comienzo = moment(this.datosTurno.fecha_Desde).format("HH:mm");
             return comienzo + " hrs."
         },
 
         Fin() {
-            let fin = moment(this.eventoActual.objTurnos.fecha_Hasta).format("HH:mm");
+            let fin = moment(this.datosTurno.fecha_Hasta).format("HH:mm");
             return fin + " hrs."
         },
 
         TipoTurno() {
-            let tipoTurno = this.eventoActual.objTurnos.tipo_turno;
+            let tipoTurno = this.datosTurno.tipo_turno;
             return tipoTurno + " "
         },
 
         Precio(){
-            let precio = this.eventoActual.objTurnos.precio;
+            let precio = this.datosTurno.precio;
             return precio + " "
         },
         Estado(){
-            let estado = this.eventoActual.objTurnos.estado;
+            let estado = this.datosTurno.estado;
             return estado + " "
         },
     },
@@ -412,10 +367,12 @@ export default {
     data() {
         return {
             moment: moment,
+            accionAux: this.accion,
+            turnoObjetoAux: this.turnoObjeto,
 
             datosTurno: {
                 cliente_id: 0,
-                cancha_id: this.eventoActual.objTurnos.cancha_id,
+                cancha_id: this.turnoObjeto.cancha_id,
                 club_configuracion_id: this.$store.state.vClub,
                 tipo_turno: "",
                 fecha_Desde: moment().format('YYYY-MM-DDTHH:mm'),
@@ -447,19 +404,14 @@ export default {
 
             alertaFormulario:[],
 
-            accionAux: this.accion,
             fechaDesdeAux: "",
             fechaHastaAux: "",
             
             abrirFormTurnos: false,
 
-            abrirGanancia: false,
+            abrirUltimosTurnos: false,
 
-            objganancia: { 
-                club_configuracion_id: this.$store.state.vClub,
-                fecha_Desde: moment().format('YYYY-MM-DDTHH:mm'),
-                fecha_Hasta: moment().format('YYYY-MM-DDTHH:mm'),
-            },
+            
         }
     },
 
@@ -489,13 +441,13 @@ export default {
                 confirmButtonColor: '#FF321A',
                 denyButtonColor: '#AB00BB',
             }).then((result) => {
-                let grupo= ""+this.eventoActual.objTurnos.grupo;
-                let turno_id= ""+ this.eventoActual.objTurnos.id;
+                let grupo= ""+this.datosTurno.grupo;
+                let turno_id= ""+ this.datosTurno.id;
                 let grupo_turno_id = "";
 
                 result.isConfirmed ? grupo_turno_id= grupo+"/"+turno_id : grupo_turno_id= grupo;
                 
-                if((result.isDenied) && (this.eventoActual.objTurnos.grupo <= 1)){
+                if((result.isDenied) && (this.datosTurno.grupo <= 1)){
                     this.$swal({
                         title: '¡Error!',
                         text: 'No se pueden eliminar todos los turnos normales (grupo 1)',
@@ -586,7 +538,7 @@ export default {
                         }
 
                         if(this.accionAux=='Editar'){  
-                            this.EditarDatos(`turnos/editar`, this.eventoActual.objTurnos.id, this.datosTurno)
+                            this.EditarDatos(`turnos/editar`, this.datosTurno.id, this.datosTurno)
                                 .then(res => {
                                     //console.log(res)
                                     if(res.msj=="Error"){
@@ -631,90 +583,26 @@ export default {
             
         },
 
-        EnviarGanacia() {
-            this.alertaFormulario= [];
-            let fechaDesde= this.objganancia.fecha_Desde
-            let fechaHasta= this.objganancia.fecha_Hasta
-            let a = moment(fechaHasta);
-            let b = moment(fechaDesde);
-            //console.log(a.diff(b, 'days') )
-            //console.log(a.diff(b, 'days') < 2)
-
-            //Valido si la Fecha1 es mayor a la Fecha2, o si la Fecha2 es anterior a la Fecha1 y por ultimo, si son iguales
-            if(moment(fechaDesde).format('x') > moment(fechaHasta).format('x') ||
-                    moment(fechaHasta).format('x') < moment(fechaDesde).format('x')){
-                this.alertaFormulario+="Puede que las fechas esten mal expresadas (Fecha1 es posterior a la Fecha2 o viceversa)";                
-            }
-
-            //Valido que las fechas no sean iguales y tengan como minimo una diferencia de 2 dias entre sus fechas
-            if(moment(fechaHasta).format('x') == moment(fechaDesde).format('x') || (a.diff(b, 'days') < 2 && a.diff(b, 'days') > 0) ){
-                this.alertaFormulario+=". Las fechas no deben ser iguales, deben tener por lo menos 48 horas entre ellas";                
-            }
-
-            if(this.alertaFormulario.length > 0){
-                this.$swal({
-                    title: 'Error',
-                    text: ''+this.alertaFormulario,
-                    icon: 'error',
-                    confirmButtonText: 'Ok',
-                    timer: 5000
-                })
-                return
-            }
-
-            this.InsertarDatos("clubes/ganacias", this.objganancia)
-                .then(res => {
-                    //console.log(res)
-                    if(res.msj == "Error") {
-                        this.$swal({
-                            title: ''+res.msj,
-                            text: ''+res.razon,
-                            icon: 'error',
-                            confirmButtonText: 'Ok',
-                            timer: 2500
-                        }) 
-                    } else {
-                        this.$swal({
-                            title: ''+res.msj,
-                            text: 'Cant de Turnos cobrados: '+res.data.cant_turnos + ". Ganancia Total: $" + res.data.ganancia,
-                            icon: 'info',
-                            confirmButtonText: 'Ok',
-                            timer: 10000
-                        })
-                    }       
-                })
-                
-                
-        },
-        
-        
-
         desplegarABMturnos(accion, abm) {
             this.accionAux = accion
             if(abm){   
                 this.abrirFormTurnos = !this.abrirFormTurnos
             }
 
-            if(this.accionAux=='Editar'){
+            if(accion!='Crear'){
+                this.ObtenerDatos(`turnos/${this.$store.state.vClub}/${this.turnoObjetoAux.cancha_id}/show/${this.turnoObjetoAux.turno_id}`)
+                    .then(res => {
+                        this.datosTurno= res[0]
 
-                let fechaDesde= this.eventoActual.objTurnos.fecha_Desde
-                let fechaHasta= this.eventoActual.objTurnos.fecha_Hasta
-
-                //console.log(moment(fechaDesde).format('YYYY-MM-DD'));
-                //console.log(this.datosTurno.fecha_Desde);
-
-                this.datosTurno.cliente_id = this.eventoActual.objTurnos.cliente_id
-                this.datosTurno.cancha_id = this.eventoActual.objTurnos.cancha_id
-                this.datosTurno.club_configuracion_id = this.eventoActual.objTurnos.club_configuracion_id
-                this.datosTurno.tipo_turno = this.eventoActual.objTurnos.tipo_turno
-                this.datosTurno.fecha_Desde = this.transformarFecha(fechaDesde, 'abm')
-                this.datosTurno.fecha_Hasta = this.transformarFecha(fechaHasta, 'abm')
-                this.datosTurno.grupo = this.eventoActual.objTurnos.grupo
-                this.datosTurno.precio = this.eventoActual.objTurnos.precio
-                this.datosTurno.diasFijo[0] = moment(this.transformarFecha(fechaDesde, 'abm')).format('ddd');
-                this.datosTurno.estado = this.eventoActual.objTurnos.estado
-                this.datosTurno.token = this.$store.state.vToken
-            }
+                        let fechaDesde= this.datosTurno.fecha_Desde
+                        let fechaHasta= this.datosTurno.fecha_Hasta
+                        
+                        this.datosTurno.fecha_Desde = moment(fechaDesde).format('YYYY-MM-DDTkk:mm')
+                        this.datosTurno.fecha_Hasta = moment(fechaHasta).format('YYYY-MM-DDTkk:mm')
+                        this.datosTurno.diasFijo = [moment(this.transformarFecha(fechaDesde, 'abm')).format('ddd')];
+                        this.datosTurno.token= this.$store.state.vToken;
+                    })
+            } 
         },
     
         traerClientes(){
@@ -736,7 +624,8 @@ export default {
                 //La fecha pasa de esto: 2018-11-14 10:00:00 a esto --> 2018-11-14T10:00 
                 //  para poder mostrarla en input datetime-local
                 //fecha= fecha.replace(fecha[10], 'T').slice(0, 16)
-                fecha= moment(fecha).format('YYYY-MM-DDTHH:mm')
+                fecha= moment(fecha).format('YYYY-MM-DDTkk:mm')
+                //console.log(fecha)
             } else if(razon=='enviar'){
                 //Metodo viceversa: La fecha pasa de esto: 2018-11-14T10:00 a esto --> 2018-11-14 10:00:00 para enviarla a la BD
                 //fecha= fecha.replace('T', ' ')+':00'
@@ -885,18 +774,21 @@ p{
     width: 450px;
     margin: 25px auto;
 }
-.VentanaModalGanancia {
-    background-color: rgb(35, 155, 86 );
-    border-radius: 10px;
-    padding: 28px;
-    width: 450px;
-    margin: 25px auto;
-}
 
-table{
+table, th, td{
+    border: 2px solid rgb(116, 113, 113);
+    border-collapse: collapse;
+    margin:10px auto 10px auto;
+    padding: 10px;
+    text-align: center;
+    border-width: 2px;
+    font-size: 22px;
+} 
+
+/* table{
     background-color: whitesmoke;
     margin: 0px 40px 10px;
-}
+} */
 
 .cierre{
     background: white;
@@ -908,10 +800,6 @@ table{
     color:white;
 }
 
-.tituloventanaganancia{
-    text-align:center;
-    color:black;
-}
 
 .campo{
 	color: white;
