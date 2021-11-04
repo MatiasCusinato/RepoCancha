@@ -194,11 +194,33 @@
                                     </div>
 
                                     <div class="col-md-6 mb-3">
-                                        <label for="" class="form-label campo">
-                                            <i class="bi bi-calendar2-day"> Fin: </i> 
-                                        </label>
-                                        <input type="datetime-local" v-model="datosTurno.fecha_Hasta"
-                                                class="form-control form-control-sm ">
+                                        <div v-if="datosTurno.grupo==1">
+                                            <label for="" class="form-label campo">
+                                                <i class="bi bi-stopwatch"> Duracion: </i> 
+                                            </label>
+                                            <!-- <input type="datetime-local" v-model="datosTurno.fecha_Hasta"
+                                                    class="form-control form-control-sm "> -->
+                                            
+                                            <select name="intervalo_hora" v-model="datosTurno.fecha_Hasta" 
+                                                class="form-select inputChico" aria-label=".form-select-sm example">
+                                            
+                                                <option v-for="(intervalo, $id) in arrIntervalosHoras" 
+                                                    :key="$id"
+                                                    :value="intervalo.valor">
+                                                        {{intervalo.texto}}
+                                                </option>
+                                            </select>
+                                        </div>
+
+                                        <div v-if="datosTurno.grupo>1">
+                                            <div class="col mb-3">
+                                                <label for="" class="form-label campo">
+                                                    <i class="bi bi-calendar2-day"> Fin: </i>
+                                                </label>
+                                                <input type="datetime-local" v-model="datosTurno.fecha_Hasta" 
+                                                        class="form-control form-control-sm">
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
 
@@ -209,7 +231,12 @@
                                         </label>
                                         <select name="cancha_id" v-model="datosTurno.fecha_Hasta" 
                                                 class="form-select inputChico" aria-label=".form-select-sm example">
-                                            <option :value="this.moment(datosTurno.fecha_Desde).add({weeks:3,hours:1}).format('YYYY-MM-DDTHH:mm')">
+                                            <option v-for="(intervaloFijo, $id) in arrIntervalosFijo" 
+                                                :key="$id"
+                                                :value="intervaloFijo.valor">
+                                                    {{intervaloFijo.texto}}
+                                            </option>
+                                            <!-- <option :value="this.moment(datosTurno.fecha_Desde).add({weeks:3,hours:1}).format('YYYY-MM-DDTHH:mm')">
                                                     3 semanas
                                             </option>
 
@@ -223,7 +250,7 @@
 
                                             <option :value="this.moment(datosTurno.fecha_Desde).add({months:2,hours:1}).format('YYYY-MM-DDTHH:mm')">
                                                     2 mes
-                                            </option> 
+                                            </option>  -->
                                         </select>
                                     </div>
                                 </div>
@@ -353,6 +380,24 @@ export default {
         if (this.accionAux != '') {
             if(this.accionAux=='Crear'){
                 this.desplegarABMturnos('Crear', true)
+                for (let i = 1; i < 10; i++) {
+
+                    this.arrIntervalosHoras.push({   
+                        texto: i+" hora/s",
+                        valor: moment(this.datosTurno.fecha_Desde).add({hours:i}).format('YYYY-MM-DDTHH:mm')
+                    })
+                    
+                }
+
+                this.arrIntervalosFijo.push({
+                    texto: "3 semanas",
+                    valor: moment(this.datosTurno.fecha_Desde).add({weeks:3}).format('YYYY-MM-DDTHH:mm')
+                },
+                {
+                    texto: "4 semanas",
+                    valor: moment(this.datosTurno.fecha_Desde).add({weeks:4}).format('YYYY-MM-DDTHH:mm')
+                },
+                )
             }
             
             if(this.accionAux=='Consultar'){
@@ -375,16 +420,18 @@ export default {
                 cancha_id: this.turnoObjeto.cancha_id,
                 club_configuracion_id: this.$store.state.vClub,
                 tipo_turno: "",
-                fecha_Desde: moment().format('YYYY-MM-DDTHH:mm'),
-                fecha_Hasta: moment().add(1, 'hours').format('YYYY-MM-DDTHH:mm'),
+                fecha_Desde: moment().format('YYYY-MM-DDTHH:00'),
+                fecha_Hasta: moment().add(1, 'hours').format('YYYY-MM-DDTHH:00'),
                 grupo: 1,
                 precio: "",
-                estado: "",
+                estado: "Reservado",
                 diasFijo:[],
                 token: this.$store.state.vToken,
             },
 
-            arrIntervalos: [],
+            arrIntervalosHoras: [],
+            arrIntervalosFijo: [],
+
             turnoFijo: false,
             diasFijo: [
                 {diaES: "Lunes", diaEN: "Mon"}, 
@@ -453,7 +500,6 @@ export default {
                         text: 'No se pueden eliminar todos los turnos normales (grupo 1)',
                         icon: 'error',
                         confirmButtonText: 'Ok',
-                        timer: 2500
                     })
 
                     return
@@ -470,10 +516,7 @@ export default {
                                     text: ''+res.razon,
                                     icon: 'error',
                                     confirmButtonText: 'Ok',
-                                    timer: 2500 
                                 })
-
-                                this.$emit('SalirDeABMturnos', true)
                             } else {
                                 this.$swal({
                                     title: 'Turno/s borrado!',
@@ -518,10 +561,7 @@ export default {
                                             text: ''+res.razon,
                                             icon: 'error',
                                             confirmButtonText: 'Ok',
-                                            timer: 2500
                                         })
-
-                                        //this.$emit('SalirDeABMturnos', true)
                                     } else {
                                         this.$swal({
                                             title: 'Turno creado!',
@@ -548,8 +588,6 @@ export default {
                                             icon: 'error',
                                             confirmButtonText: 'Ok'
                                         })
-
-                                        this.$emit('SalirDeABMturnos', true)
                                     } else {
                                         this.$swal({
                                             title: 'Turno editado!',
@@ -571,7 +609,6 @@ export default {
                         text: 'Errores:'+ this.alertaFormulario,
                         icon: 'warning',
                         confirmButtonText: 'Ok',
-                        timer: 2500
                     })   
                 }
 
@@ -680,6 +717,21 @@ export default {
         },
         
     },
+
+    watch: {
+        //Cada vez que se asigne una fecha_Desde diferente, voy a rellenar los intervalosHora con fecha_Hasta respe
+        'datosTurno.fecha_Desde': function (){
+            this.arrIntervalosHoras= [];
+
+            for (let i = 1; i < 10; i++) {
+                this.arrIntervalosHoras.push({   
+                    texto: i+" hora/s",
+                    valor: moment(this.datosTurno.fecha_Desde).add({hours:i}).format('YYYY-MM-DDTHH:mm')
+                })
+                this.datosTurno.fecha_Hasta= this.arrIntervalosHoras[0].valor
+            }
+        },
+    }
 
     
 }

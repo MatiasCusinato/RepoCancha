@@ -1,7 +1,13 @@
 <template>
     <div style="margin: -30px ">
         <h2>Turnos</h2>
-        <div v-if="!abrirABMturnos">
+        <div v-if="!abrirABMturnos && alertaCanchas">
+            <div class="alert alert-danger" role="alert" style="text-align: center; font-size:20px">
+                <strong>¡No tenés canchas!</strong> <br>Para crear un turno, debes de crear una cancha en la vista <u>"Mis canchas"</u>.<br>
+                Tambien deberas crear clientes desde la vista <u>"Mis clientes"</u> 
+            </div>
+        </div>
+        <div v-if="!abrirABMturnos && canchas.length>0">
             <div class="btncli">
                 <button class="btn btn-primary" @click="desplegarAccion('Crear', 0, canchaActual)"  
                         style="font-size: 20px"> 
@@ -27,7 +33,7 @@
             </div>
         </div>
 
-        <div v-if="!abrirUltimosTurnos">
+        <div v-if="!abrirUltimosTurnos && canchas.length>0">
             <vue-cal class="calendarioVue vuecal--green-theme" 
                 :time-from="9 * 60" :time-to="24.5 * 60" 
                 :time-step="30" active-view="month" 
@@ -75,35 +81,33 @@
                                 <div class="row">
                                     <h1 class="bg-success text-white text-center"> 
                                         Ultimos turnos reservados 
-                                       
                                     </h1>     
                                 </div>
-                                
-                                <div class="col-md-5 mb-3">
-                                    <span><i class="bi bi-hourglass-top campo "> Comienzo: </i></span>
-                                    <input type="datetime-local" class="form-control form-control-sm input-md" 
-                                            v-model="objUltimosTurnos.fecha_Desde">
-                                </div>
-
-                                <div class="col-md-5 mb-3">
-                                    <span><i class="bi bi-hourglass-bottom campo "> Fin: </i></span>
-                                    <input type="datetime-local" class="form-control form-control-sm input-md" 
-                                            v-model="objUltimosTurnos.fecha_Hasta">
-                                </div>
                             </div>
 
-                            <div class="container">
-                                <div class="row justify-content-md-center">
-                                        <button class="btn btn-primary col-md-2 mb-3" @click="EnviarGanacia()">
-                                                <i class="bi bi-check2-circle"> Enviar </i>
-                                        </button>
+                            <div class="row justify-content-around">
+                                    <div class="col-4 mb-3">
+                                        <span><i class="bi bi-hourglass-top campo "> Comienzo: </i></span>
+                                        <input type="datetime-local" class="form-control form-control-sm input-md" 
+                                                v-model="objUltimosTurnos.fecha_Desde">
+                                    </div>
 
-                                            <button class="btn btn-danger col-md-2 mb-3" @click="cerrarUltimosTurnos()">
-                                            <i class="bi bi-x-circle-fill"> Atras </i>
-                                        </button>
-                                </div>  
-                            </div>
+                                    <div class="col-4 mb-3">
+                                        <span><i class="bi bi-hourglass-bottom campo "> Fin: </i></span>
+                                        <input type="datetime-local" class="form-control form-control-sm input-md" 
+                                                v-model="objUltimosTurnos.fecha_Hasta">
+                                    </div>
+                                </div>
 
+                            <div class="row justify-content-around">
+                                    <button class="btn btn-primary col-4" @click="obtenerUltimosTurnos()">
+                                            <i class="bi bi-check2-circle"> Enviar </i>
+                                    </button>
+
+                                    <button class="btn btn-danger col-4" @click="cerrarUltimosTurnos()">
+                                        <i class="bi bi-x-circle-fill"> Atras </i>
+                                    </button>
+                            </div>  
 
                             <table class="table-success tablecli" v-if="ultimosTurnos.length>0">
                                 <thead>
@@ -191,6 +195,7 @@ export default {
             },
 
             ultimosTurnos: [],
+            alertaCanchas: false,
         }
     },
 
@@ -249,13 +254,16 @@ export default {
             this.ObtenerDatos(`canchas/${this.$store.state.vClub}`)
                 .then (res => {
                     if(res.msj=='Error'){
-                        return this.$swal({
+                        this.$swal({
                             title: ''+res.msj,
                             text: ''+res.razon,
                             icon: 'error',
                             confirmButtonText: 'Ok',
                             timer: 2500
                         })
+
+                        this.alertaCanchas= true;
+                        return
                     }else {
                         this.canchas = res.canchas.data
                         this.canchaActual= this.canchas[0].id
@@ -272,11 +280,12 @@ export default {
                     //console.log(res)
                     if(res.length==0){
                         this.$swal({
-                            title: '¡Error!',
-                            text: 'Esta cancha no contiene turnos',
+                            title: 'Esta cancha no contiene turnos',
                             icon: 'error',
                             confirmButtonText: 'Ok',
-                            timer: 2500
+                            timer: 2000,
+                            position: 'top-end',
+                            backdrop:false,
                         })
                     } else {
                         this.datos = res;
@@ -302,25 +311,28 @@ export default {
         },
         
         MostrarABMturnos(ver) {
+            this.ultimosTurnos= [];
             this.abrirABMturnos= false
 
             if (ver === true) {
                 this.traerTurnos();
             }
         },
-
         
 
-        EnviarGanacia() {
+        obtenerUltimosTurnos() {
             this.alertaFormulario= [];
             //Valido si la Fecha1 es mayor a la Fecha2, o si la Fecha2 es anterior a la Fecha1 y por ultimo, si son iguales
-            /* if(moment(fechaDesde).format('x') > moment(fechaHasta).format('x') ||
-                    moment(fechaHasta).format('x') < moment(fechaDesde).format('x')){
-                this.alertaFormulario+="Puede que las fechas esten mal expresadas (Fecha1 es posterior a la Fecha2 o viceversa)";                
+            let fechaDesde= moment(this.objUltimosTurnos.fecha_Desde);
+            let fechaHasta= moment(this.objUltimosTurnos.fecha_Hasta);
+            if(fechaDesde.format('x') > fechaHasta.format('x') ||
+                    fechaHasta.format('x') < fechaDesde.format('x')){
+                this.alertaFormulario+="Las fechas estan mal indicadas (Fecha1 es posterior a la Fecha2 o viceversa)";                
             }
 
             //Valido que las fechas no sean iguales y tengan como minimo una diferencia de 2 dias entre sus fechas
-            if(moment(fechaHasta).format('x') == moment(fechaDesde).format('x') || (a.diff(b, 'days') < 2 && a.diff(b, 'days') > 0) ){
+            if(fechaHasta.format('x') === fechaDesde.format('x') || 
+                    (fechaHasta.diff(fechaDesde, 'days') < 2 && fechaHasta.diff(fechaDesde, 'days') > 0) ){
                 this.alertaFormulario+=". Las fechas no deben ser iguales, deben tener por lo menos 48 horas entre ellas";                
             }
 
@@ -333,7 +345,7 @@ export default {
                     timer: 5000
                 })
                 return
-            } */
+            }
 
             this.InsertarDatos(`turnos/${this.$store.state.vClub}/ultimosReservados`, this.objUltimosTurnos)
                 .then(res => {
@@ -344,7 +356,6 @@ export default {
                             text: ''+res.razon,
                             icon: 'error',
                             confirmButtonText: 'Ok',
-                            timer: 2500
                         }) 
                     } else {
                         this.ultimosTurnos= res.data;
@@ -444,6 +455,7 @@ p{
 	width: 100%;
 	height: 100%;
 	background: rgba(0,0,0,0.5);
+    overflow-y: scroll;
 }
 
 .VentanaModalCrear {

@@ -3,7 +3,6 @@
         <div v-if="club.length > 1">
             <div class="alert alert-primary divAlerta" role="alert">
                 ¡Clickea uno de nuestros clubes para observar sus turnos y sus canchas!
-                {{this.$route.params.club}}
             </div>
             
             <h1> Nuestros clubes: </h1>

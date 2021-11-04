@@ -91,13 +91,18 @@ class TurnoController extends Controller
 
                 //Compruebo que la fechaDesde no sean anterior a la fecha de HOY, 
                 //y tambien que la fechaDesde no sea posterior a la fechaHasta  y viceversa          
-                if(($request->estado =='Reservado' && $fechaDesdeInt < $fechaDeHoy) 
-                        || $fechaDesdeInt > $fechaHastaInt || $fechaHastaInt < $fechaDesdeInt){
+                if($request->estado =='Reservado' && $fechaDesdeInt < $fechaDeHoy){
                     return response()->json([
                         "msj" => 'Error',
-                        "razon" => 'Puede que la fecha especificada sea vieja, o que las fechas no son correctas (Fecha 1 es posterior a Fecha2)'
+                        "razon" => 'No podés RESERVAR un turno anterior a la fecha de HOY ('.Carbon::parse(now())->format('Y-m-d 00:00:00').'). Consejo: guardalo con otro estado.'
                     ], 400);
-                } 
+                    
+                } else if ($fechaDesdeInt > $fechaHastaInt || $fechaHastaInt < $fechaDesdeInt){
+                    return response()->json([
+                        "msj" => 'Error',
+                        "razon" => 'Las fechas estan mal especificadas (Fecha 1 es posterior a Fecha2 o viceversa)'
+                    ], 400);
+                }
 
                 $respuestaTurnoOcupado= response()->json([
                     "msj" => "Error",
@@ -288,16 +293,28 @@ class TurnoController extends Controller
         //dd($fechaDesde,$fechaHasta,$horaDesde,$horaHasta,$fechaDesdeInt,$fechaHastaInt);
 
         $fechaDeHoy= Carbon::parse(now())->format('Y-m-d 00:00:00');
-                $fechaDeHoy = strtotime($fechaDeHoy); //Variable q contiene el dia de hoy en formato timestamp
+        $fechaDeHoy = strtotime($fechaDeHoy); //Variable q contiene el dia de hoy en formato timestamp
                 
         //Compruebo que la fechaDesde no sean anterior a la fecha de HOY, 
-        //y tambien que la fechaDesde no sea posterior a la fechaHasta  y viceversa          
-        if(($request->estado =='Reservado' && $fechaDesdeInt < $fechaDeHoy) || $fechaDesdeInt > $fechaHastaInt || $fechaHastaInt < $fechaDesdeInt){
+        //y tambien que la fechaDesde no sea posterior a la fechaHasta  y viceversa     
+        if($request->estado =='Reservado' && $fechaDesdeInt < $fechaDeHoy){
+            return response()->json([
+                "msj" => 'Error',
+                "razon" => 'No podés RESERVAR un turno anterior a la fecha del dia Hoy ('.Carbon::parse(now())->format('Y-m-d 00:00:00').')'
+            ], 400);
+        } else if($fechaDesdeInt > $fechaHastaInt || $fechaHastaInt < $fechaDesdeInt){
+            return response()->json([
+                "msj" => 'Error',
+                "razon" => 'Las fechas especificadas no son correctas (Fecha 1 es posterior a Fecha2 o viceversa)'
+            ], 400);
+        }
+        /* if(($request->estado =='Reservado' && $fechaDesdeInt < $fechaDeHoy) 
+                    || $fechaDesdeInt > $fechaHastaInt || $fechaHastaInt < $fechaDesdeInt){
             return response()->json([
                 "msj" => 'Error',
                 "razon" => 'Puede que la fecha especificada sea vieja, o que las fechas no son correctas (Fecha 1 es posterior a Fecha2)'
             ], 400);
-        }
+        } */
         
         $valTurno = $this->validarTurno($request->fecha_Desde, $request->fecha_Hasta, $request->club_configuracion_id, $request->cancha_id, $turno_id);
 

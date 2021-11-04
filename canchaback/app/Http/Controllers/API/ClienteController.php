@@ -98,7 +98,7 @@ class ClienteController extends Controller
             if(count($sqlValidacionClienteClub) > 0){
                 return response()->json([
                     'msj' => 'Error',
-                    'razon' => 'Este cliente ya esta registrado!'
+                    'razon' => 'Ese e-mail ya esta registrado!'
                 ]);
             }else{
                 //Si no hay registro en la tabla "cliente_club_configuracion", inserto uno nuevo 
