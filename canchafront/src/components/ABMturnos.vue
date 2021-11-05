@@ -194,7 +194,7 @@
                                     </div>
 
                                     <div class="col-md-6 mb-3">
-                                        <div v-if="datosTurno.grupo==1">
+                                        <div v-if="datosTurno.grupo==1 || accionAux=='Editar'">
                                             <label for="" class="form-label campo">
                                                 <i class="bi bi-stopwatch"> Duracion: </i> 
                                             </label>
@@ -212,7 +212,7 @@
                                             </select>
                                         </div>
 
-                                        <div v-if="datosTurno.grupo>1">
+                                        <div v-if="datosTurno.grupo>1 && accionAux=='Crear'">
                                             <div class="col mb-3">
                                                 <label for="" class="form-label campo">
                                                     <i class="bi bi-calendar2-day"> Fin: </i>
@@ -380,24 +380,39 @@ export default {
         if (this.accionAux != '') {
             if(this.accionAux=='Crear'){
                 this.desplegarABMturnos('Crear', true)
-                for (let i = 1; i < 10; i++) {
 
+                for (let i = 1; i < 10; i++) {
                     this.arrIntervalosHoras.push({   
                         texto: i+" hora/s",
                         valor: moment(this.datosTurno.fecha_Desde).add({hours:i}).format('YYYY-MM-DDTHH:mm')
                     })
-                    
                 }
 
                 this.arrIntervalosFijo.push({
                     texto: "3 semanas",
-                    valor: moment(this.datosTurno.fecha_Desde).add({weeks:3}).format('YYYY-MM-DDTHH:mm')
+                    valor: moment(this.datosTurno.fecha_Desde).add({weeks:3, hours:1}).format('YYYY-MM-DDTHH:mm')
                 },
                 {
                     texto: "4 semanas",
-                    valor: moment(this.datosTurno.fecha_Desde).add({weeks:4}).format('YYYY-MM-DDTHH:mm')
+                    valor: moment(this.datosTurno.fecha_Desde).add({weeks:4, hours:1}).format('YYYY-MM-DDTHH:mm')
+                },
+                {
+                    texto: "1 mes",
+                    valor: moment(this.datosTurno.fecha_Desde).add({months:1, hours:1}).format('YYYY-MM-DDTHH:mm')
+                },
+                {
+                    texto: "2 mes",
+                    valor: moment(this.datosTurno.fecha_Desde).add({months:2, hours:1}).format('YYYY-MM-DDTHH:mm')
                 },
                 )
+            }
+            if(this.accionAux=='Editar'){
+                for (let i = 1; i < 10; i++) {
+                    this.arrIntervalosHoras.push({   
+                        texto: i+" hora/s",
+                        valor: moment(this.datosTurno.fecha_Desde).add({hours:i}).format('YYYY-MM-DDTHH:mm')
+                    })
+                }
             }
             
             if(this.accionAux=='Consultar'){
@@ -539,6 +554,7 @@ export default {
 
         Aceptar(){
             if(this.accionAux=='Editar' || this.accionAux=='Crear'){
+
                 this.datosTurno.fecha_Desde= this.transformarFecha(this.datosTurno.fecha_Desde, 'enviar')
                 this.datosTurno.fecha_Hasta= this.transformarFecha(this.datosTurno.fecha_Hasta, 'enviar')
 
@@ -564,10 +580,10 @@ export default {
                                         })
                                     } else {
                                         this.$swal({
-                                            title: 'Turno creado!',
+                                            title: '¡Turno creado!',
+                                            text: res.razon,
                                             icon: 'success',
                                             confirmButtonText: 'Ok',
-                                            timer: 2500,
                                             position: 'top-end',
                                             backdrop: false,    
                                         })
@@ -721,14 +737,36 @@ export default {
     watch: {
         //Cada vez que se asigne una fecha_Desde diferente, voy a rellenar los intervalosHora con fecha_Hasta respe
         'datosTurno.fecha_Desde': function (){
-            this.arrIntervalosHoras= [];
-
-            for (let i = 1; i < 10; i++) {
-                this.arrIntervalosHoras.push({   
-                    texto: i+" hora/s",
-                    valor: moment(this.datosTurno.fecha_Desde).add({hours:i}).format('YYYY-MM-DDTHH:mm')
-                })
-                this.datosTurno.fecha_Hasta= this.arrIntervalosHoras[0].valor
+            if(this.datosTurno.grupo>=1){
+                this.arrIntervalosHoras= [];
+                for (let i = 1; i < 10; i++) {
+                    this.arrIntervalosHoras.push({   
+                        texto: i+" hora/s",
+                        valor: moment(this.datosTurno.fecha_Desde).add({hours:i}).format('YYYY-MM-DDTHH:mm')
+                    })
+                    this.datosTurno.fecha_Hasta= this.arrIntervalosHoras[0].valor
+                }
+            } else {
+                this.arrIntervalosFijo=[];
+                this.arrIntervalosFijo.push({
+                    texto: "3 semanas",
+                    valor: moment(this.datosTurno.fecha_Desde).add({weeks:3, hours:1}).format('YYYY-MM-DDTHH:mm')
+                },
+                {
+                    texto: "4 semanas",
+                    valor: moment(this.datosTurno.fecha_Desde).add({weeks:4, hours:1}).format('YYYY-MM-DDTHH:mm')
+                },
+                {
+                    texto: "1 mes",
+                    valor: moment(this.datosTurno.fecha_Desde).add({months:1, hours:1}).format('YYYY-MM-DDTHH:mm')
+                },
+                {
+                    texto: "2 mes",
+                    valor: moment(this.datosTurno.fecha_Desde).add({months:2, hours:1}).format('YYYY-MM-DDTHH:mm')
+                },
+                )
+                
+                this.datosTurno.fecha_Hasta= this.arrIntervalosFijo[0].valor
             }
         },
     }

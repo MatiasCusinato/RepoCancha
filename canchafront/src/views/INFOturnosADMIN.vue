@@ -100,30 +100,31 @@
                                 </div>
 
                             <div class="row justify-content-around">
+                                    <button class="btn btn-danger col-4" @click="cerrarUltimosTurnos()">
+                                        <i class="bi bi-x-circle-fill"> Atras </i>
+                                    </button>
+
                                     <button class="btn btn-primary col-4" @click="obtenerUltimosTurnos()">
                                             <i class="bi bi-check2-circle"> Enviar </i>
                                     </button>
 
-                                    <button class="btn btn-danger col-4" @click="cerrarUltimosTurnos()">
-                                        <i class="bi bi-x-circle-fill"> Atras </i>
-                                    </button>
                             </div>  
-
+                             <br>
                             <table class="table-success tablecli" v-if="ultimosTurnos.length>0">
                                 <thead>
                                     <tr class="bg-success">
-                                        <th scope="col">ID</th>
-                                        <th scope="col">cliente</th>
-                                        <th scope="col">cancha</th>
-                                        <th scope="col">fecha_Desde</th>
-                                        <th scope="col">fecha_Hasta</th>
-                                        <th scope="col">precio</th>
+                                        <!-- <th scope="col">ID</th> -->
+                                        <th scope="col">Cliente</th>
+                                        <th scope="col">Cancha</th>
+                                        <th scope="col">Comienzo</th>
+                                        <th scope="col">Fin</th>
+                                        <th scope="col">Precio</th>
                                         <th scope="col">Acciones</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr v-for="(turno, index) in ultimosTurnos" :key="index">
-                                        <th scope="row">{{turno.id}}</th>
+                                        <!-- <th scope="row">{{turno.id}}</th> -->
                                         <td> {{turno.nombre}} {{turno.apellido}}</td>
                                         <td>{{turno.cancha_id}}| {{turno.deporte}}</td>
                                         <td> {{turno.fecha_Desde}} </td>
@@ -191,7 +192,7 @@ export default {
                 club_configuracion_id: this.$store.state.vClub,
                 token: this.$store.state.vToken,
                 fecha_Desde: moment().format('YYYY-MM-DDT00:00'),
-                fecha_Hasta: moment().add(2, 'days').format('YYYY-MM-DDT23:59'),
+                fecha_Hasta: moment().add({days: 2}).format('YYYY-MM-DDT23:59'),
             },
 
             ultimosTurnos: [],
@@ -337,14 +338,12 @@ export default {
             }
 
             if(this.alertaFormulario.length > 0){
-                this.$swal({
+                return this.$swal({
                     title: 'Error',
                     text: ''+this.alertaFormulario,
                     icon: 'error',
                     confirmButtonText: 'Ok',
-                    timer: 5000
                 })
-                return
             }
 
             this.InsertarDatos(`turnos/${this.$store.state.vClub}/ultimosReservados`, this.objUltimosTurnos)

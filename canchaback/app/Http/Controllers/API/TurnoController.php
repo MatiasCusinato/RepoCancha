@@ -106,7 +106,7 @@ class TurnoController extends Controller
 
                 $respuestaTurnoOcupado= response()->json([
                     "msj" => "Error",
-                    "razon" => "Esa fecha/horario ya esta reservado por otro turno, intente con otro."
+                    "razon" => "Esa fecha/horario ya esta reservado por otro turno, intente con otra fecha u horario."
                 ], 400);
 
 
@@ -135,6 +135,13 @@ class TurnoController extends Controller
 
                 } else {
                     //PARTE DE TURNO FIJO
+
+                    if(strtotime($horaHasta) <= strtotime($horaDesde)){
+                        return response()->json([
+                            "msj" => "Error",
+                            "razon" => "La hora de finalizado no es correcta"
+                        ]);
+                    }
 
                     //cantidad de dias seleccionados a reservar, ejemplo: ["Lunes", "Miercoles", "Viernes"] = 3
                     $cantDiasFijo= count($request->diasFijo);
@@ -308,14 +315,7 @@ class TurnoController extends Controller
                 "razon" => 'Las fechas especificadas no son correctas (Fecha 1 es posterior a Fecha2 o viceversa)'
             ], 400);
         }
-        /* if(($request->estado =='Reservado' && $fechaDesdeInt < $fechaDeHoy) 
-                    || $fechaDesdeInt > $fechaHastaInt || $fechaHastaInt < $fechaDesdeInt){
-            return response()->json([
-                "msj" => 'Error',
-                "razon" => 'Puede que la fecha especificada sea vieja, o que las fechas no son correctas (Fecha 1 es posterior a Fecha2)'
-            ], 400);
-        } */
-        
+
         $valTurno = $this->validarTurno($request->fecha_Desde, $request->fecha_Hasta, $request->club_configuracion_id, $request->cancha_id, $turno_id);
 
         if(!$valTurno){
@@ -381,6 +381,7 @@ class TurnoController extends Controller
                                     ])
                                     ->get();
         //dd($sqlDisponibilidadTurno);
+        
         //Si la sql esta vacia, retorno true o false
         if($sqlDisponibilidadTurno->isEmpty()){
             //No hay turnos a esa hora, retorno true, PUEDE reservar
@@ -417,10 +418,18 @@ class TurnoController extends Controller
                                                 'turnos.estado')
                                     ->get();
         //dd($ultimosTurnos);
-        return response()->json([
-            "msj" => "Ultimos turnos reservados",
-            "data" => $ultimosTurnos
-        ]);
+        if($ultimosTurnos->isEmpty()){
+            return response()->json([
+                "msj" => "Error",
+                "razon" => "No hay turnos entre las fechas indicadas. Pruebe con otras fechas"
+            ]);
+        } else {
+            return response()->json([
+                "msj" => "Ultimos turnos reservados",
+                "data" => $ultimosTurnos
+            ]);
+        }
+            
 
     }
 

@@ -186,12 +186,22 @@ class ClienteController extends Controller
             'telefono' => ['required', 'max:30'],
             'edad' => ['required'],
         ]); 
+        $valEmail = Validator::make($request->all(), [
+            'email' => 'unique:clientes',
+        ]); 
 
-        if($val->fails()){
-            return response()->json([
+        if($val->fails() || $valEmail->fails()){
+            if($val->fails()){
+                return response()->json([
+                        'msj' => 'Error', 
+                        'razon' => 'Falta uno de los datos, o algun campo sobrepasa los caracteres maximos(50 email, 30 los demas campos).'
+                ], 400);
+            } else{
+                return response()->json([
                     'msj' => 'Error', 
-                    'razon' => 'Falta uno de los datos, o algun campo sobrepasa los caracteres maximos(50 email, 30 los demas campos).'
+                    'razon' => '¡Ese email ya esta registrado!'
             ], 400);
+            }
         }else { 
             try {
                 DB::beginTransaction();
