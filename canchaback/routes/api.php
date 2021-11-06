@@ -41,7 +41,7 @@ Route::post('logout',[AccesoUsuarioController::class, 'logout']);
 
 //Ruta Clubes
 Route::get('clubes', [clubConfiguracionController::class, 'index']);
-Route::post('clubes/ganacias', [clubConfiguracionController::class, 'gananciaClub']);
+Route::post('clubes/ganancias', [clubConfiguracionController::class, 'gananciaClub']);
 Route::post('clubes/guardar', [clubConfiguracionController::class, 'store']);
 Route::get('clubes/show/{club_id}', [clubConfiguracionController::class, 'show']);
 Route::put('clubes/editar/{club_id}', [clubConfiguracionController::class, 'update']);

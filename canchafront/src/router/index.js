@@ -8,6 +8,7 @@ import INFOcanchas from '@/views/INFOcanchas.vue'
 import Login from '@/views/Login.vue'
 import Registro from '@/views/Registro.vue'
 import Soporte from '@/views/Soporte.vue'
+import INFOganancias from '@/views/INFOganancias.vue'
 
 
 
@@ -46,6 +47,13 @@ const routes = [
     path: '/INFOcanchas',
     name: 'INFOcanchas',
     component: INFOcanchas,
+    meta: { requiresAuth: true }
+  },
+
+  {
+    path: '/INFOganancias',
+    name: 'INFOganancias',
+    component: INFOganancias,
     meta: { requiresAuth: true }
   },
 
