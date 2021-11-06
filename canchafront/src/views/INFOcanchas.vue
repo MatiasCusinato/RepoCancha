@@ -6,7 +6,7 @@
             <div class="divFiltros">
                 <h4>Filtros:</h4>
                 <div class="row justify-content-evenly g-2">
-                    <input type="text" placeholder="Filtro por deporte" autofocus 
+                    <input type="text" placeholder="Filtro por deporte" 
                             v-model="filtroDeporte" maxlength="20" class="form-control">
 
                     <button type="button" class="btn btn-secondary btn-sm col-4" 

@@ -30,6 +30,11 @@
                                     <i class="bi bi-flag-fill"> Mis Canchas </i>
                         </router-link>
 
+                        <router-link to="/INFOganancias" 
+                                class="nav-item nav-link">
+                                    <i class="bi bi-currency-dollar"> Mis ganancias </i>
+                        </router-link> 
+
                         <router-link to="/Soporte" 
                                 class="nav-item nav-link">
                                     <i class="bi bi-envelope"> Soporte </i>

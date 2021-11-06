@@ -8,7 +8,14 @@
                     <div class="cabecera tituloventana">
                         <h5 class="h5ABMTurnos">Evento: <br>
                         {{ datosTurno.tipo_turno }}</h5>
-                        <div class="container overflow-hidden gx-1">                     
+                            <button class="cierreAtras btn btn-primary" @click="Cancelar()">
+                                <font color="#ff0000">
+                                    <i class="bi bi-x-circle-fill"></i>
+                                </font>
+                            </button>
+                        <div class="container overflow-hidden gx-1">
+                            <!-- <h5 class="card-title"><i class="bi bi-calendar"> Fecha: {{ eventoActual.start && eventoActual.start.format('DD/MM/YYYY') }} </i></h5> -->
+                            
                             <div class="row justify-content-md-center">
                                 <div class="col-md-6 mb-3">
                                     <span><i class="bi bi-person campo"> Cliente: </i></span>
@@ -101,13 +108,13 @@
                                     </div>
                                 </div>
                                 
-                                <div class="row justify-content-md-center">
+                                <!-- <div class="row justify-content-md-center">
                                     <button class="btn btn-secondary col-md-6 mb-3" @click="Cancelar()">
                                         <i class="bi-arrow-left-square">
                                             Atras
                                         </i>
                                     </button>
-                                </div>
+                                </div> -->
                             </div>
                         </div>
                     </div>
@@ -311,9 +318,6 @@
                 </div>
             </div>
         </div>
-
-        
-        
     </div>
 </template>
 
@@ -883,6 +887,18 @@ table, th, td{
 .cierre{
     background: white;
     float: right;
+}
+
+.cierreAtras{
+    background: white;
+    margin-left: 285px;
+    margin-top: -95px;
+}
+
+.btnAtras{
+    background: white;
+    float: right;
+    margin-left: -50px;
 }
 
 .tituloventana{

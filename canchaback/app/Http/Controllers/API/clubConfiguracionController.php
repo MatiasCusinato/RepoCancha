@@ -111,24 +111,36 @@ class clubConfiguracionController extends Controller
                 "razon" => 'Puede que las fechas no sean correctas (Fecha 1 es posterior a Fecha2 o viceversa)'
             ], 400);
         } 
-
-        $sqlGanancia= DB::table('club_configuracions')
+        
+        $sqlTotalGanancia= DB::table('club_configuracions')
                             ->join('turnos', 'club_configuracions.id', '=', 'turnos.club_configuracion_id')
                             ->where([
                                 ['club_configuracions.id', '=', $club],
                                 ['turnos.estado', '=', 'Cobrado'],
                                 ['turnos.fecha_Desde', '<=', $fechaHasta],
                                 ['turnos.fecha_Hasta', '>=', $fechaDesde]
-                            ])  
-                            ->select(DB::raw("turnos.id, turnos.precio, 
-                                                SUM( turnos.precio ) OVER( ORDER BY id ) as total"))
+                            ])
+                            ->select(DB::raw("COUNT(turnos.id) AS cant_turnos, 
+                                            COALESCE( SUM(turnos.precio), 0) AS ganancia"))
+                            ->get();
+                            /* dd($TurnosGanancia); */
+                    
+        $TurnosGanancia= DB::table('turnos')
+                            ->select("turnos.id","turnos.fecha_Desde","turnos.precio","turnos.cancha_id","turnos.tipo_turno")
+                            ->join('club_configuracions', 'club_configuracions.id', '=', 'turnos.club_configuracion_id')
+                            ->where([
+                                ['turnos.club_configuracion_id', '=', $club],
+                                ['turnos.estado', '=', 'Cobrado'],
+                                ['turnos.fecha_Desde', '<=', $fechaHasta],
+                                ['turnos.fecha_Hasta', '>=', $fechaDesde]
+                            ])
                             ->get();
                             //dd($sqlGanancia[0]);
 
         return response()->json([
             "msj" => "Informe de ganancia exitoso",
-            "data" => $sqlGanancia
+            "TotalGanancia" => $sqlTotalGanancia[0],
+            "data" => $TurnosGanancia
         ], 200);
-                            
     }
 }

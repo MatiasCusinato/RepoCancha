@@ -66,14 +66,14 @@
 
         <div class="container">
             <div class="row justify-content-md-center">
-                <div class="btnganacias">
+                <div class="btnUltimosTurnos">
                     <button class="btn btn-secondary" @click="abrirUltimosTurnos= !abrirUltimosTurnos"
                             style="font-size: 22px"> 
                         <i class="bi bi-stack"> Ultimos turnos </i> 
                     </button>
                 </div>
 
-            <!-- Modal Ganacia "consultar" -->
+            <!-- Modal Ultimos Turnos -->
             <div v-if="abrirUltimosTurnos">
                     <div class="contenedor">
                         <div class="VentanaModalUltimosTurnos">
@@ -398,9 +398,9 @@ export default {
 .vuecal__event {cursor: pointer;}
 
 .vuecal__event-title {
-  font-size: 14px;
-  font-weight: 700;
-  margin: 4px 0 8px;
+    font-size: 14px;
+    font-weight: 700;
+    margin: 4px 0 8px;
 }
 
 .vuecal__event.Reservado {
@@ -442,7 +442,7 @@ p{
     margin: 10px 25px 0px
 }
 
-.btnganacias{
+.btnUltimosTurnos{
     position: relative;
     top: -620px;
     left: -370px
@@ -538,6 +538,5 @@ table, th, td{
     position: relative;
     top: -650px;
     left: -400px;
-
 }
 </style>

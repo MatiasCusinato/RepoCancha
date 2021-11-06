@@ -9,7 +9,7 @@
                 <h4>Filtros:</h4>
                 <div class="row justify-content-md-center">
                     <div class="row justify-content-evenly g-2">
-                        <input type="text" autofocus placeholder="Filtro por nombre" 
+                        <input type="text" placeholder="Filtro por nombre" 
                             v-model="filtroNombre" maxlength="20" class="form-control">
 
                         <button type="button" class="btn btn-secondary btn-sm col-4" @click="traerFiltro()">
