@@ -136,13 +136,6 @@ class TurnoController extends Controller
                 } else {
                     //PARTE DE TURNO FIJO
 
-                    if(strtotime($horaHasta) <= strtotime($horaDesde)){
-                        return response()->json([
-                            "msj" => "Error",
-                            "razon" => "La hora de finalizado no es correcta"
-                        ]);
-                    }
-
                     //cantidad de dias seleccionados a reservar, ejemplo: ["Lunes", "Miercoles", "Viernes"] = 3
                     $cantDiasFijo= count($request->diasFijo);
 
@@ -177,6 +170,10 @@ class TurnoController extends Controller
                             if(date("D", $i) == $request->diasFijo[$j]){
                                 $diaDesdeIndex= "". date("Y-m-d", $i)." ".$horaDesde;
                                 $diaHastaIndex= "". date("Y-m-d", $i)." ".$horaHasta;
+
+                                if(strtotime($horaHasta) <= strtotime($horaDesde)){
+                                    $diaHastaIndex= "". date("Y-m-d", $i+86400)." ".$horaHasta;
+                                }
                                 
                                 $valTurno = $this->validarTurno($diaDesdeIndex, $diaHastaIndex, 
                                             $request->club_configuracion_id, $request->cancha_id, $turno_id);
@@ -191,8 +188,8 @@ class TurnoController extends Controller
                                         "club_configuracion_id" => $request->club_configuracion_id,
                                         "cliente_id" => $request->cliente_id,
                                         "cancha_id" => $request->cancha_id,
-                                        "fecha_Desde" => date("Y-m-d", $i)." ". $horaDesde,
-                                        "fecha_Hasta" => date("Y-m-d", $i)." ". $horaHasta,
+                                        "fecha_Desde" => $diaDesdeIndex, //date("Y-m-d", $i)." ". $horaDesde,
+                                        "fecha_Hasta" => $diaHastaIndex, //date("Y-m-d", $i)." ". $horaHasta,
                                         "tipo_turno" => $request->tipo_turno,
                                         "precio" => $request->precio,
                                         "grupo" => $grupoTurnoFijo,

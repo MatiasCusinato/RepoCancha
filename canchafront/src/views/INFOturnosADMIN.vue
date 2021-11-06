@@ -180,12 +180,12 @@ export default {
             eventoActual: null,
 
             events: [
-                {
+                /* {
                     start: '2018-11-21',
                     end: '2018-11-21',
                     title: 'Need to go shopping',
                     class: 'sport'
-                },
+                }, */
             ],
 
             objUltimosTurnos: { 
@@ -309,6 +309,7 @@ export default {
                     class: this.datos[i].estado
                 })      
             }
+            //console.log(this.events);
         },
         
         MostrarABMturnos(ver) {
