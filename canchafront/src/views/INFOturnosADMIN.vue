@@ -57,7 +57,8 @@
             :accion="accion"
             @SalirDeABMturnos = MostrarABMturnos($event)
         />
-        <div class="container">
+
+        <!-- <div class="container">
             <div class="row justify-content-md-center">
                 <div class="btnganacias">
                     <button class="btn btn-secondary" @click="desplegarGanancia('ConsultarGanancia', false)"
@@ -66,7 +67,7 @@
                     </button>
                 </div>
             </div>
-        </div>
+        </div> -->
     </div>
 </template>
 
@@ -88,7 +89,6 @@ export default {
     
     data() {
         return {
-            abrirGanancia: false,
             selectedEvent: null,
             showEventCreationDialog: false,
 
@@ -235,7 +235,8 @@ export default {
                 this.traerTurnos();
             }
         },
-        desplegarGanancia(accion) {
+
+        /* desplegarGanancia(accion) {
             this.abrirABMturnos = true
             this.accion = accion
             this.eventoActual= {
@@ -256,8 +257,8 @@ export default {
                     "diasFijos":[],
                 }
             }
-            /* this.abrirGanancia = !this.abrirGanancia; */
-        },
+            //this.abrirGanancia = !this.abrirGanancia;
+        }, */
         
     },
 }
@@ -289,9 +290,9 @@ export default {
 .vuecal__event {cursor: pointer;}
 
 .vuecal__event-title {
-  font-size: 14px;
-  font-weight: 700;
-  margin: 4px 0 8px;
+    font-size: 14px;
+    font-weight: 700;
+    margin: 4px 0 8px;
 }
 
 .vuecal__event.sport {
@@ -299,9 +300,6 @@ export default {
     border: 1px solid rgb(235, 82, 82);
     color: #fff;
 }
-
-
-
 
 .formABM {
     border: 2px solid rgb(116, 113, 113);
@@ -397,6 +395,5 @@ table{
     position: relative;
     top: -650px;
     left: -400px;
-
 }
 </style>

@@ -8,6 +8,11 @@
                     <div class="cabecera tituloventana">
                         <h5 class="h5ABMTurnos">Evento: <br>
                         {{ eventoActual.title }}</h5>
+                            <button class="cierreAtras btn btn-primary" @click="Cancelar()">
+                                <font color="#ff0000">
+                                    <i class="bi bi-x-circle-fill"></i>
+                                </font>
+                            </button>
                         <div class="container overflow-hidden gx-1">
                             <!-- <h5 class="card-title"><i class="bi bi-calendar"> Fecha: {{ eventoActual.start && eventoActual.start.format('DD/MM/YYYY') }} </i></h5> -->
                             
@@ -103,13 +108,13 @@
                                     </div>
                                 </div>
                                 
-                                <div class="row justify-content-md-center">
+                                <!-- <div class="row justify-content-md-center">
                                     <button class="btn btn-secondary col-md-6 mb-3" @click="Cancelar()">
                                         <i class="bi-arrow-left-square">
                                             Atras
                                         </i>
                                     </button>
-                                </div>
+                                </div> -->
                             </div>
                         </div>
                     </div>
@@ -300,52 +305,6 @@
                 </div>
             </div>
         </div>
-
-        <!-- Modal Ganacia "consultar" -->
-        <h1 class="bg-primary text-white text-center mb-3"> Ganancias </h1>
-            <div v-if="!abrirGanancia && accionAux=='ConsultarGanancia'">
-                <div class="contenedor">
-                    <div class="VentanaModalGanancia">
-                        <div class="cabecera tituloventanaganancia">
-                            <h5 class="h5ABMGanacia"> Ganancia </h5>
-                            <div class="alert alert-success" role="alert">
-                               <i class="bi bi-info-circle-fill"></i>
-                               Calcule la ganacia de los turnos cobrados colocando solo 2 fechas
-                            </div>
-                            <div class="container overflow-hidden gx-1">
-                                <div class="row gy-2 justify-content-md-center">
-                                    <div class="col-md-6 mb-3">
-                                        <span><i class="bi bi-hourglass-top campo"> Comienzo: </i></span>
-                                        <input type="date" class="form-control form-control-sm inputChico" 
-                                                v-model="objganancia.fecha_Desde">
-                                    </div>
-
-                                    <div class="col-md-6 mb-3">
-                                        <span><i class="bi bi-hourglass-bottom campo"> Fin: </i></span>
-                                        <input type="date" class="form-control form-control-sm inputChico" 
-                                                v-model="objganancia.fecha_Hasta">
-                                    </div>
-                                </div>
-
-                                <div class="container">
-                                    <div class="row">
-                                        <div class="col-md-6 mb-3">
-                                                <button class="btn btn-primary" @click="EnviarGanacia()">
-                                                        <i class="bi bi-check2-circle"> Enviar </i>
-                                                </button>
-                                        </div>
-                                        <div class="col-md-6 mb-3">
-                                                <button class="btn btn-danger" @click="Cancelar()">
-                                                        <i class="bi bi-x-circle-fill"> Atras </i>
-                                                </button>
-                                        </div>
-                                    </div>  
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
     </div>
 </template>
 
@@ -640,7 +599,7 @@ export default {
             
         },
 
-        EnviarGanacia() {
+        /* EnviarGanacia() {
             this.alertaFormulario= [];
             let fechaDesde= this.objganancia.fecha_Desde
             let fechaHasta= this.objganancia.fecha_Hasta
@@ -694,7 +653,7 @@ export default {
                 })
                 
                 
-        },
+        }, */
         
         
 
@@ -910,6 +869,18 @@ table{
 .cierre{
     background: white;
     float: right;
+}
+
+.cierreAtras{
+    background: white;
+    margin-left: 285px;
+    margin-top: -95px;
+}
+
+.btnAtras{
+    background: white;
+    float: right;
+    margin-left: -50px;
 }
 
 .tituloventana{
