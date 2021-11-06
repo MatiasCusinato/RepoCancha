@@ -158,15 +158,20 @@ export default {
                                     text: ''+res.razon,
                                     icon: 'error',
                                     confirmButtonText: 'Ok',
-                                    timer: 2500
+                                    position: 'top-end',
+                                    backdrop:false,
                                 })
                             } else {
                                 this.$swal({
-                                    title: '¡Cliente creado!',
+                                    title: `${res.msj}`,
                                     icon: 'success',
                                     confirmButtonText: 'Ok',
-                                    timer: 2500                           
+                                    timer: 2500 ,
+                                    position: 'top-end',
+                                    backdrop:false,                          
                                 })
+
+                                this.$emit('SalirDeABMclientes', true)
                             }
                         })
                 }
@@ -182,16 +187,18 @@ export default {
                                     text: `${res.razon}`,
                                     icon: 'error',
                                     confirmButtonText: 'Ok',
-                                    timer: 2500
                                 })
                             } else {
                                 this.$swal({
-                                    title: `${res.msj}`,
-                                    text: `${res.razon}`,
+                                    title: `${res.razon}`,
                                     icon: 'success',
                                     confirmButtonText: 'Ok',
-                                    timer: 2500
+                                    timer: 2500,
+                                    position: 'top-end',
+                                    backdrop: false,
                                 })
+
+                                this.$emit('SalirDeABMclientes', true)
                             }
                         })
                 }
@@ -206,28 +213,27 @@ export default {
                                     text: `Razon : ${res.razon}`,
                                     icon: 'error',
                                     confirmButtonText: 'Ok',
-                                    timer: 2500
                                 })
                             } else {
                                 this.$swal({
-                                    title: `¡Eliminacion exitosa!`,
-                                    text: `El cliente ha sido eliminado`,
+                                    title: `¡Cliente eliminado exitosamente!`,
                                     icon: 'success',
                                     confirmButtonText: 'Ok',
-                                    timer: 2500
+                                    timer: 2500,
+                                    position: 'top-end',
+                                    backdrop: false,
                                 })
+
+                                this.$emit('SalirDeABMclientes', true)
                             }
                         })
                 }
-
-                this.$emit('SalirDeABMclientes', true)
             } else {
                 this.$swal({
                     title: '¡Formulario incompleto!',
                     text: 'Los siguientes campos estan vacios: '+ this.alertaFormulario,
                     icon: 'warning',
                     confirmButtonText: 'Ok',
-                    timer: 2500
                 })
             }
             

@@ -17,23 +17,26 @@ class TurnoController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($club_id, $cancha_id)
+    public function index($club_id, $cancha_id, $estado=null)
     {
         $turnos = DB::table('turnos')
                     ->join('clientes', 'turnos.cliente_id', '=', 'clientes.id')
                     ->join('canchas', 'turnos.cancha_id', '=', 'canchas.id')
-                        ->where([
-                            ['turnos.club_configuracion_id', '=', $club_id],
-                            ['turnos.cancha_id', '=', $cancha_id],
-                        ])
-                            ->select('turnos.id', 'turnos.grupo', 'turnos.cliente_id',
-                                        'clientes.nombre', 'clientes.apellido',
-                                        'turnos.cancha_id', 'canchas.deporte',
-                                        'turnos.club_configuracion_id',
-                                        'turnos.tipo_turno', 'turnos.fecha_Desde',
-                                        'turnos.fecha_Hasta', 'turnos.precio',
-                                        'turnos.estado',)
-                            ->get();
+                    ->where([
+                        ['turnos.club_configuracion_id', '=', $club_id],
+                        ['turnos.cancha_id', '=', $cancha_id],
+                    ])
+                    ->select('turnos.id', 'turnos.grupo', 'turnos.cliente_id',
+                                'clientes.nombre', 'clientes.apellido',
+                                'turnos.cancha_id', 'canchas.deporte',
+                                'turnos.club_configuracion_id',
+                                'turnos.tipo_turno', 'turnos.fecha_Desde',
+                                'turnos.fecha_Hasta', 'turnos.precio',
+                                'turnos.estado')
+                    ->when($estado, function ($sql, $estado) {
+                        return $sql->where('turnos.estado', $estado);
+                    })
+                    ->get();
 
         return $turnos->toJson(JSON_PRETTY_PRINT);
     }
@@ -74,9 +77,9 @@ class TurnoController extends Controller
                 $fechaDesde= Carbon::parse($request->fecha_Desde)->format('Y-m-d'); //$fechaDesde= "2018-10-22"
                 $fechaHasta= Carbon::parse($request->fecha_Hasta)->format('Y-m-d');
             
-                $horaDesde= Carbon::parse($request->fecha_Desde)->format('H:m:s');//$horaDesde= "10:00:00"
-                
-                $horaHasta= Carbon::parse($request->fecha_Hasta)->format('H:m:s');
+                $horaDesde= Carbon::parse($request->fecha_Desde)->format('H:i:s');//$horaDesde= "10:00:00"
+                $horaHasta= Carbon::parse($request->fecha_Hasta)->format('H:i:s');
+            
                 
                 $fechaDesdeInt = strtotime($request->fecha_Desde); //Convierte el $request->fecha_Desde a formato timestamp --> 1543104000
                 $fechaHastaInt = strtotime($request->fecha_Hasta); 
@@ -88,17 +91,22 @@ class TurnoController extends Controller
 
                 //Compruebo que la fechaDesde no sean anterior a la fecha de HOY, 
                 //y tambien que la fechaDesde no sea posterior a la fechaHasta  y viceversa          
-                if(($request->estado =='Reservado' && $fechaDesdeInt < $fechaDeHoy) 
-                        || $fechaDesdeInt > $fechaHastaInt || $fechaHastaInt < $fechaDesdeInt){
+                if($request->estado =='Reservado' && $fechaDesdeInt < $fechaDeHoy){
                     return response()->json([
                         "msj" => 'Error',
-                        "razon" => 'Puede que la fecha especificada sea vieja, o que las fechas no son correctas (Fecha 1 es posterior a Fecha2)'
+                        "razon" => 'No podés RESERVAR un turno anterior a la fecha de HOY ('.Carbon::parse(now())->format('Y-m-d 00:00:00').'). Consejo: guardalo con otro estado.'
                     ], 400);
-                } 
+                    
+                } else if ($fechaDesdeInt > $fechaHastaInt || $fechaHastaInt < $fechaDesdeInt){
+                    return response()->json([
+                        "msj" => 'Error',
+                        "razon" => 'Las fechas estan mal especificadas (Fecha 1 es posterior a Fecha2 o viceversa)'
+                    ], 400);
+                }
 
                 $respuestaTurnoOcupado= response()->json([
                     "msj" => "Error",
-                    "razon" => "Esa fecha/horario ya esta reservado por otro turno, intente con otro."
+                    "razon" => "Esa fecha/horario ya esta reservado por otro turno, intente con otra fecha u horario."
                 ], 400);
 
 
@@ -162,6 +170,10 @@ class TurnoController extends Controller
                             if(date("D", $i) == $request->diasFijo[$j]){
                                 $diaDesdeIndex= "". date("Y-m-d", $i)." ".$horaDesde;
                                 $diaHastaIndex= "". date("Y-m-d", $i)." ".$horaHasta;
+
+                                if(strtotime($horaHasta) <= strtotime($horaDesde)){
+                                    $diaHastaIndex= "". date("Y-m-d", $i+86400)." ".$horaHasta;
+                                }
                                 
                                 $valTurno = $this->validarTurno($diaDesdeIndex, $diaHastaIndex, 
                                             $request->club_configuracion_id, $request->cancha_id, $turno_id);
@@ -176,8 +188,8 @@ class TurnoController extends Controller
                                         "club_configuracion_id" => $request->club_configuracion_id,
                                         "cliente_id" => $request->cliente_id,
                                         "cancha_id" => $request->cancha_id,
-                                        "fecha_Desde" => date("Y-m-d", $i)." ". $horaDesde,
-                                        "fecha_Hasta" => date("Y-m-d", $i)." ". $horaHasta,
+                                        "fecha_Desde" => $diaDesdeIndex, //date("Y-m-d", $i)." ". $horaDesde,
+                                        "fecha_Hasta" => $diaHastaIndex, //date("Y-m-d", $i)." ". $horaHasta,
                                         "tipo_turno" => $request->tipo_turno,
                                         "precio" => $request->precio,
                                         "grupo" => $grupoTurnoFijo,
@@ -228,7 +240,7 @@ class TurnoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($club_id, $turno_id)
+    public function show($club_id, $cancha_id, $turno_id)
     {
         $turno = DB::table('turnos')
                     ->join('clientes', 'turnos.cliente_id', '=', 'clientes.id')
@@ -277,25 +289,30 @@ class TurnoController extends Controller
         $fechaDesde= Carbon::parse($request->fecha_Desde)->format('Y-m-d'); //$fechaDesde= "2018-10-22"
         $fechaHasta= Carbon::parse($request->fecha_Hasta)->format('Y-m-d');
     
-        $horaDesde= Carbon::parse($request->fecha_Desde)->format('H:m:s'); //$horaDesde= "10:00:00"
-        $horaHasta= Carbon::parse($request->fecha_Hasta)->format('H:m:s');
+        $horaDesde= Carbon::parse($request->fecha_Desde)->format('H:i:s'); //$horaDesde= "10:00:00"
+        $horaHasta= Carbon::parse($request->fecha_Hasta)->format('H:i:s');
             
         $fechaDesdeInt = strtotime($request->fecha_Desde); //Convierte el $request->fecha_Desde a formato timestamp --> 1543104000
         $fechaHastaInt = strtotime($request->fecha_Hasta); 
         //dd($fechaDesde,$fechaHasta,$horaDesde,$horaHasta,$fechaDesdeInt,$fechaHastaInt);
 
         $fechaDeHoy= Carbon::parse(now())->format('Y-m-d 00:00:00');
-                $fechaDeHoy = strtotime($fechaDeHoy); //Variable q contiene el dia de hoy en formato timestamp
+        $fechaDeHoy = strtotime($fechaDeHoy); //Variable q contiene el dia de hoy en formato timestamp
                 
         //Compruebo que la fechaDesde no sean anterior a la fecha de HOY, 
-        //y tambien que la fechaDesde no sea posterior a la fechaHasta  y viceversa          
-        if(($request->estado =='Reservado' && $fechaDesdeInt < $fechaDeHoy) || $fechaDesdeInt > $fechaHastaInt || $fechaHastaInt < $fechaDesdeInt){
+        //y tambien que la fechaDesde no sea posterior a la fechaHasta  y viceversa     
+        if($request->estado =='Reservado' && $fechaDesdeInt < $fechaDeHoy){
             return response()->json([
                 "msj" => 'Error',
-                "razon" => 'Puede que la fecha especificada sea vieja, o que las fechas no son correctas (Fecha 1 es posterior a Fecha2)'
+                "razon" => 'No podés RESERVAR un turno anterior a la fecha del dia Hoy ('.Carbon::parse(now())->format('Y-m-d 00:00:00').')'
+            ], 400);
+        } else if($fechaDesdeInt > $fechaHastaInt || $fechaHastaInt < $fechaDesdeInt){
+            return response()->json([
+                "msj" => 'Error',
+                "razon" => 'Las fechas especificadas no son correctas (Fecha 1 es posterior a Fecha2 o viceversa)'
             ], 400);
         }
-        
+
         $valTurno = $this->validarTurno($request->fecha_Desde, $request->fecha_Hasta, $request->club_configuracion_id, $request->cancha_id, $turno_id);
 
         if(!$valTurno){
@@ -361,6 +378,7 @@ class TurnoController extends Controller
                                     ])
                                     ->get();
         //dd($sqlDisponibilidadTurno);
+        
         //Si la sql esta vacia, retorno true o false
         if($sqlDisponibilidadTurno->isEmpty()){
             //No hay turnos a esa hora, retorno true, PUEDE reservar
@@ -369,6 +387,47 @@ class TurnoController extends Controller
             //Ya hay un turno reservado, retorno false, NO PUEDE reservar
             return false;
         }
+    }
+
+
+    public function ultimosReservados($club_id, Request $request)
+    {
+        $fechaComienzo= $request->fecha_Desde;
+        $fechaFin= $request->fecha_Hasta;
+
+        $ultimosTurnos= DB::table('turnos')
+                                    ->join('clientes', 
+                                                'turnos.cliente_id', '=', 'clientes.id')
+                                    ->join('canchas', 
+                                                'turnos.cancha_id', '=', 'canchas.id')
+                                    ->where([
+                                        ['turnos.club_configuracion_id', '=', $club_id],
+                                        ['turnos.fecha_Desde', '<', $fechaFin], 
+                                        ['turnos.fecha_Hasta', '>', $fechaComienzo],  
+                                        ['turnos.estado', '=', 'Reservado'],  
+                                    ])
+                                    ->select('turnos.id', 'turnos.grupo', 'turnos.cliente_id',
+                                                'clientes.nombre', 'clientes.apellido',
+                                                'turnos.cancha_id', 'canchas.deporte',
+                                                'turnos.club_configuracion_id',
+                                                'turnos.tipo_turno', 'turnos.fecha_Desde',
+                                                'turnos.fecha_Hasta', 'turnos.precio',
+                                                'turnos.estado')
+                                    ->get();
+        //dd($ultimosTurnos);
+        if($ultimosTurnos->isEmpty()){
+            return response()->json([
+                "msj" => "Error",
+                "razon" => "No hay turnos entre las fechas indicadas. Pruebe con otras fechas"
+            ]);
+        } else {
+            return response()->json([
+                "msj" => "Ultimos turnos reservados",
+                "data" => $ultimosTurnos
+            ]);
+        }
+            
+
     }
 
 }

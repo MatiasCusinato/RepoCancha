@@ -15,9 +15,10 @@
                     <router-link class="nav-link list-group-item 
                                             list-group-item-action 
                                             list-group-item-secondary"
-                                style="font-size: 20px "                                   
-                                :to="'/INFOturnosDISPONIBLES/club/'+c.id" 
-                                v-for="(c, id) in filtroClub" :key="id">
+                                    style="font-size: 20px "                                                                  
+                                    :to="'/INFOturnosDISPONIBLES/club/'+c.id" 
+                                    v-for="(c, id) in filtroClub" :key="id"
+                                    >
                         {{c.id}}|{{c.nombre_club}}
                     </router-link>
                 </li>
@@ -51,11 +52,9 @@
                         @change="traerTurnos()"
                         class="form-select" aria-label=".form-select-sm example">
 
-                    <option v-for="(cancha, $id) in canchas" 
-                        :key="$id"
-                        :value="cancha.id" 
-                        >
-                            {{cancha.id}}| {{cancha.deporte}}
+                    <option v-for="(cancha, $id) in canchas" :key="$id"
+                                :value="cancha.id">
+                        {{cancha.id}}| {{cancha.deporte}}
                     </option>
                 </select>
 
@@ -173,7 +172,7 @@ export default {
         traerTurnos(){
             this.events=[]
 
-            this.ObtenerDatos(`turnos/${this.clubActual}/${this.canchaActual}`)
+            this.ObtenerDatos(`turnos/${this.clubActual}/${this.canchaActual}/Reservado`)
                 .then(res => {
                     //console.log(res)
                     if(res.length==0){
@@ -200,7 +199,7 @@ export default {
                     end: this.turnos[i].fecha_Hasta,
                     title: this.turnos[i].tipo_turno,
                     objTurnos: this.turnos[i],
-                    class: 'sport'
+                    class: this.turnos[i].estado
                 })      
             }
             
@@ -225,7 +224,25 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
+.vuecal__event.Reservado {
+    background-color: rgba(27, 155, 44, 0.9);
+    border: 1px solid rgb(4, 15, 5);
+    color: #fff;
+}
+
+.vuecal__event.Cobrado {
+    background-color: rgba(138, 138, 138, 0.9);
+    border: 1px solid rgb(8, 2, 2);
+    color: #fff;
+}
+
+.vuecal__event.Adeudado {
+    background-color: rgba(200, 19, 19, 0.9);
+    border: 1px solid rgb(0, 0, 0);
+    color: #fff;
+}
+
 .divAlerta{
     min-width: 200px;
     min-height: 50px;
@@ -235,13 +252,14 @@ export default {
 }
 
 .divInfo{
-    min-width: 200px;
-    min-height: 90px;
-    margin: 20px -50px;
-    padding: 20px;
     background-color: rgb(246, 218, 157) ;
     border: 3px solid;
     border-radius: 15%;
+    width: 300px;
+    min-height: 100px;
+    margin: 20px -20px;
+    padding: 20px;
+    text-align: center;
 }
 
 .icono{

@@ -68,10 +68,12 @@ class CanchaSeeder extends Seeder
             'club_configuracion_id' => '4',
             'deporte' => 'handball',
         ]);
+        
         DB::table('canchas')->insert([
             'club_configuracion_id' => '4',
             'deporte' => 'futbol 5',
         ]);
+
         DB::table('canchas')->insert([
             'club_configuracion_id' => '4',
             'deporte' => 'basket',

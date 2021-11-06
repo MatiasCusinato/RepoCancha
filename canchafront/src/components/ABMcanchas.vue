@@ -102,15 +102,20 @@ export default {
                                     text: `Razon : ${res.razon}`,
                                     icon: 'warning',
                                     confirmButtonText: 'Ok',
-                                    timer: 2500 
+                                    position: 'top-end',
+                                    backdrop:false,
                                 })
                             } else {
                                 this.$swal({
                                     title: `¡${res.msj}!`,
                                     icon: 'success',
                                     confirmButtonText: 'Ok',
-                                    timer: 2500
+                                    timer: 2500,
+                                    position: 'top-end',
+                                    backdrop:false,
                                 })
+                                
+                                this.$emit('SalirDeABMcanchas', true)
                             }
                         })
                 }
@@ -127,16 +132,20 @@ export default {
                                     text: `Razon : ${res.razon}`,
                                     icon: 'error',
                                     confirmButtonText: 'Ok',
-                                    timer: 2500
+                                    position: 'top-end',
+                                    backdrop:false,
                                 })
                             } else {
                                 this.$swal({
-                                    title: `¡${res.msj}!`,
-                                    text: `${res.razon}`,
+                                    title: `¡${res.razon}!`,
                                     icon: 'success',
                                     confirmButtonText: 'Ok',
-                                    timer: 2500
+                                    timer: 2500,
+                                    position: 'top-end',
+                                    backdrop:false,
                                 })
+
+                                this.$emit('SalirDeABMcanchas', true)
                             }
                         })
                 }
@@ -151,29 +160,29 @@ export default {
                                     text: `Razon : ${res.razon}`,
                                     icon: 'error',
                                     confirmButtonText: 'Ok',
-                                    timer: 2500
+                                    position: 'top-end',
+                                    backdrop:false,
                                 })
                             } else {
                                 this.$swal({
-                                    title: `¡Eliminacion exitosa!`,
-                                    text: `La cancha ha sido eliminada`,
+                                    title: `¡La cancha ha sido eliminada!`,
                                     icon: 'success',
                                     confirmButtonText: 'Ok',
-                                    timer: 2500
+                                    timer: 2500,
+                                    position: 'top-end',
+                                    backdrop: false,
                                 })
+                                
+                                this.$emit('SalirDeABMcanchas', true)
                             }
                         })
                 }
-
-                this.$emit('SalirDeABMcanchas', true)
-
             }else{
                 this.$swal({
                     title: '¡Formulario incompleto!',
                     text: 'Los siguientes campos estan vacios: '+ this.alertaFormulario,
                     icon: 'warning',
                     confirmButtonText: 'Ok',
-                    timer: 2500
                 })
             }
         },

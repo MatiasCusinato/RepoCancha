@@ -24,19 +24,19 @@ class CreateTurnosTable extends Migration
             $table->unsignedBigInteger("cancha_id")->nullable();        
             $table->foreign('cancha_id')
                     ->references('id')->on('canchas')
-                    ->onDelete('set null');
+                    ->onDelete('cascade');
 
             $table->unsignedBigInteger("club_configuracion_id")->nullable();
             $table->foreign('club_configuracion_id')
                     ->references('id')->on('club_configuracions')
-                    ->onDelete('set null');
+                    ->onDelete('cascade');
                     
             $table->string('tipo_turno',30);
             $table->dateTime("fecha_Desde");
             $table->dateTime("fecha_Hasta");
             $table->integer("grupo");
             $table->integer('precio');   
-            $table->enum('estado', ['Reservado', 'Cobrado', 'En deuda']);   
+            $table->enum('estado', ['Reservado', 'Cobrado', 'Adeudado']);   
 
             $table->timestamps();
         });

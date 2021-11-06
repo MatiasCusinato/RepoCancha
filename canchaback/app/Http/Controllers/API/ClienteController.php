@@ -40,7 +40,7 @@ class ClienteController extends Controller
                             ->join('clientes', 'cliente_club_configuracion.cliente_id', '=', 'clientes.id')
                             ->where('cliente_club_configuracion.club_configuracion_id', '=', $club_id)
                             ->select('clientes.*')
-                            ->orderBy('id', 'asc')
+                            ->orderBy('id', 'desc')
                             ->paginate($registros);
 
         return [
@@ -98,7 +98,7 @@ class ClienteController extends Controller
             if(count($sqlValidacionClienteClub) > 0){
                 return response()->json([
                     'msj' => 'Error',
-                    'razon' => 'Este cliente ya esta registrado!'
+                    'razon' => 'Ese e-mail ya esta registrado!'
                 ]);
             }else{
                 //Si no hay registro en la tabla "cliente_club_configuracion", inserto uno nuevo 
@@ -186,12 +186,22 @@ class ClienteController extends Controller
             'telefono' => ['required', 'max:30'],
             'edad' => ['required'],
         ]); 
+        $valEmail = Validator::make($request->all(), [
+            'email' => 'unique:clientes',
+        ]); 
 
-        if($val->fails()){
-            return response()->json([
+        if($val->fails() || $valEmail->fails()){
+            if($val->fails()){
+                return response()->json([
+                        'msj' => 'Error', 
+                        'razon' => 'Falta uno de los datos, o algun campo sobrepasa los caracteres maximos(50 email, 30 los demas campos).'
+                ], 400);
+            } else{
+                return response()->json([
                     'msj' => 'Error', 
-                    'razon' => 'Falta uno de los datos, o algun campo sobrepasa los caracteres maximos(50 email, 30 los demas campos).'
+                    'razon' => '¡Ese email ya esta registrado!'
             ], 400);
+            }
         }else { 
             try {
                 DB::beginTransaction();

@@ -6,7 +6,7 @@
             <div class="divFiltros">
                 <h4>Filtros:</h4>
                 <div class="row justify-content-evenly g-2">
-                    <input type="text" placeholder="Filtro por deporte" autofocus 
+                    <input type="text" placeholder="Filtro por deporte" 
                             v-model="filtroDeporte" maxlength="20" class="form-control">
 
                     <button type="button" class="btn btn-secondary btn-sm col-4" 
@@ -126,7 +126,7 @@ export default {
     methods: {
         traerDatos(pagina) {
             console.log("Obteniendo CANCHAS desde la API ...");
-            this.ObtenerDatos(`canchas/${this.$store.state.vClub}/4/?page=${pagina}`)
+            this.ObtenerDatos(`canchas/${this.$store.state.vClub}/8/?page=${pagina}`)
                 .then(res => {
                     this.datos = res.canchas.data;
                     this.paginacion = res.paginacion

@@ -9,7 +9,7 @@
                 <h4>Filtros:</h4>
                 <div class="row justify-content-md-center">
                     <div class="row justify-content-evenly g-2">
-                        <input type="text" autofocus placeholder="Filtro por nombre" 
+                        <input type="text" placeholder="Filtro por nombre" 
                             v-model="filtroNombre" maxlength="20" class="form-control">
 
                         <button type="button" class="btn btn-secondary btn-sm col-4" @click="traerFiltro()">
@@ -140,7 +140,7 @@ export default {
     methods: {
         traerDatos(pagina) {
             console.log("Obteniendo CLIENTES desde la API ...");
-            this.ObtenerDatos(`clientes/${this.$store.state.vClub}/3/?page=${pagina}`)
+            this.ObtenerDatos(`clientes/${this.$store.state.vClub}/8/?page=${pagina}`)
                 .then(res => {
                     this.datos = res.clientes.data;
                     this.paginacion= res.paginacion

@@ -1,9 +1,15 @@
 <template>
     <div style="margin: -30px ">
         <h2>Turnos</h2>
-        <div v-if="!abrirABMturnos">
+        <div v-if="!abrirABMturnos && alertaCanchas">
+            <div class="alert alert-danger" role="alert" style="text-align: center; font-size:20px">
+                <strong>¡No tenés canchas!</strong> <br>Para crear un turno, debes de crear una cancha en la vista <u>"Mis canchas"</u>.<br>
+                Tambien deberas crear clientes desde la vista <u>"Mis clientes"</u> 
+            </div>
+        </div>
+        <div v-if="!abrirABMturnos && canchas.length>0">
             <div class="btncli">
-                <button class="btn btn-primary" @click="crearTurno('Crear')"  
+                <button class="btn btn-primary" @click="desplegarAccion('Crear', 0, canchaActual)"  
                         style="font-size: 20px"> 
                     Agregar un nuevo turno 
                 </button>
@@ -27,7 +33,7 @@
             </div>
         </div>
 
-        <div>
+        <div v-if="!abrirUltimosTurnos && canchas.length>0">
             <vue-cal class="calendarioVue vuecal--green-theme" 
                 :time-from="9 * 60" :time-to="24.5 * 60" 
                 :time-step="30" active-view="month" 
@@ -53,21 +59,92 @@
         </div>
 
         <ABMturnos v-if="abrirABMturnos"
-            :eventoActual="eventoActual"
             :accion="accion"
+            :turnoObjeto="turnoObjeto"
             @SalirDeABMturnos = MostrarABMturnos($event)
         />
 
-        <!-- <div class="container">
+        <div class="container">
             <div class="row justify-content-md-center">
-                <div class="btnganacias">
-                    <button class="btn btn-secondary" @click="desplegarGanancia('ConsultarGanancia', false)"
+                <div class="btnUltimosTurnos">
+                    <button class="btn btn-secondary" @click="abrirUltimosTurnos= !abrirUltimosTurnos"
                             style="font-size: 22px"> 
-                        <i class="bi bi-currency-dollar"> Mi ganancia </i> 
+                        <i class="bi bi-stack"> Ultimos turnos </i> 
                     </button>
                 </div>
+
+            <!-- Modal Ultimos Turnos -->
+            <div v-if="abrirUltimosTurnos">
+                    <div class="contenedor">
+                        <div class="VentanaModalUltimosTurnos">
+                            <div class="row gy-2 justify-content-md-center">
+                                <div class="row">
+                                    <h1 class="bg-success text-white text-center"> 
+                                        Ultimos turnos reservados 
+                                    </h1>     
+                                </div>
+                            </div>
+
+                            <div class="row justify-content-around">
+                                    <div class="col-4 mb-3">
+                                        <span><i class="bi bi-hourglass-top campo "> Comienzo: </i></span>
+                                        <input type="datetime-local" class="form-control form-control-sm input-md" 
+                                                v-model="objUltimosTurnos.fecha_Desde">
+                                    </div>
+
+                                    <div class="col-4 mb-3">
+                                        <span><i class="bi bi-hourglass-bottom campo "> Fin: </i></span>
+                                        <input type="datetime-local" class="form-control form-control-sm input-md" 
+                                                v-model="objUltimosTurnos.fecha_Hasta">
+                                    </div>
+                                </div>
+
+                            <div class="row justify-content-around">
+                                    <button class="btn btn-danger col-4" @click="cerrarUltimosTurnos()">
+                                        <i class="bi bi-x-circle-fill"> Atras </i>
+                                    </button>
+
+                                    <button class="btn btn-primary col-4" @click="obtenerUltimosTurnos()">
+                                            <i class="bi bi-check2-circle"> Enviar </i>
+                                    </button>
+
+                            </div>  
+                             <br>
+                            <table class="table-success tablecli" v-if="ultimosTurnos.length>0">
+                                <thead>
+                                    <tr class="bg-success">
+                                        <!-- <th scope="col">ID</th> -->
+                                        <th scope="col">Cliente</th>
+                                        <th scope="col">Cancha</th>
+                                        <th scope="col">Comienzo</th>
+                                        <th scope="col">Fin</th>
+                                        <th scope="col">Precio</th>
+                                        <th scope="col">Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="(turno, index) in ultimosTurnos" :key="index">
+                                        <!-- <th scope="row">{{turno.id}}</th> -->
+                                        <td> {{turno.nombre}} {{turno.apellido}}</td>
+                                        <td>{{turno.cancha_id}}| {{turno.deporte}}</td>
+                                        <td> {{turno.fecha_Desde}} </td>
+                                        <td> {{turno.fecha_Hasta}} </td>
+                                        <td> {{turno.precio}} </td>
+
+                                        <td>
+                                            <button class="btn btn-info" 
+                                                    @click="desplegarAccion('Consultar', turno.id, turno.cancha_id)">
+                                                <i class="bi bi-eye-fill"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table> 
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div> -->
+        </div>
     </div>
 </template>
 
@@ -89,6 +166,7 @@ export default {
     
     data() {
         return {
+            abrirUltimosTurnos: false,
             selectedEvent: null,
             showEventCreationDialog: false,
 
@@ -102,13 +180,23 @@ export default {
             eventoActual: null,
 
             events: [
-                {
+                /* {
                     start: '2018-11-21',
                     end: '2018-11-21',
                     title: 'Need to go shopping',
                     class: 'sport'
-                },
+                }, */
             ],
+
+            objUltimosTurnos: { 
+                club_configuracion_id: this.$store.state.vClub,
+                token: this.$store.state.vToken,
+                fecha_Desde: moment().format('YYYY-MM-DDT00:00'),
+                fecha_Hasta: moment().add({days: 2}).format('YYYY-MM-DDT23:59'),
+            },
+
+            ultimosTurnos: [],
+            alertaCanchas: false,
         }
     },
 
@@ -140,37 +228,27 @@ export default {
 
         onEventClick (event, e) {
             this.selectedEvent = event
-            this.abrirABMturnos = true
-            this.accion= "Consultar"
-            //console.log(event)
-            this.eventoActual= event
-
+            console.log(event)
+            
+            this.desplegarAccion('Consultar', event.objTurnos.id, event.objTurnos.cancha_id)
+        
             // Prevent navigating to narrower view (default vue-cal behavior).
             e.stopPropagation()
         },
 
-        crearTurno(accion){
-            this.abrirABMturnos = true
-            this.accion= accion
-
-            this.eventoActual= {
-                //"start":"00-0-00",
-                "objTurnos":{
-                    "grupo":0,
-                    "cliente_id":null,
-                    "nombre":"",
-                    "apellido":"",
-                    "cancha_id":null,
-                    "deporte":"",
-                    "club_configuracion_id":null,
-                    "tipo_turno":"",
-                    "fecha_Desde":"0000-00-00 00:00:00",
-                    "fecha_Hasta":"0000-00-00 00:00:00",
-                    "precio":"0",
-                    "estado":"",
-                    "diasFijos":[],
+        desplegarAccion(accion, turno_id, cancha_id){
+            if(accion=='Consultar' || accion=='Crear'){
+                this.abrirABMturnos = true
+            
+                this.accion= accion 
+                this.turnoObjeto= {
+                    "turno_id": turno_id,
+                    "cancha_id": cancha_id,
                 }
+
+                this.abrirUltimosTurnos=false
             }
+            
         },
 
         traerCanchas(){
@@ -184,10 +262,14 @@ export default {
                             confirmButtonText: 'Ok',
                             timer: 2500
                         })
+
+                        this.alertaCanchas= true;
+                        return
+                    }else {
+                        this.canchas = res.canchas.data
+                        this.canchaActual= this.canchas[0].id
+                        this.traerTurnos(this.canchaActual);
                     }
-                    this.canchas = res.canchas.data
-                    this.canchaActual= this.canchas[0].id
-                    this.traerTurnos(this.canchaActual);
                 })
         },
 
@@ -199,11 +281,12 @@ export default {
                     //console.log(res)
                     if(res.length==0){
                         this.$swal({
-                            title: '¡Error!',
-                            text: 'Esta cancha no contiene turnos',
+                            title: 'Esta cancha no contiene turnos',
                             icon: 'error',
                             confirmButtonText: 'Ok',
-                            timer: 2500
+                            timer: 2000,
+                            position: 'top-end',
+                            backdrop:false,
                         })
                     } else {
                         this.datos = res;
@@ -223,42 +306,67 @@ export default {
                     end: this.datos[i].fecha_Hasta,
                     title: this.datos[i].tipo_turno,
                     objTurnos: this.datos[i],
-                    class: 'sport'
+                    class: this.datos[i].estado
                 })      
             }
+            //console.log(this.events);
         },
         
         MostrarABMturnos(ver) {
+            this.ultimosTurnos= [];
             this.abrirABMturnos= false
 
             if (ver === true) {
                 this.traerTurnos();
             }
         },
+        
 
-        /* desplegarGanancia(accion) {
-            this.abrirABMturnos = true
-            this.accion = accion
-            this.eventoActual= {
-                //"start":"00-0-00",
-                "objTurnos":{
-                    "grupo":0,
-                    "cliente_id":null,
-                    "nombre":"",
-                    "apellido":"",
-                    "cancha_id":null,
-                    "deporte":"",
-                    "club_configuracion_id":null,
-                    "tipo_turno":"",
-                    "fecha_Desde":"0000-00-00 00:00:00",
-                    "fecha_Hasta":"0000-00-00 00:00:00",
-                    "precio":"0",
-                    "estado":"",
-                    "diasFijos":[],
-                }
+        obtenerUltimosTurnos() {
+            this.alertaFormulario= [];
+            //Valido si la Fecha1 es mayor a la Fecha2, o si la Fecha2 es anterior a la Fecha1 y por ultimo, si son iguales
+            let fechaDesde= moment(this.objUltimosTurnos.fecha_Desde);
+            let fechaHasta= moment(this.objUltimosTurnos.fecha_Hasta);
+            if(fechaDesde.format('x') > fechaHasta.format('x') ||
+                    fechaHasta.format('x') < fechaDesde.format('x')){
+                this.alertaFormulario+="Las fechas estan mal indicadas (Fecha1 es posterior a la Fecha2 o viceversa)";                
             }
-            //this.abrirGanancia = !this.abrirGanancia;
-        }, */
+
+            //Valido que las fechas no sean iguales y tengan como minimo una diferencia de 2 dias entre sus fechas
+            if(fechaHasta.format('x') === fechaDesde.format('x') || 
+                    (fechaHasta.diff(fechaDesde, 'days') < 2 && fechaHasta.diff(fechaDesde, 'days') > 0) ){
+                this.alertaFormulario+=". Las fechas no deben ser iguales, deben tener por lo menos 48 horas entre ellas";                
+            }
+
+            if(this.alertaFormulario.length > 0){
+                return this.$swal({
+                    title: 'Error',
+                    text: ''+this.alertaFormulario,
+                    icon: 'error',
+                    confirmButtonText: 'Ok',
+                })
+            }
+
+            this.InsertarDatos(`turnos/${this.$store.state.vClub}/ultimosReservados`, this.objUltimosTurnos)
+                .then(res => {
+                    console.log(res)
+                    if(res.msj == "Error") {
+                        this.$swal({
+                            title: ''+res.msj,
+                            text: ''+res.razon,
+                            icon: 'error',
+                            confirmButtonText: 'Ok',
+                        }) 
+                    } else {
+                        this.ultimosTurnos= res.data;
+                    }       
+                })   
+        },
+
+        cerrarUltimosTurnos(){
+            this.abrirUltimosTurnos=!this.abrirUltimosTurnos
+            this.ultimosTurnos= [];
+        }
         
     },
 }
@@ -295,11 +403,23 @@ export default {
     margin: 4px 0 8px;
 }
 
-.vuecal__event.sport {
-    background-color: rgba(255, 102, 102, 0.9);
-    border: 1px solid rgb(235, 82, 82);
+.vuecal__event.Reservado {
+    background-color: rgba(27, 155, 44, 0.9);
+    border: 1px solid rgb(4, 15, 5);
     color: #fff;
 }
+
+.vuecal__event.Cobrado {
+    background-color: rgba(138, 138, 138, 0.9);
+    border: 1px solid rgb(8, 2, 2);
+    color: #fff;
+}
+.vuecal__event.Adeudado {
+    background-color: rgba(216, 104, 0, 0.9);
+    border: 1px solid rgb(0, 0, 0);
+    color: #fff;
+}
+
 
 .formABM {
     border: 2px solid rgb(116, 113, 113);
@@ -322,7 +442,7 @@ p{
     margin: 10px 25px 0px
 }
 
-.btnganacias{
+.btnUltimosTurnos{
     position: relative;
     top: -620px;
     left: -370px
@@ -335,6 +455,7 @@ p{
 	width: 100%;
 	height: 100%;
 	background: rgba(0,0,0,0.5);
+    overflow-y: scroll;
 }
 
 .VentanaModalCrear {
@@ -353,10 +474,32 @@ p{
     margin: 25px auto;
 }
 
+
 table{
     background-color: whitesmoke;
     margin: 0px 40px 10px;
 }
+
+.VentanaModalUltimosTurnos{
+    background-color: rgb(58, 194, 137);
+    border-radius: 10px;
+    padding: 28px;
+    width: 1000px;
+    margin: 25px auto;
+}
+.input-md{
+    width:250px;
+}
+
+table, th, td{
+    border: 2px solid rgb(116, 113, 113);
+    border-collapse: collapse;
+    margin:10px auto 10px auto;
+    padding: 10px;
+    text-align: center;
+    border-width: 2px;
+    font-size: 22px;
+} 
 
 .VentanaModalBorrar {
     background-color: rgb(209, 113, 89);
