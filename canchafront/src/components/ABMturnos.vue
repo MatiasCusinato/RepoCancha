@@ -243,21 +243,6 @@
                                                 :value="intervaloFijo.valor">
                                                     {{intervaloFijo.texto}}
                                             </option>
-                                            <!-- <option :value="this.moment(datosTurno.fecha_Desde).add({weeks:3,hours:1}).format('YYYY-MM-DDTHH:mm')">
-                                                    3 semanas
-                                            </option>
-
-                                            <option :value="this.moment(datosTurno.fecha_Desde).add({weeks:4,hours:1}).format('YYYY-MM-DDTHH:mm')">
-                                                    4 semanas
-                                            </option>
-
-                                            <option :value="this.moment(datosTurno.fecha_Desde).add({months:1,hours:1}).format('YYYY-MM-DDTHH:mm')">
-                                                    1 mes
-                                            </option>
-
-                                            <option :value="this.moment(datosTurno.fecha_Desde).add({months:2,hours:1}).format('YYYY-MM-DDTHH:mm')">
-                                                    2 mes
-                                            </option>  -->
                                         </select>
                                     </div>
                                 </div>

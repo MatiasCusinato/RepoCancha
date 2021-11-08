@@ -116,7 +116,7 @@ class TurnoController extends Controller
 
                     $valTurno = $this->validarTurno($request->fecha_Desde, $request->fecha_Hasta, 
                                             $request->club_configuracion_id, $request->cancha_id, $turno_id);
-                
+                                            
                     if(!$valTurno){
                         return $respuestaTurnoOcupado;
                     }
@@ -413,6 +413,7 @@ class TurnoController extends Controller
                                                 'turnos.tipo_turno', 'turnos.fecha_Desde',
                                                 'turnos.fecha_Hasta', 'turnos.precio',
                                                 'turnos.estado')
+                                    ->orderBy('turnos.fecha_Desde', 'ASC')
                                     ->get();
         //dd($ultimosTurnos);
         if($ultimosTurnos->isEmpty()){
