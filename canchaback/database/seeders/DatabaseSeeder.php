@@ -9,6 +9,7 @@ use App\Models\Cliente;
 use App\Models\Cancha;
 use App\Models\clubConfiguracion;
 use App\Models\User;
+use App\Models\Rol;
 
 class DatabaseSeeder extends Seeder
 {
@@ -19,6 +20,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
+        $this->call(RolSeeder::class);
         \App\Models\clubConfiguracion::factory(3)->create();
         \App\Models\User::factory(3)->create();
         \App\Models\Cancha::factory(15)->create();

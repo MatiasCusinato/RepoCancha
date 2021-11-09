@@ -32,7 +32,7 @@ class Turno extends Model
         return $this->belongsTo('App\Models\Cliente');
     }
 
-    //Relacion 1 a 1 INVERSA
+    //Relacion 1 a M INVERSA
     public function cancha() 
     {
         return $this->belongsTo('App\Models\Cancha');

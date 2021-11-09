@@ -9,6 +9,7 @@ import Login from '@/views/Login.vue'
 import Registro from '@/views/Registro.vue'
 import Soporte from '@/views/Soporte.vue'
 import INFOganancias from '@/views/INFOganancias.vue'
+import ABMclubes from '@/components/ABMclubes.vue'
 
 
 
@@ -73,6 +74,12 @@ const routes = [
     path: '/soporte',
     name: 'Soporte',
     component: Soporte,
+  },
+
+  {
+    path: '/ABMclubes',
+    name: 'ABMclubes',
+    component: ABMclubes,
   },
 
 /* {

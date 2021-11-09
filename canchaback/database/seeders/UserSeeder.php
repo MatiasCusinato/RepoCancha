@@ -22,6 +22,7 @@ class UserSeeder extends Seeder
             'password' => 'pabloadmin',
             'club_configuracion_id' => '4',
             'token_actual' => 'null',
+            'rol_id' => '1',
         ]);
     }
 }
