@@ -15,10 +15,42 @@ class clubConfiguracionController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($paginado=null)
     {
-        $club_configuracion = clubConfiguracion::all();
-        return $club_configuracion->toJson(JSON_PRETTY_PRINT);
+        if($paginado==null){
+            $club_configuracion = DB::table('club_configuracions')
+                            ->select('club_configuracions.*')
+                            ->orderBy('club_configuracions.id', 'asc')
+                            ->get();
+
+            if($club_configuracion->isEmpty()){
+                return response()->json([
+                    "msj" => "Error",
+                    "razon" => "No hay clubes",
+                ], 400);
+            }   
+
+            $paginado = count($club_configuracion);
+        }
+            $club_configuracion = DB::table('club_configuracions')
+                                ->select('club_configuracions.*')
+                                ->orderBy('id', 'asc')
+                                ->paginate($paginado);
+
+        return [
+            'paginacion' => [
+                'total'         => $club_configuracion->total(),
+                'current_page'  => $club_configuracion->currentPage(),
+                'per_page'      => $club_configuracion->perPage(),
+                'last_page'     => $club_configuracion->lastPage(),
+                'from'          => $club_configuracion->firstItem(),
+                'to'            => $club_configuracion->lastPage(),
+            ],
+
+            'clubes' => $club_configuracion
+        ];
+        /* $club_configuracion = clubConfiguracion::all();
+        return $club_configuracion->toJson(JSON_PRETTY_PRINT); */
     }
 
     /**

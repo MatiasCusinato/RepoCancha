@@ -111,14 +111,14 @@
 import apiRest from "@/mixins/apiRest.vue"
 
 export default {
-    //props: ['accion','id'],
+    props: ['accion','id'],
 
     mixins: [apiRest],
     
     data() {
         return {
-            accion: 'Editar',
-            id: 1,
+            //accion: 'Editar',
+            //id: 0,
 
             datosClubes: {
                 nombre_club: '',

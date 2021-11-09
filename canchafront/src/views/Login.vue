@@ -61,8 +61,11 @@ export default {
                         setInterval(() => {
                             location.reload();
                         }, 200);
-                        
-                        this.$router.push("/INFOturnosADMIN");
+                        if(this.$store.state.vRol=='admin'){
+                            this.$router.push("/INFOturnosADMIN");
+                        } else{
+                            this.$router.push("/INFOclubes");
+                        }
                     }
                 });
             } else {

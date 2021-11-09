@@ -40,7 +40,7 @@ Route::post('login',[AccesoUsuarioController::class, 'login']);
 Route::post('logout',[AccesoUsuarioController::class, 'logout']); 
 
 //Ruta Clubes
-Route::get('clubes', [clubConfiguracionController::class, 'index']);
+Route::get('clubes/{paginado?}', [clubConfiguracionController::class, 'index']);
 Route::post('clubes/ganancias', [clubConfiguracionController::class, 'gananciaClub']);
 Route::post('clubes/guardar', [clubConfiguracionController::class, 'store']);
 Route::get('clubes/show/{club_id}', [clubConfiguracionController::class, 'show']);
