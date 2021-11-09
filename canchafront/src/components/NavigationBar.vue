@@ -10,6 +10,12 @@
                 
                 <div class="collapse navbar-collapse" v-if="this.token">
                     <div class="navbar-nav">
+
+                        <router-link to="/INFOclubes" 
+                                class="nav-item nav-link">
+                                    <i class="bi bi-trophy"> Mis Clubes </i>
+                        </router-link>
+
                         <router-link to="/INFOturnosADMIN" 
                                 class="nav-item nav-link">
                                     <i class="bi bi-calendar3"> Mis Turnos </i>
