@@ -9,6 +9,7 @@ import Login from '@/views/Login.vue'
 import Registro from '@/views/Registro.vue'
 import Soporte from '@/views/Soporte.vue'
 import INFOganancias from '@/views/INFOganancias.vue'
+import INFOclubes from '@/views/INFOclubes.vue'
 
 
 
@@ -27,6 +28,13 @@ const routes = [
     name: 'INFOclientes',
     component: INFOclientes,
     meta: { requiresAuth: true }
+  },
+
+  {
+    path: '/INFOclubes',
+    name: 'INFOclubes',
+    component: INFOclubes,
+    /* meta: { requiresAuth: true } */
   },
 
   {
