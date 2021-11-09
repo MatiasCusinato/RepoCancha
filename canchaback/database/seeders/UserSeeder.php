@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 class UserSeeder extends Seeder
 {
@@ -19,10 +20,10 @@ class UserSeeder extends Seeder
             'apellido' => 'Schumans',
             'email' => 'pablo@gmail.com',
             'telefono' => '3446 435678',
-            'password' => 'pabloadmin',
+            'password' => Hash::make('pabloadmin'),
             'club_configuracion_id' => '4',
             'token_actual' => 'null',
-            'rol_id' => '1',
+            'rol_id' => '2',
         ]);
     }
 }
