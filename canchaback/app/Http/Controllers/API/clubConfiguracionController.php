@@ -75,11 +75,11 @@ class clubConfiguracionController extends Controller
     {
         //$club_configuracion = clubConfiguracion::find($club_id);
         $club_configuracion = DB::table('club_configuracions')
-                                    ->when($club_id, function ($sql, $club_id) {
-                                        return $sql->where('id', '=', $club_id);
-                                    })
-                                    ->get();
-        
+                                ->when($club_id, function ($sql, $club_id) {
+                                    return $sql->where('id', '=', $club_id);
+                                })
+                                ->get();
+    
         //dd($club_configuracion->isEmpty());
         
         if($club_id < 0 || $club_configuracion->isEmpty() || $club_configuracion == null){
@@ -108,8 +108,8 @@ class clubConfiguracionController extends Controller
         $club_configuracion->update($request->all());
 
         return response()->json([
-            'Petición' => 'Modificacion exitosa',
-            'Mensaje' => 'El club ha sido modificado'
+            'msj' => 'Modificacion exitosa',
+            'razon' => 'El club ha sido modificado'
         ]);
     }
 
@@ -123,9 +123,10 @@ class clubConfiguracionController extends Controller
     {
         /* clubConfiguracion::destroy($club_configuracion->id); */
         clubConfiguracion::destroy($club_id);
+
         return response()->json([
-            'Petición' => 'Eliminacion exitosa', 
-            'Mensaje' => 'El club ha sido eliminado'
+            'msj' => 'Eliminacion exitosa', 
+            'razon' => 'El club ha sido eliminado'
         ]);
     }
 

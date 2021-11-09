@@ -29,6 +29,7 @@ class UserFactory extends Factory
             'telefono' => $this->faker->ean8,
             'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
             'club_configuracion_id' => $this->faker->numberBetween($min = 1, $max = 3),
+            'rol_id' => 2,
             'token_actual' => Str::random(10),
             /* 'remember_token' => Str::random(10), */
         ];

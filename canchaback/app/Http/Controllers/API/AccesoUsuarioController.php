@@ -38,6 +38,7 @@ class AccesoUsuarioController extends Controller
                 'password' => $request->password,
                 'token_actual' => "null",
                 'club_configuracion_id' => $request->club_configuracion_id,
+                'rol_id' => $request->rol_id,
             ]);
     
             $user->password = bcrypt($user->password);
@@ -78,10 +79,12 @@ class AccesoUsuarioController extends Controller
             if($user->token_actual == 'null'){
                 //$fechaAhora= Carbon::createFromFormat('Y-m-d H:i:s', now(), 'UTC')->setTimezone('America/Buenos_Aires');
                 //$fechaAhora= $fechaAhora->format('Y-m-d H:i:s');
-                
+                //dd();
                 $arrUser= array("email" => $user->email, 
-                                "club" => $user->club_configuracion_id); 
+                                "club" => $user->club_configuracion_id,
+                                "rol" => $user->rol['titulo']);              
                                 //"fechaInicio" => $fechaAhora);
+
                 $jsonUser= json_encode($arrUser);
                 //$jsonUser= json_encode(utf8_decode($jsonUser));
                 $tokenUser= base64_encode($jsonUser);    

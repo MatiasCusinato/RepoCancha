@@ -9,22 +9,11 @@
                 </li>
                 
                 <div class="collapse navbar-collapse" v-if="this.token">
-                    <div class="navbar-nav">
-
-                        <router-link to="/INFOclubes" 
-                                class="nav-item nav-link">
-                                    <i class="bi bi-trophy"> Mis Clubes </i>
-                        </router-link>
-
+                    <div class="navbar-nav" v-if="$store.state.vRol=='admin'">
                         <router-link to="/INFOturnosADMIN" 
                                 class="nav-item nav-link">
                                     <i class="bi bi-calendar3"> Mis Turnos </i>
                         </router-link>
-
-                        <!-- <router-link to="/INFOturnosDISPONIBLES/club/1" 
-                                class="nav-item nav-link">
-                                    <i class="bi bi-calendar-check-fill"> Turnos DISPONIBLES </i>
-                        </router-link> -->
 
                         <router-link to="/INFOclientes" 
                                 class="nav-item nav-link">
@@ -44,6 +33,13 @@
                         <router-link to="/Soporte" 
                                 class="nav-item nav-link">
                                     <i class="bi bi-envelope"> Soporte </i>
+                        </router-link>
+                    </div>
+
+                    <div class="navbar-nav" v-if="$store.state.vRol=='programador'">
+                        <router-link to="/INFOclubes" 
+                                class="nav-item nav-link">
+                                    <i class="bi bi-trophy"> Mis Clubes </i>
                         </router-link>
                     </div>
                 </div>

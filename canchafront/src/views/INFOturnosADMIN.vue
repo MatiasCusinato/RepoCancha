@@ -117,8 +117,8 @@
                                         <th scope="col">Cliente</th>
                                         <th scope="col">Cancha</th>
                                         <th scope="col">Comienzo</th>
-                                        <th scope="col">Fin</th>
-                                        <th scope="col">Precio</th>
+                                        <!-- <th scope="col">Fin</th> -->
+                                        <th scope="col">Titulo</th>
                                         <th scope="col">Acciones</th>
                                     </tr>
                                 </thead>
@@ -128,8 +128,8 @@
                                         <td> {{turno.nombre}} {{turno.apellido}}</td>
                                         <td>{{turno.cancha_id}}| {{turno.deporte}}</td>
                                         <td> {{turno.fecha_Desde}} </td>
-                                        <td> {{turno.fecha_Hasta}} </td>
-                                        <td> {{turno.precio}} </td>
+                                        <!-- <td> {{turno.fecha_Hasta}} </td> -->
+                                        <td> {{turno.tipo_turno}} </td>
 
                                         <td>
                                             <button class="btn btn-info" 
@@ -167,6 +167,7 @@ export default {
     data() {
         return {
             abrirUltimosTurnos: false,
+
             selectedEvent: null,
             showEventCreationDialog: false,
 
@@ -324,19 +325,35 @@ export default {
 
         obtenerUltimosTurnos() {
             this.alertaFormulario= [];
-            //Valido si la Fecha1 es mayor a la Fecha2, o si la Fecha2 es anterior a la Fecha1 y por ultimo, si son iguales
             let fechaDesde= moment(this.objUltimosTurnos.fecha_Desde);
             let fechaHasta= moment(this.objUltimosTurnos.fecha_Hasta);
-            if(fechaDesde.format('x') > fechaHasta.format('x') ||
+
+            //Valido si la Fecha1 es mayor a la Fecha2, o si la Fecha2 es anterior a la Fecha1 y por ultimo, si son iguales
+            if(moment(fechaDesde).format('x') > moment(fechaHasta).format('x') ||
+                    moment(fechaHasta).format('x') < moment(fechaDesde).format('x')){
+                this.alertaFormulario+="Puede que las fechas esten mal expresadas (Fecha1 es posterior a la Fecha2 o viceversa)";                
+            }
+
+            //Valido que las fechas no sean iguales
+            if(moment(fechaHasta).format('x') == moment(fechaDesde).format('x')){
+                this.alertaFormulario+=". Las fechas no deben ser iguales";                
+            }
+            
+            //Valido que las fechas tengan como minimo una diferencia de 2 dias entre sus fechas
+            /* if((a.diff(b, 'days', true) < 2 && a.diff(b, 'days', true) > 0)){
+                this.alertaFormulario+=". Las fechas deben tener por lo menos 48 horas de diferencia";
+            } */
+
+            /* if(fechaDesde.format('x') > fechaHasta.format('x') ||
                     fechaHasta.format('x') < fechaDesde.format('x')){
                 this.alertaFormulario+="Las fechas estan mal indicadas (Fecha1 es posterior a la Fecha2 o viceversa)";                
             }
 
             //Valido que las fechas no sean iguales y tengan como minimo una diferencia de 2 dias entre sus fechas
             if(fechaHasta.format('x') === fechaDesde.format('x') || 
-                    (fechaHasta.diff(fechaDesde, 'days') < 2 && fechaHasta.diff(fechaDesde, 'days') > 0) ){
+                    (fechaHasta.diff(fechaDesde, 'days', true) < 2 && fechaHasta.diff(fechaDesde, 'days', true) > 0) ){
                 this.alertaFormulario+=". Las fechas no deben ser iguales, deben tener por lo menos 48 horas entre ellas";                
-            }
+            } */
 
             if(this.alertaFormulario.length > 0){
                 return this.$swal({
@@ -365,7 +382,10 @@ export default {
 
         cerrarUltimosTurnos(){
             this.abrirUltimosTurnos=!this.abrirUltimosTurnos
+            
             this.ultimosTurnos= [];
+            this.objUltimosTurnos.fecha_Desde=moment().format('YYYY-MM-DDT00:00')
+            this.objUltimosTurnos.fecha_Hasta=moment().add({days: 2}).format('YYYY-MM-DDT23:59')
         }
         
     },

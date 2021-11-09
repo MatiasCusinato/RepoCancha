@@ -5,15 +5,24 @@
         <div>
             <button class="btn btn-primary" @click="desplegarABMclubes('Crear')" 
                     style="font-size: 22px"> 
-                <i class="bi bi-person-plus-fill"> Agregar un nuevo Club </i> 
+                <i class="bi bi-shop"> Agregar nuevo Club </i> 
+            </button>
+            <br><br>
+            <button class="btn btn-primary" @click="desplegarRegistro()" 
+                    style="font-size: 22px"> 
+                <i class="bi bi-person-plus-fill"> Agregar nuevo admin</i> 
             </button>
         </div>
         <br>
 
-        <!-- <ABMclubes v-if="abrirABMclubes"
+        <ABMclubes v-if="abrirABMclubes"
             :accion=accion :id=id
             @SalirDeABMclubes = MostrarABMclubes($event)
-        /><br> -->
+        /><br>
+
+        <Registro v-if="abrirRegistro"
+            @SalirDeABMclubes = MostrarABMclubes($event)           
+        /><br>
 
         <div class="row justify-content-md-center tableclub" v-if="datos.length>0">
             <table class="table-secondary">
@@ -82,21 +91,24 @@
 
 <script>
 import apiRest from "../mixins/apiRest.vue"
-/* import ABMclientes from "../components/ABMclientes.vue" */
+import ABMclubes from "../components/ABMclubes.vue"
+import Registro from "../views/Registro.vue"
 
 export default {
     
     mixins: [apiRest],
 
-    /* components: {
-        ABMclientes
-    }, */
+    components: {
+        ABMclubes,
+        Registro,
+    },
 
     data() {
         return {
             datos: [],
 
-            /* abrirABMcliente: false, */
+            abrirABMclubes: false,
+            abrirRegistro: false,
 
             accion: '',
 
@@ -134,9 +146,13 @@ export default {
             this.id = id
             this.abrirABMclubes = !this.abrirABMclubes;
         },
+        desplegarRegistro() {
+            this.abrirRegistro = !this.abrirRegistro;
+        },
         
         MostrarABMclubes(ver) {
             this.abrirABMclubes = false
+            this.abrirRegistro = false
             if (ver == true) {
                 this.traerDatos();
             }

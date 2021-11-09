@@ -5,8 +5,9 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    vClub:  localStorage.getItem('club') || "null",
-    vToken:  localStorage.getItem('laravelToken') || "null",
+    vClub: localStorage.getItem('club') || "null",
+    vToken: localStorage.getItem('laravelToken') || "null",
+    vRol: localStorage.getItem('rol') || "null",
     jsonToken: {
       "token": localStorage.getItem('laravelToken')
     }
@@ -21,9 +22,11 @@ export default new Vuex.Store({
       
       localStorage.setItem('laravelToken', objDatos.token.slice(1,-1));
       localStorage.setItem('club', objToken.club);
+      localStorage.setItem('rol', objToken.rol);
 
       state.vToken= objDatos.token.slice(1,-1);
       state.vClub= objToken.club;
+      state.vRol= objToken.rol;
 
       console.log(state.vToken)
       console.log(state.vClub)
@@ -33,9 +36,11 @@ export default new Vuex.Store({
       console.log("borrando datos usuario del LS")
       localStorage.removeItem('laravelToken');
       localStorage.removeItem('club');
+      localStorage.removeItem('rol');
 
       state.vToken= "";
       state.vClub= "";
+      state.vRol= "";
     },
   },
 

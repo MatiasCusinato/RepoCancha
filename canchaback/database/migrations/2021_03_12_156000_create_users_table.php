@@ -26,6 +26,11 @@ class CreateUsersTable extends Migration
             $table->foreign('club_configuracion_id')
                     ->references('id')->on('club_configuracions')
                     ->onDelete('set null');
+                    
+            $table->unsignedBigInteger("rol_id")->nullable();
+            $table->foreign('rol_id')
+                    ->references('id')->on('rols')
+                    ->onDelete('set null');
 
             $table->string('token_actual')->nullable();
             //$table->rememberToken();

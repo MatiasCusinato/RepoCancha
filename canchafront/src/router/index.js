@@ -9,7 +9,10 @@ import Login from '@/views/Login.vue'
 import Registro from '@/views/Registro.vue'
 import Soporte from '@/views/Soporte.vue'
 import INFOganancias from '@/views/INFOganancias.vue'
+import ABMclubes from '@/components/ABMclubes.vue'
 import INFOclubes from '@/views/INFOclubes.vue'
+import Redireccion from '@/views/Redireccion.vue'
+import store from '../store/index.js'
 
 
 
@@ -34,7 +37,7 @@ const routes = [
     path: '/INFOclubes',
     name: 'INFOclubes',
     component: INFOclubes,
-    /* meta: { requiresAuth: true } */
+    meta: { requiresAuth: true }
   },
 
   {
@@ -75,12 +78,25 @@ const routes = [
     path: '/registro',
     name: 'Registro',
     component: Registro,
+    meta: { requiresAuth: true }
   },
 
   {
     path: '/soporte',
     name: 'Soporte',
     component: Soporte,
+  },
+
+  {
+    path: '/ABMclubes',
+    name: 'ABMclubes',
+    component: ABMclubes,
+  },
+
+  {
+    path: '/redireccion',
+    name: 'Redireccion',
+    component: Redireccion,
   },
 
 /* {
@@ -100,9 +116,31 @@ const router = new VueRouter({
 
 //Esta funcion nos permite agregar logica y en este caso impedir de que se pueda ingresar a ciertas vistas si no hay un permiso determinado, to: a la ruta que queremos ir, from de la ruta que venimos y next es la funcion que se va a ejecutar despues de que hagamos las operaciones respectivas//
 router.beforeEach((to, from, next) => {
+  let rutasProgramador=["/INFOclubes", "/ABMclubes", "/registro"]
+  let rutasAdmin=["/INFOclientes", "/INFOcanchas", "/INFOganancias", "/INFOturnosADMIN"]
+  let rol= store.state.vRol;
+
   console.log("local",localStorage.getItem('laravelToken'))
   if (to.matched.some(record => record.meta.requiresAuth)) {
     if (localStorage.getItem('laravelToken') != null) {
+      if(rol=="admin"){
+        for (let i = 0; i < rutasProgramador.length; i++) {
+          if(to.fullPath==rutasProgramador[i]){
+            console.log("NO ESTAS AUTORIZADO")
+            next("/redireccion")
+          }
+        }
+      }
+
+      if(rol=="programador"){
+        for (let i = 0; i < rutasAdmin.length; i++) {
+          if(to.fullPath==rutasAdmin[i]){
+            console.log("NO ESTAS AUTORIZADO")
+            next("/redireccion")
+          }
+        }
+      }
+
       next()
     } else {
       next("/login")

@@ -24,6 +24,7 @@ class User extends Authenticatable
         'telefono',
         'password',
         'club_configuracion_id',
+        'rol_id',
         'token_actual',
         //'rememberToken',
     ];
@@ -51,5 +52,11 @@ class User extends Authenticatable
     public function club() 
     {
         return $this->belongsTo('App\Models\clubConfiguracion');
+    }
+
+    //Relacion 1 a M INVERSA
+    public function rol() 
+    {
+        return $this->belongsTo('App\Models\Rol');
     }
 }
