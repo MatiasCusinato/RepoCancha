@@ -426,6 +426,8 @@ export default {
                 tipo_turno: "",
                 fecha_Desde: moment().format('YYYY-MM-DDTHH:00'),
                 fecha_Hasta: moment().add(1, 'hours').format('YYYY-MM-DDTHH:00'),
+                /* fecha_Desde: "",
+                fecha_Hasta: "", */
                 grupo: 1,
                 precio: "",
                 estado: "Reservado",
@@ -726,17 +728,20 @@ export default {
     watch: {
         //Cada vez que se asigne una fecha_Desde diferente, voy a rellenar los intervalosHora con fecha_Hasta respe
         'datosTurno.fecha_Desde': function (){
-            if(this.datosTurno.grupo>=1){
+            if(this.datosTurno.grupo==1){
                 this.arrIntervalosHoras= [];
+
                 for (let i = 1; i < 10; i++) {
                     this.arrIntervalosHoras.push({   
                         texto: i+" hora/s",
                         valor: moment(this.datosTurno.fecha_Desde).add({hours:i}).format('YYYY-MM-DDTHH:mm')
                     })
-                    this.datosTurno.fecha_Hasta= this.arrIntervalosHoras[0].valor
                 }
-            } else {
+
+                this.datosTurno.fecha_Hasta= this.arrIntervalosHoras[0].valor
+            }else {
                 this.arrIntervalosFijo=[];
+
                 this.arrIntervalosFijo.push({
                     texto: "3 semanas",
                     valor: moment(this.datosTurno.fecha_Desde).add({weeks:3, hours:1}).format('YYYY-MM-DDTHH:mm')
@@ -755,7 +760,7 @@ export default {
                 },
                 )
                 
-                this.datosTurno.fecha_Hasta= this.arrIntervalosFijo[0].valor
+                this.datosTurno.fecha_Hasta= this.arrIntervalosFijo[2].valor
             }
         },
     }
