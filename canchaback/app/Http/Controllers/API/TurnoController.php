@@ -109,7 +109,6 @@ class TurnoController extends Controller
                     "razon" => "Esa fecha/horario ya esta reservado por otro turno, intente con otra fecha u horario."
                 ], 400);
 
-
                 //Distingo si la fechaDesde y la FechaHasta son iguales(turno normal). Si son distintas (Turno fijo). 
                 if($fechaDesde == $fechaHasta || $request->grupo == 1){
                     // PARTE DE TURNO NORMAL
@@ -313,7 +312,8 @@ class TurnoController extends Controller
             ], 400);
         }
 
-        $valTurno = $this->validarTurno($request->fecha_Desde, $request->fecha_Hasta, $request->club_configuracion_id, $request->cancha_id, $turno_id);
+        $valTurno = $this->validarTurno($request->fecha_Desde, $request->fecha_Hasta, 
+                                        $request->club_configuracion_id, $request->cancha_id, $turno_id);
 
         if(!$valTurno){
             return response()->json([
