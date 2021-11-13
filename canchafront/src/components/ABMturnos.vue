@@ -366,48 +366,18 @@ export default {
     created() {
         //console.log(JSON.stringify(this.eventoActual))
         
+
         if (this.accionAux != '') {
+
             if(this.accionAux=='Crear'){
                 this.desplegarABMturnos('Crear', true)
-
-                for (let i = 1; i < 10; i++) {
-                    this.arrIntervalosHoras.push({   
-                        texto: i+" hora/s",
-                        valor: moment(this.datosTurno.fecha_Desde).add({hours:i}).format('YYYY-MM-DDTHH:mm')
-                    })
-                }
-
-                this.arrIntervalosFijo.push({
-                    texto: "3 semanas",
-                    valor: moment(this.datosTurno.fecha_Desde).add({weeks:3, hours:1}).format('YYYY-MM-DDTHH:mm')
-                },
-                {
-                    texto: "4 semanas",
-                    valor: moment(this.datosTurno.fecha_Desde).add({weeks:4, hours:1}).format('YYYY-MM-DDTHH:mm')
-                },
-                {
-                    texto: "1 mes",
-                    valor: moment(this.datosTurno.fecha_Desde).add({months:1, hours:1}).format('YYYY-MM-DDTHH:mm')
-                },
-                {
-                    texto: "2 mes",
-                    valor: moment(this.datosTurno.fecha_Desde).add({months:2, hours:1}).format('YYYY-MM-DDTHH:mm')
-                },
-                )
-            }
-            if(this.accionAux=='Editar'){
-                for (let i = 1; i < 10; i++) {
-                    this.arrIntervalosHoras.push({   
-                        texto: i+" hora/s",
-                        valor: moment(this.datosTurno.fecha_Desde).add({hours:i}).format('YYYY-MM-DDTHH:mm')
-                    })
-                }
+                this.cargarIntervalos()
             }
             
             if(this.accionAux=='Consultar'){
                 this.desplegarABMturnos('Consultar', false)
             }
-        
+
             this.traerClientes()
             this.traerCanchas()
         } 
@@ -454,7 +424,6 @@ export default {
             clientes: [],
             canchas: [],
     
-
             alertaFormulario:[],
 
             fechaDesdeAux: "",
@@ -469,6 +438,36 @@ export default {
     },
 
     methods: {
+        cargarIntervalos(){
+            this.arrIntervalosHoras= [];
+            for (let i = 1; i < 10; i++) {
+                this.arrIntervalosHoras.push({   
+                    texto: i+" hora/s",
+                    valor: moment(this.datosTurno.fecha_Desde).add({hours:i}).format('YYYY-MM-DDTHH:mm')
+                })
+            }
+
+            this.arrIntervalosFijo=[];
+            this.arrIntervalosFijo.push(
+                {
+                    texto: "3 semanas",
+                    valor: moment(this.datosTurno.fecha_Desde).add({weeks:3, hours:1}).format('YYYY-MM-DDTHH:mm')
+                },
+                {
+                    texto: "4 semanas",
+                    valor: moment(this.datosTurno.fecha_Desde).add({weeks:4, hours:1}).format('YYYY-MM-DDTHH:mm')
+                },
+                {
+                    texto: "1 mes",
+                    valor: moment(this.datosTurno.fecha_Desde).add({months:1, hours:1}).format('YYYY-MM-DDTHH:mm')
+                },
+                {
+                    texto: "2 mes",
+                    valor: moment(this.datosTurno.fecha_Desde).add({months:2, hours:1}).format('YYYY-MM-DDTHH:mm')
+                },
+            )
+        },
+
         terminarTurno(){
             this.desplegarABMturnos('Editar', false)
             this.datosTurno.estado= 'Cobrado';
@@ -479,6 +478,7 @@ export default {
             this.turnoFijo=!this.turnoFijo
             if(this.turnoFijo){
                 this.datosTurno.grupo= 11;
+                this.datosTurno.fecha_Hasta= moment(this.datosTurno.fecha_Desde).add({months:1, hours:1}).format('YYYY-MM-DDTHH:mm')
             } else{
                 this.datosTurno.grupo= 1;
             }
@@ -629,6 +629,7 @@ export default {
 
         desplegarABMturnos(accion, abm) {
             this.accionAux = accion
+
             if(abm){   
                 this.abrirFormTurnos = !this.abrirFormTurnos
             }
@@ -645,6 +646,8 @@ export default {
                         this.datosTurno.fecha_Hasta = moment(fechaHasta).format('YYYY-MM-DDTkk:mm')
                         this.datosTurno.diasFijo = [moment(this.transformarFecha(fechaDesde, 'abm')).format('ddd')];
                         this.datosTurno.token= this.$store.state.vToken;
+                
+                        this.cargarIntervalos()
                     })
             } 
         },
@@ -726,45 +729,20 @@ export default {
     },
 
     watch: {
-        //Cada vez que se asigne una fecha_Desde diferente, voy a rellenar los intervalosHora con fecha_Hasta respe
+        //Cada vez que se asigne una fecha_Desde nueva, voy a rellenar los intervalosHora con fecha_Hasta respectivas a la fecha_Desde actual
         'datosTurno.fecha_Desde': function (){
-            if(this.datosTurno.grupo==1){
-                this.arrIntervalosHoras= [];
-
-                for (let i = 1; i < 10; i++) {
-                    this.arrIntervalosHoras.push({   
-                        texto: i+" hora/s",
-                        valor: moment(this.datosTurno.fecha_Desde).add({hours:i}).format('YYYY-MM-DDTHH:mm')
-                    })
+            this.cargarIntervalos()
+            if(this.datosTurno.grupo==1 || this.accionAux=='Editar'){
+                if(this.accionAux=='Crear'){
+                    this.datosTurno.fecha_Hasta= this.arrIntervalosHoras[0].valor
                 }
-
-                this.datosTurno.fecha_Hasta= this.arrIntervalosHoras[0].valor
-            }else {
-                this.arrIntervalosFijo=[];
-
-                this.arrIntervalosFijo.push({
-                    texto: "3 semanas",
-                    valor: moment(this.datosTurno.fecha_Desde).add({weeks:3, hours:1}).format('YYYY-MM-DDTHH:mm')
-                },
-                {
-                    texto: "4 semanas",
-                    valor: moment(this.datosTurno.fecha_Desde).add({weeks:4, hours:1}).format('YYYY-MM-DDTHH:mm')
-                },
-                {
-                    texto: "1 mes",
-                    valor: moment(this.datosTurno.fecha_Desde).add({months:1, hours:1}).format('YYYY-MM-DDTHH:mm')
-                },
-                {
-                    texto: "2 mes",
-                    valor: moment(this.datosTurno.fecha_Desde).add({months:2, hours:1}).format('YYYY-MM-DDTHH:mm')
-                },
-                )
-                
-                this.datosTurno.fecha_Hasta= this.arrIntervalosFijo[2].valor
+            }else if(this.datosTurno.grupo>1 || this.accionAux=='Editar' ) {
+                if(this.accionAux=='Crear'){
+                    this.datosTurno.fecha_Hasta= this.arrIntervalosFijo[2].valor
+                } 
             }
-        },
+        }, 
     }
-
     
 }
 </script>
